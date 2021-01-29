@@ -1,0 +1,27 @@
+{
+	"initialState": "init",
+	"states": [
+	{
+		"stateName": "init",
+		"preProcess":[
+			"InitAppController:startApp"		
+		],
+		"postProcess":[
+		],
+		"outbound":["popup"],
+		"events":[
+			"UserModelUpdated",
+			"UpdateUserModel",
+			"LoadView"
+		]
+	},
+	{
+		"stateName": "popup",
+		"preProcess":[],
+		"postProcess":[],
+		"outbound":["intro"],
+		"events":[
+			"UserModelUpdated"
+		]
+	}]
+}

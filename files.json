@@ -1,0 +1,16 @@
+[
+  "src/core/data/binarytree/BinaryTree.js",
+  "src/core/data/linkedlist/LinkedList.js",
+  "src/core/data/queue/Queue.js",
+  "src/core/parsers/ViewParser.js",
+  "src/core/service/Loader.js",
+  "src/core/Backoff.js",
+  "src/core/ControllerCore.js",
+  "src/core/EventBus.js",
+  "src/core/ModelCore.js",
+  "src/core/MVCSCore.js",
+  "src/core/ServiceCore.js",
+  "src/core/StateMachine.js",
+  "src/core/ViewCore.js",
+  "src/fw.js"
+]
