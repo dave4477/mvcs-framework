@@ -1,12 +1,8 @@
 import fw from './../../../../src/core/fw.js';
 import * as THREE from './../../../libs/three.module.js';
-
-import { DDSLoader } from './../../../libs/jsm/loaders/DDSLoader.js';
-import { MTLLoader } from './../../../libs/jsm/loaders/MTLLoader.js';
-import { OBJLoader } from './../../../libs/jsm/loaders/OBJLoader.js';
+import ObjectLoaders from './ObjectLoaders.js';
 
 const SHOW_RIGID_BODY = false;
-
 const FORCE_JUMP = 25;
 const FORCE_MOVE = 0.8;
 const DAMPING = 0.92;
@@ -14,9 +10,10 @@ const MASS = 1;
 
 export default class Character extends fw.core.viewCore {
     constructor(jumpForce = FORCE_JUMP, moveForce = FORCE_MOVE, damping = DAMPING, mass = MASS){
-        super();
+        super("CHARACTER");
 
         this.character = {};
+        this.objectLoader = new ObjectLoaders();
 
         this._jumpForce = jumpForce;
         this._moveForce = moveForce;
@@ -52,64 +49,53 @@ export default class Character extends fw.core.viewCore {
     }
     
     create() {
-        var manager = new THREE.LoadingManager();
-        manager.addHandler( /\.dds$/i, new DDSLoader() );
+        this.objectLoader.loadObjMTL('./assets/', 'fat_cat_obj.mtl', './assets/', 'fat_cat_obj.obj').then((object) => {
+            object.rotation.y = 96.5;
+            const parent = new THREE.Mesh( new THREE.CubeGeometry( 1, 1, 1 ), new THREE.MeshBasicMaterial({color:0xCC3333}) );
+            parent.position.y = 0.5;
+            parent.position.x = 0;
+            parent.position.z = 0;
+            parent.scale.x = 0.05;
+            parent.scale.y = 0.05;
+            parent.scale.z = 0.05;
+            parent.add(object);
 
-        new MTLLoader( manager )
-            .setPath( './assets/' )
-            .load( 'fat_cat_obj.mtl', ( materials ) => {
+            const mesh = new Physijs.BoxMesh(
+                parent.geometry,
+                Physijs.createMaterial(
+                    new THREE.MeshBasicMaterial({color:0xCC3333}),
+                    0.2,
+                    0.5
+                ),
+                this._mass
+            );
+            mesh.visible = SHOW_RIGID_BODY;
 
-                materials.preload();
+            mesh.position.y = 0.4;
+            mesh.position.x = 0;
+            mesh.position.z = 0;
 
-                new OBJLoader( manager )
-                    .setMaterials( materials )
-                    .setPath( './assets/' )
-                    .load( 'fat_cat_obj.obj', ( object ) => {
-                        object.rotation.y = 96.5;
-                        const parent = new THREE.Mesh( new THREE.CubeGeometry( 1, 1, 1 ), new THREE.MeshBasicMaterial({color:0xCC3333}) );
-                        parent.position.y = 0.5;
-                        parent.position.x = 0;
-                        parent.position.z = 0;
-                        parent.scale.x = 0.05;
-                        parent.scale.y = 0.05;
-                        parent.scale.z = 0.05;
-                        parent.add(object);
+            // var floorMesh = new Physijs.BoxMesh(
+            //     new THREE.CubeGeometry( 0.8, 0.2, 0.8 ),
+            //     Physijs.createMaterial(
+            //         new THREE.MeshBasicMaterial({color:0x333366}),
+            //         0.2,
+            //         0.5
+            //     ),
+            //     1
+            // );
+            // floorMesh.position.y = -0.6;
+            // floorMesh.visible = SHOW_RIGID_BODY;
+            // // mesh.add(floorMesh);
+            // floorMesh.addEventListener('collision', this.handlePlayerCollision.bind(this));
+            mesh.addEventListener('collision', this.handlePlayerCollision.bind(this));
+            mesh.setAngularFactor(new THREE.Vector3(0,0,0));
+            this.character = { model: parent, mesh: mesh };
+            this.dispatchToView('ObjectLoaded', this.character);
+        });
 
-                        var mesh = new Physijs.BoxMesh(
-                            parent.geometry,
-                            Physijs.createMaterial(
-                                new THREE.MeshBasicMaterial({color:0xCC3333}),
-                                0.2,
-                                0.5
-                            ),
-                            this._mass
-                        );
-                        mesh.visible = SHOW_RIGID_BODY;
-
-                        mesh.position.y = 0.4;
-                        mesh.position.x = 0;
-                        mesh.position.z = 0;
-
-                        // var floorMesh = new Physijs.BoxMesh(
-                        //     new THREE.CubeGeometry( 0.8, 0.2, 0.8 ),
-                        //     Physijs.createMaterial(
-                        //         new THREE.MeshBasicMaterial({color:0x333366}),
-                        //         0.2,
-                        //         0.5
-                        //     ),
-                        //     1
-                        // );
-                        // floorMesh.position.y = -0.6;
-                        // floorMesh.visible = SHOW_RIGID_BODY;
-                        // // mesh.add(floorMesh);
-                        // floorMesh.addEventListener('collision', this.handlePlayerCollision.bind(this));
-                        mesh.addEventListener('collision', this.handlePlayerCollision.bind(this));
-                        mesh.setAngularFactor(new THREE.Vector3(0,0,0));
-                        this.character = { model: parent, mesh: mesh };
-                        this.dispatchToView('ObjectLoaded', this.character);
-
-                    }, null, null);
-            });
+        //         }, null, null);
+            // });
     }
 
     handlePlayerCollision(collidedWith, linearVelocity, angularVelocity) {

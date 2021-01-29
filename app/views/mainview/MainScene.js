@@ -1,9 +1,10 @@
 import fw from './../../../../src/core/fw.js';
 import * as THREE from './../../../libs/three.module.js';
 import { Physijs } from './../../../libs/physi.js';
-
+import SkyBox from './SkyBox.js';
 import Platforms from './Platforms.js';
 import Character from './Character.js';
+import SnowMan from './SnowMan.js';
 import PlayerInput from './PlayerInput.js';
 
 export default class MainScene extends fw.core.viewCore {
@@ -14,7 +15,6 @@ export default class MainScene extends fw.core.viewCore {
         Physijs.scripts.ammo = './ammo.js';
 
         this._boxes = [];
-        this.loader = null;
         this.renderer = null;
         this.scene = null;
         this.ground = null;
@@ -25,12 +25,13 @@ export default class MainScene extends fw.core.viewCore {
         this.player = null;
         this.playerInput = null;
         this.loader = new THREE.TextureLoader();
-        
+        this._enemies = [];
         this._addViewListeners();
     }
 
     _addViewListeners() {
         this.addViewListener('ObjectLoaded', this.onPlayerLoaded);
+        this.addViewListener('SnowManLoaded', this.onSnowManLoaded);
     }
 
     createRenderer() {
@@ -73,34 +74,21 @@ export default class MainScene extends fw.core.viewCore {
         this.light.castShadow = true;
         this.scene.add(this.light);
 
-
         Platforms.create(this.scene);
         Platforms.createBottomCatcher(this.scene);
         this.addCharacter();
+        this.addSnowMen();
         this.addSkyBox();
-
 
         window.requestAnimationFrame(() => this.render() );
         this.scene.simulate();
     }
 
     addSkyBox() {
-        var imagePrefix = "images/dawnmountain-";
-        var directions  = ["xpos", "xneg", "ypos", "yneg", "zpos", "zneg"];
-        var imageSuffix = ".png";
-        var skyGeometry = new THREE.CubeGeometry( 500, 500, 500 );
-
-        var materialArray = [];
-        for (var i = 0; i < 6; i++)
-            materialArray.push( new THREE.MeshBasicMaterial({
-                map: this.loader.load( imagePrefix + directions[i] + imageSuffix ),
-                side: THREE.BackSide
-            }));
-        var skyMaterial = materialArray;
-        var skyBox = new THREE.Mesh( skyGeometry, skyMaterial );
+        const skyBox = SkyBox.create();
         this.scene.add( skyBox );
-
     }
+
     spawnBoxes(numBoxes) {
         this.numBoxes = numBoxes;
         this.spawnBox();
@@ -113,27 +101,15 @@ export default class MainScene extends fw.core.viewCore {
 
     createBox(box_geometry, boxCount = 0) {
         var box, material;
-
-        material = Physijs.createMaterial(
-            new THREE.MeshLambertMaterial({ map: this.loader.load( 'images/plywood.jpg' ) }),
-            .6, // medium friction
-            .6 // low restitution
-        );
+        material = Physijs.createMaterial(new THREE.MeshLambertMaterial({ map: this.loader.load( 'images/plywood.jpg' ) }), .6, .6 );
         material.map.wrapS = material.map.wrapT = THREE.RepeatWrapping;
         material.map.repeat.set( .5, .5 );
 
-        box = new Physijs.BoxMesh(
-            box_geometry,
-            material,
-            1
-        );
+        box = new Physijs.BoxMesh(box_geometry, material, 1);
         box.collisions = 0;
-        box.position.set(
-            Math.random() * 35 - 7.5,
-            25,
-            Math.random() * 30 - 7.5
-        );
+        box.position.set( Math.random() * 35 - 7.5, 25, Math.random() * 30 - 7.5 );
         box.name = "box";
+        box.addEventListener('collision', this.onBoxCollision);
         box.castShadow = true;
         this._boxes.push(box);
 
@@ -141,6 +117,23 @@ export default class MainScene extends fw.core.viewCore {
             this.scene.add( box );
             this.spawnBox(++boxCount)
         }
+    }
+
+    onBoxCollision(target, linearV, angularV) {
+        if (target.name == "bottomCatcher") {
+            this.parent.remove(this);
+        }
+    }
+
+    addSnowMen() {
+        this._enemies.push(new SnowMan());
+        this._enemies[this._enemies.length-1].create();
+    }
+
+    onSnowManLoaded(snowMan) {
+        snowMan.position.x = 6;
+        snowMan.position.y = 1;
+        this.scene.add(snowMan);
     }
 
     addCharacter() {
