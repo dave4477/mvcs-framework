@@ -5,12 +5,12 @@ This includes a finite statemachine, however this is optional.
 There are some utilities included, like an audio manager.
 For backwards compatibility I have used babel.
 
-To see how to bootstrap, look in main.js in the app folder.
+To see how to bootstrap, look in main.js in the app folder as an example.
 
 The basic principle is as follow:
 
 Load framework. The framework can be accessed through fw.
-Initialize your models, controllers and services, and optional views as an example.
+Initialize your models, controllers and services, and optional views.
 
 Models should extend <code>fw.core.ModelCore</code><br>
 Controllers should extend <code>fw.core.ControllerCore</code><br>
