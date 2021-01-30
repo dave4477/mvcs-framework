@@ -14,10 +14,10 @@ The basic principle is as follow:
 Load framework. The framework can be accessed through fw.
 Initialize your models, controllers and services, and optional views.
 
-Models should extend <code>fw.core.ModelCore</code>
-Controllers should extend <code>fw.core.ControllerCore</code>
-Views should extend <code>fw.core.ViewCore</code>
-Services should extend <code>fw.core.ServiceCore</code>
+Models should extend <code>fw.core.ModelCore</code><br>
+Controllers should extend <code>fw.core.ControllerCore</code><br>
+Views should extend <code>fw.core.ViewCore</code><br>
+Services should extend <code>fw.core.ServiceCore</code><br>
 
 Creating a state configuration:
 <pre>
@@ -44,7 +44,7 @@ Creating a state configuration:
 
 
 Then initialize it using:
-<code>fw.setStateConfiguration(json);</code>
+<code>fw.setStateConfiguration(json);</code><br>
 
 Everything that is dispatched to the context, is validated by the state machine. 
 If the event is not found for the current state, the subscriber will not receive it.
