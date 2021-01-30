@@ -1,8 +1,8 @@
-import * as THREE from './../../../libs/three.module.js';
+import * as THREE from './../../../app/libs/three.module.js';
 
-import { DDSLoader } from './../../../libs/jsm/loaders/DDSLoader.js';
-import { MTLLoader } from './../../../libs/jsm/loaders/MTLLoader.js';
-import { OBJLoader } from './../../../libs/jsm/loaders/OBJLoader.js';
+import { DDSLoader } from './../../../app/libs/jsm/loaders/DDSLoader.js';
+import { MTLLoader } from './../../../app/libs/jsm/loaders/MTLLoader.js';
+import { OBJLoader } from './../../../app/libs/jsm/loaders/OBJLoader.js';
 
 export default class ObjectLoaders {
     constructor() {

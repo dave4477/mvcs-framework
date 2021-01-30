@@ -11,19 +11,8 @@ export default class InitAppController extends fw.core.controllerCore {
 	}
 
 	addListeners() {
-
-		this.addListener(Constants.events.UPDATE_USER_MODEL, (data) => {
-			this.userModel.numBoxes = data;
-		});
-
-		this.addListener(Constants.events.USER_MODEL_UPDATED, (data) => {
-
-		});
 	}
 
-	init() {
-		this.dispatch("switchState", "init");
-	}
 	startApp() {
 		console.log(`InitAppController::startApp`);		
 		this.loadView("MAIN_VIEW", "./views/mainview/mainView.html");

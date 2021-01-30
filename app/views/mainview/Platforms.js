@@ -1,4 +1,4 @@
-import * as THREE from './../../../libs/three.module.js';
+import * as THREE from './../../../app/libs/three.module.js';
 
 const levelMap = [
     {posX:6, posY:-8, posZ:0, geomX:16, geomY:16, geomZ:4},

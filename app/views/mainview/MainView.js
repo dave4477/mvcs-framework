@@ -19,11 +19,6 @@ export default class MainView extends fw.core.viewCore {
 				this.addContextListener(Constants.events.USER_MODEL_UPDATED, this.updateView);
 			});
 		}
-
-		document.getElementById('buttonUpdate').addEventListener('click', (e) => {
-			fw.utils.audioManager.playSound('./assets/sounds/testsound.mp3');
-			this.dispatchToContext(Constants.events.UPDATE_USER_MODEL, document.getElementById('textBoxes').value);
-		});
 	}
 
 
