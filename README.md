@@ -6,13 +6,11 @@ There are some utilities included, like an audio manager.
 For backwards compatibility I have used babel.
 
 To see how to bootstrap, look in main.js in the app folder.
-If you either import the release module or include the script tag, 
-there is no need to import the core classes for the view, controller, model or service.
 
 The basic principle is as follow:
 
 Load framework. The framework can be accessed through fw.
-Initialize your models, controllers and services, and optional views.
+Initialize your models, controllers and services, and optional views as an example.
 
 Models should extend <code>fw.core.ModelCore</code><br>
 Controllers should extend <code>fw.core.ControllerCore</code><br>
