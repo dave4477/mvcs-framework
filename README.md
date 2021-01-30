@@ -14,23 +14,37 @@ The basic principle is as follow:
 Load framework. The framework can be accessed through fw.
 Initialize your models, controllers and services, and optional views.
 
-Models should extend fw.core.ModelCore
-Controllers should extend fw.core.ControllerCore
-Views should extend fw.core.ViewCore
-Services should extend fw.core.ServiceCore
+Models should extend <code>fw.core.ModelCore</code>
+Controllers should extend <code>fw.core.ControllerCore</code>
+Views should extend <code>fw.core.ViewCore</code>
+Services should extend <code>fw.core.ServiceCore</code>
 
 Creating a state configuration:
-
+<pre>
 {
-  "stateName": "default",
-  "preProcess": "[]",
-  "postProcess": "[]",
-  "events": "[]",
-  "outbound": "[]"
+	"initialState": "init",
+	"states": [
+	{
+		"stateName": "init",
+		"preProcess":[
+			"InitAppController:startApp" // will automatically trigger upon entering this state		
+		],
+		"postProcess":[ // will trigger when leaving this state
+		],
+		"outbound":["popup"], // states it can transition to
+		"events":[ // allowed events for this state
+			"UserModelUpdated",
+			"UpdateUserModel",
+			"LoadView"
+		]
+	}
 }
+</pre>
+
+
 
 Then initialize it using:
-fw.setStateConfiguration(json)
+<code>fw.setStateConfiguration(json);</code>
 
 Everything that is dispatched to the context, is validated by the state machine. 
 If the event is not found for the current state, the subscriber will not receive it.
