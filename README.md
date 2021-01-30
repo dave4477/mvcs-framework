@@ -19,7 +19,8 @@ Controllers should extend <code>fw.core.ControllerCore</code><br>
 Views should extend <code>fw.core.ViewCore</code><br>
 Services should extend <code>fw.core.ServiceCore</code><br>
 
-Creating a state configuration:
+Creating a state configuration:<br>
+<sub>example</sub>
 <pre>
 {
 	"initialState": "init",
