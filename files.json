@@ -12,5 +12,7 @@
   "src/core/ServiceCore.js",
   "src/core/StateMachine.js",
   "src/core/ViewCore.js",
+  "src/core/utils/AudioManager.js",
+  "src/core/utils/Sound.js",
   "src/fw.js"
 ]

@@ -37,6 +37,6 @@ export default {
 		viewCore: ViewCore
 	},
 	utils: {
-		audioManager: new AudioManager(),
+		audioManager: new AudioManager()
 	}
 };

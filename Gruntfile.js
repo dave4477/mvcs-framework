@@ -1,11 +1,9 @@
 module.exports = function (grunt) {
     var appConfig = null;
 
-    // this is used to know where the app is and paste the framework
-        /*if (grunt.file.exists ("build.json")) {
-            appConfig = grunt.file.readJSON ('build.json');
-        }*/
-
+	/**
+	 * Grunt is only used to uglify the build file in the release folder.
+	 */
     var config = {
         pkg: grunt.file.readJSON("package.json"),
         fileReplace: {
@@ -21,8 +19,8 @@ module.exports = function (grunt) {
         },
         uglify: {
             build: {
-                src: './release/fw.js',
-                dest: './release/fw.min.js'
+                src: './release/fw.script.js',
+                dest: './release/fw.script.min.js'
             }
         }
     };
@@ -32,9 +30,8 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-uglify');
 
-    grunt.registerTask('build', ["deployCompiled"]);
-    grunt.registerTask('default', ['build']);
-    grunt.registerTask('fw', [/*'concat'*/,'uglify'/*, 'qunit'*/]);
+    grunt.registerTask('default', ['uglify']);
+    grunt.registerTask('fw', ['uglify']);
     grunt.registerTask('deployCompiled', function () {
 		console.log("current workspace");
 		console.log("deployed to app !");

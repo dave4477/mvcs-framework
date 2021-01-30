@@ -1,4 +1,5 @@
 import * as THREE from './../../../app/libs/three.module.js';
+import ObjectLoaders from './ObjectLoaders.js';
 
 const levelMap = [
     {posX:6, posY:-8, posZ:0, geomX:16, geomY:16, geomZ:4},
@@ -41,7 +42,13 @@ export default class Platforms {
             ground.position.set(obj.posX, obj.posY, obj.posZ);
             ground.receiveShadow = true;
             ground.name = "ground";
+
+            // const objectLoader = new ObjectLoaders();
+            // objectLoader.loadObjMTL('./assets/grass/', 'grass.mtl', './assets/grass/', 'grass.obj').then((object) => {
+            //     object.position.y = ground.geometry.boundingBox.max.y + 0.05;
+            // ground.add(object);
             scene.add(ground);
+            //});
         }
 
     }

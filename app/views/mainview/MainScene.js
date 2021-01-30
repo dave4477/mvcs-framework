@@ -5,6 +5,7 @@ import SkyBox from './SkyBox.js';
 import Platforms from './Platforms.js';
 import Character from './Character.js';
 import SnowMan from './SnowMan.js';
+import Box from './Box.js';
 import PlayerInput from './PlayerInput.js';
 
 export default class MainScene extends fw.core.viewCore {
@@ -14,13 +15,11 @@ export default class MainScene extends fw.core.viewCore {
         Physijs.scripts.worker = './libs/physijs_worker.js';
         Physijs.scripts.ammo = './ammo.js';
 
-        this._boxes = [];
         this.renderer = null;
         this.scene = null;
         this.ground = null;
         this.light = null;
         this.camera = null;
-        this.numBoxes = null;
         this.character = null;
         this.player = null;
         this.playerInput = null;
@@ -79,6 +78,7 @@ export default class MainScene extends fw.core.viewCore {
         this.addCharacter();
         this.addSnowMen();
         this.addSkyBox();
+        this.spawnBoxes();
 
         window.requestAnimationFrame(() => this.render() );
         this.scene.simulate();
@@ -89,40 +89,18 @@ export default class MainScene extends fw.core.viewCore {
         this.scene.add( skyBox );
     }
 
-    spawnBoxes(numBoxes) {
-        this.numBoxes = numBoxes;
-        this.spawnBox();
-    }
+    spawnBoxes(boxCount = 1) {
 
-    spawnBox(boxCount = 0) {
-        const box_geometry = new THREE.BoxGeometry(1, 1, 1);
-        this.createBox(box_geometry, boxCount);
-    }
-
-    createBox(box_geometry, boxCount = 0) {
-        var box, material;
-        material = Physijs.createMaterial(new THREE.MeshLambertMaterial({ map: this.loader.load( 'images/plywood.jpg' ) }), .6, .6 );
-        material.map.wrapS = material.map.wrapT = THREE.RepeatWrapping;
-        material.map.repeat.set( .5, .5 );
-
-        box = new Physijs.BoxMesh(box_geometry, material, 1);
-        box.collisions = 0;
-        box.position.set( Math.random() * 35 - 7.5, 25, Math.random() * 30 - 7.5 );
-        box.name = "box";
-        box.addEventListener('collision', this.onBoxCollision);
-        box.castShadow = true;
-        this._boxes.push(box);
-
-        if (boxCount < this.numBoxes) {
-            this.scene.add( box );
-            this.spawnBox(++boxCount)
-        }
-    }
-
-    onBoxCollision(target, linearV, angularV) {
-        if (target.name == "bottomCatcher") {
-            this.parent.remove(this);
-        }
+        setTimeout( () => {
+            for (let i = 0; i < boxCount; i++) {
+                const boxFactory = new Box(this.loader);
+                const box = boxFactory.create();
+                box.position.set( Math.random() * 35 - 7.5, 25, Math.random() * 30 - 7.5 );
+                this.scene.add(box);
+            }
+            const rand = Math.floor(Math.random() * 50);
+            this.spawnBoxes(rand);
+        }, 5000);
     }
 
     addSnowMen() {
