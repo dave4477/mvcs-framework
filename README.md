@@ -1,7 +1,7 @@
 # mvcs-framework
 
 A simple MVCS framework written in Javascript.
-This includes a stateConfig.json to include a finite statemachine, however this is optional.
+This includes a finite statemachine, however this is optional.
 There are some utilities included, like an audio manager.
 For backwards compatibility I have used babel.
 
