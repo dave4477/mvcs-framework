@@ -50,11 +50,11 @@ Then initialize it using:
 Everything that is dispatched to the context, is validated by the state machine. 
 If the event is not found for the current state, the subscriber will not receive it.
 
-Controllers can access models, services and views directly and invoke methods on them.
-Models can dispatch to the context.
-Views and controllers can listen to this context.
-Views can dispatch to the context, and also dispatch to other views, which by-passes the state validation.
-Services can dispatch to the context and access models directly. 
-Services can get and post data using a build-in backoff strategy.
+Controllers can access models, services and views directly and invoke methods on them.<br>
+Models can dispatch to the context.<br>
+Views and controllers can listen to this context.<br><br>
+Views can dispatch to the context, and also dispatch to other views, which by-passes the state validation.<br><br>
+Services can dispatch to the context and access models directly. <br><br>
+Services can get and post data using a build-in backoff strategy.<br>
 
 
