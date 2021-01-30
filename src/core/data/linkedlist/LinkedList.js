@@ -118,7 +118,7 @@ export default class LinkedList {
 
 		// Make sure we are okay to go
 		if( nodeOne === nodeTwo ) {
-			console.log("ERROR: 'SWAP' both the nodes must be different!");
+			console.log(`ERROR: 'SWAP' both the nodes must be different!`);
 			return false;
 		} else if( nodeOne > nodeTwo ) {
 			let temp = nodeOne;
@@ -127,7 +127,7 @@ export default class LinkedList {
 		}
 
 		if( nodeOne < 0 || nodeTwo < 0 ) {
-			console.log("ERROR: 'SWAP' both the nodes must be index & index can not be negative!");
+			console.log(`ERROR: 'SWAP' both the nodes must be index & index can not be negative!`);
 			return false;
 		}
 
@@ -172,7 +172,7 @@ export default class LinkedList {
 
 	traverse( fn ) {
 		if(!fn || typeof fn !== 'function') {
-			console.log("ERROR: 'TRAVERSE' function is undefined!");
+			console.log(`ERROR: 'TRAVERSE' function is undefined!`);
 			return false;
 		}
 		let current = this.head;
@@ -185,7 +185,7 @@ export default class LinkedList {
 
 	traverseReverse( fn ) {
 		if(!fn || typeof fn !== 'function') {
-			console.log("ERROR: 'TRAVERSE_REVERSE' function is undefined!");
+			console.log(`ERROR: 'TRAVERSE_REVERSE' function is undefined!`);
 			return false;
 		}
 		let current = this.tail;

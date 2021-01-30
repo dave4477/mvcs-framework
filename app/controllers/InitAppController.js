@@ -1,5 +1,5 @@
 import Constants from './../Constants.js';
-import fw from './../../src/core/fw.js';
+//import fw from './../../src/core/fw.js';
 
 const ViewLoaderService = "VIEW_LOADER_SERVICE";
 

@@ -1,4 +1,4 @@
-import fw from './../../../../src/core/fw.js';
+//import fw from './../../../../src/core/fw.js';
 import * as THREE from './../../../libs/three.module.js';
 import ObjectLoaders from './ObjectLoaders.js';
 
@@ -99,7 +99,7 @@ export default class Character extends fw.core.viewCore {
     }
 
     handlePlayerCollision(collidedWith, linearVelocity, angularVelocity) {
-        console.log(`collided with:  ${collidedWith} linearV: ${linearVelocity} angularV: ${angularVelocity}`);
+        //console.log(`collided with:  ${collidedWith} linearV: ${linearVelocity} angularV: ${angularVelocity}`);
         switch (collidedWith.name) {
             case "ground":
             case "box":

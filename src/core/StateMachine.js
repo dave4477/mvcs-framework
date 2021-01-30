@@ -37,7 +37,6 @@ export default class StateMachine {
 	addListeners() {
 
 		EventBus.subscribe("switchState", ( data ) => {
-			// console.log("Trying to move to state ", data);
 			const states = this._config.states;
 			const statesLen = states.length;
 			

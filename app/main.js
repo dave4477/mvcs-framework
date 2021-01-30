@@ -1,4 +1,3 @@
-import fw from './../src/core/fw.js';
 
 import UserModel from './models/UserModel.js';
 import ViewLoaderService from './services/ViewLoaderService.js';
@@ -11,7 +10,7 @@ export default class Main {
 	}
 
 	async loadConfig() {
-		const url = "./stateConfig.json";
+		const url = "./stateconfig.json";
 
 		const result = await fw.core.connection.xhrLoader.loadFiles([url]);
 

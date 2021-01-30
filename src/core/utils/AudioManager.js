@@ -10,13 +10,17 @@ export default class AudioManager {
     }
 
     get isWebAudioSupported() {
-        try {
-            window.AudioContext = window.AudioContext || window.webkitAudioContext;
-            return new AudioContext();
+        if (!this._context) {
+            try {
+                window.AudioContext = window.AudioContext || window.webkitAudioContext;
+                return new AudioContext();
 
-        } catch(e) {
-            console.warn("WebAudio is not supported");
-            return null;
+            } catch (e) {
+                console.warn("WebAudio is not supported");
+                return null;
+            }
+        } else {
+            return this._context;
         }
     }
 

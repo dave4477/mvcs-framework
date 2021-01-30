@@ -45,7 +45,6 @@ export default class ViewCore {
 			console.warn(`${this.constructor.name} Could not unsubsribe  from ${type}`);
 			return;
 		}
-		console.log("removing contextListener:", type);
 		this._removeEvent(this._contextListeners, {type:type, fn:fn});
 		MVCSCore.eventMap[type][fn].unsubscribe();
 		delete MVCSCore.eventMap[type][fn];
@@ -73,7 +72,6 @@ export default class ViewCore {
 
 	removeAllContextListeners() {
 		let listener = null;
-		console.log("All contextListeners:", this._contextListeners);
 		for (let i = 0; i < this._contextListeners.length; i++) {
 			listener = this._contextListeners[i];
 			this.removeContextListener(listener.type, listener.fn);

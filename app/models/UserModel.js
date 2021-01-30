@@ -1,4 +1,4 @@
-import fw from './../../src/core/fw.js';
+//import fw from './../../src/core/fw.js';
 import Constants from './../Constants.js';
 
 export default class UserModel extends fw.core.modelCore {

@@ -1,4 +1,4 @@
-import fw from './../../../../src/core/fw.js';
+//import fw from './../../../../src/core/fw.js';
 import * as THREE from './../../../libs/three.module.js';
 import ObjectLoaders from './ObjectLoaders.js';
 

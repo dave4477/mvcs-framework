@@ -147,9 +147,6 @@ var fw = (function () {
 					if (stateConfiguration.states[i].stateName == stateConfiguration.states.current) {
 						for (var e = 0; e < stateConfiguration.states[i].events.length; e++) {
 							if (stateConfiguration.states[i].events[e] === eventType) {
-
-								console.log("EventBus::state:", stateConfiguration.states.current, ":publishing:", eventType);
-
 								Object.keys(subscriptions[eventType]).forEach(key => subscriptions[eventType][key](arg));
 							}
 						}
@@ -483,7 +480,6 @@ var fw = (function () {
 			SYSTEM_STATE.outbound.push(config.initialState);
 			const newItem = this._config.states.push(SYSTEM_STATE);
 
-			console.log("newItem:", this._config.states);
 			EventBus.stateConfig = config.states;
 			
 			this.addListeners();
@@ -914,6 +910,164 @@ var fw = (function () {
 		}
 	}
 
+	class Sound {
+	    constructor(id, buffer, context) {
+	        this.id = id;
+	        this._autoStart = true;
+	        this._context = context;
+	        this._mainGain = context.createGain();
+	        this._masterGain = null;
+
+	        this.sourceNode = context.createBufferSource();
+	        this.sourceNode.buffer = buffer;
+
+	        this._isPlaying = false;
+	    }
+
+	    set autoStart(value) {
+	        this._autoStart = value;
+	    }
+
+	    set masterGain(value) {
+	        this._masterGain = value;
+	    }
+
+	    connectNodes(source) {
+	        source.connect(this._mainGain);
+	        if (this._masterGain) {
+	            this._mainGain.connect(this._masterGain);
+	        }
+	        this._masterGain.connect(this._context.destination);
+	    }
+
+	    play(offset = 0) {
+	        if (this._context && this._context.state === 'suspended') {
+	            this._context.resume();
+	        }
+	        if (this._context) {
+	            const newSource = this._context.createBufferSource();
+	            newSource.buffer = this.sourceNode.buffer;
+	            this.sourceNode = newSource;
+	            this.connectNodes(newSource);
+	            newSource.start();
+	        } else {
+	            this.sourceNode.play();
+	        }
+	        this._isPlaying = true;
+	        console.log(`[Sound] playing sound ${this.id}`);
+	    };
+
+	    stop() {
+	        this.sourceNode.stop();
+	        this._isPlaying = false;
+	        console.log(`[Sound] ${this.id} was stopped`);
+	    }
+
+	    setVolume(value) {
+	        this._mainGain.gain.setValueAtTime(value, 0);
+	    }
+	}
+
+	class AudioManager {
+	    constructor() {
+	        this.loader = new Backoff();
+	        this._context = null;
+	        this._sounds = {};
+	        this._masterGain = null;
+	    }
+
+	    get isWebAudioSupported() {
+	        if (!this._context) {
+	            try {
+	                window.AudioContext = window.AudioContext || window.webkitAudioContext;
+	                return new AudioContext();
+
+	            } catch (e) {
+	                console.warn("WebAudio is not supported");
+	                return null;
+	            }
+	        } else {
+	            return this._context;
+	        }
+	    }
+
+	    /**
+	     * Will start playing the sound requested by id.
+	     * If the sound was already loaded, we play it from cache if autoStart is true,
+	     * otherwise we will load the sound first and then play it if autoStart is true.
+	     *
+	     * @method playSound.
+	     * @param {string} id The id or url from where to load the sound.
+	     * @param {boolean} loop Whether to loop the playback. Default is false.
+	     * @param {number} volume The amount of damage we want to cause to ears. 0 for no sound, 1 for normal volume. Default is 1.
+	     * @param {boolean} autoStart Automatically starts playing when <code>true</code>. Default is true.
+	     */
+	    playSound(id, loop = false, volume = 1, autoStart = true) {
+	        if (!this._context) {
+	            this._context = this.isWebAudioSupported;
+	            this._masterGain = this._context.createGain();
+	        }
+	        if (this._sounds[id]) {
+	            this._sounds[id].loop = loop = this._sounds[id].sourceNode.loop = loop;
+	            this._sounds[id].setVolume(volume);
+	            this._sounds[id].autoStart = autoStart;
+	            this._sounds[id].masterGain = this._masterGain;
+
+	            if (autoStart) {
+	                this._sounds[id].play();
+	            }
+	            return;
+	        } else {
+	            this._loadSounds(id).then((result) => {
+	                this.playSound(id, loop, volume, autoStart);
+	            });
+	        }
+	    };
+
+	    muteSounds() {
+	        this._masterGain.gain.setValueAtTime(0, 0);
+	    };
+
+	    unmuteSounds() {
+	        this._masterGain.gain.setValueAtTime(1, 0);
+	    };
+
+	    stopSound(id) {
+	        if (this._sounds[id]) {
+	            this._sounds[id].stop();
+	        }
+	    };
+
+	    getAllSounds() {
+	        return this._sounds;
+	    };
+
+	    setVolume(id, value) {
+	        if (this._sounds[id]) {
+	            this._sounds[id].setVolume(value);
+	        }
+	    }
+
+	    /**
+	     * Loads and decodes sounds from an array of URLs.
+	     * @param {Array} sounds. An array of urls to a soundfile.
+	     * @returns {Promise} A promise with all loaded objects of type Sound,
+	     *					  once resolved ALL sounds are loaded and decoded. .
+	     */
+	    _loadSounds(sound) {
+	        return new Promise((resolve, reject) => {
+	            this.loader.getURL(sound)
+	                .then(response => response.arrayBuffer())
+	                .then(arrayBuffer => this._context.decodeAudioData(arrayBuffer))
+	                .then(audioBuffer => {
+	                    var snd = new Sound(sound, audioBuffer, this._context);
+	                    this._sounds[sound] = snd;
+	                    resolve(this._sounds);
+	                });
+	        });
+	    }
+	}
+
 	/**
 	 * Very simple lightweight "MVCS" framework, including
 	 * an optional state machine and utils.
@@ -939,6 +1093,9 @@ var fw = (function () {
 			modelCore: ModelCore,
 			serviceCore: ServiceCore,
 			viewCore: ViewCore
+		},
+		utils: {
+			audioManager: new AudioManager(),
 		}
 	};
 
