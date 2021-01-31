@@ -42,8 +42,10 @@ Creating a state configuration:<br>
 
 
 
-Then initialize it using:
-<code>fw.setStateConfiguration(json);</code><br>
+Then run it (after instantiating your models, controllers and services) using:
+<code>fw.setStateConfiguration(json);</code><br><br>
+As shown in the example, the state machine will switch to the initial state,
+which will fire a method on a controller defined in the preProcess array of the json file.
 
 Everything that is dispatched to the context, is validated by the state machine. 
 If the event is not found for the current state, the subscriber will not receive it.
