@@ -1,34 +1,21 @@
 import Constants from './../Constants.js';
-//import fw from './../../src/core/fw.js';
-
-const ViewLoaderService = "VIEW_LOADER_SERVICE";
 
 export default class InitAppController extends fw.core.controllerCore {
 	constructor() {
 		super();
-		this.userModel = this.getModelByName("USER_MODEL");
-		this.addListeners();
-	}
-
-	addListeners() {
 	}
 
 	startApp() {
 		console.log(`InitAppController::startApp`);		
-		this.loadView("MAIN_VIEW", "./views/mainview/mainView.html");
+		this.loadView('./views/mainview/mainView.html');
 	}
-	
-	async loadView(viewName, url) {
-		const mainView = this.getViewByName(viewName);
-		const viewLoaderService = this.getServiceByName(ViewLoaderService);
+
+	/**
+	 * Dynamically loads and attach view.
+ 	 */
+	async loadView(url) {
+		const viewLoaderService = this.getServiceByName(Constants.servives.VIEW_LOADER_SERVICE);
 		const loadedView = await viewLoaderService.loadView(url);
-		
-		if (loadedView) {
-			fw.core.parsers.viewParser.parseHTML(loadedView).then(html => {
-				mainView.addHTML(html);
-			});
-		} else {
-			console.log(`Something went wrong: ${loadedView}`);
-		}
+		new loadedView.script().addHTML(loadedView.html);
 	}
 }

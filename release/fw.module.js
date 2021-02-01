@@ -340,7 +340,33 @@ var fw = (function () {
 		}	
 		
 		async loadView(url) {
-			return this.backoff.getURL(url);
+			return new Promise((resolve, reject) =>{
+				this.backoff.getURL(url).then((loadedView) =>{
+					if (loadedView) {
+						fw.core.parsers.viewParser.parseHTML(loadedView).then(html => {
+							// Check if there is a script attached.
+							const content = html.getElementsByTagName('body')[0].firstChild;
+							const script = content.hasAttribute('data-api') ? content.getAttribute('data-api') : null;
+							if (script) {
+								import(script).then(loadedscript => {
+									resolve( {
+										script: loadedscript.default,
+										html: html
+									});
+								});
+							} else {
+								resolve({
+									script: null,
+									html: html
+								});
+							}
+						});
+					} else {
+						console.log(`Something went wrong: ${loadedView}`);
+						reject();
+					}
+				});
+			});
 		}
 
 		async httpGet(url, data = null) {
@@ -395,7 +421,6 @@ var fw = (function () {
 				console.warn(`${this.constructor.name} Could not unsubsribe  from ${type}`);
 				return;
 			}
-			console.log("removing contextListener:", type);
 			this._removeEvent(this._contextListeners, {type:type, fn:fn});
 			MVCSCore.eventMap[type][fn].unsubscribe();
 			delete MVCSCore.eventMap[type][fn];
@@ -423,7 +448,6 @@ var fw = (function () {
 
 		removeAllContextListeners() {
 			let listener = null;
-			console.log("All contextListeners:", this._contextListeners);
 			for (let i = 0; i < this._contextListeners.length; i++) {
 				listener = this._contextListeners[i];
 				this.removeContextListener(listener.type, listener.fn);
@@ -490,7 +514,6 @@ var fw = (function () {
 		addListeners() {
 
 			EventBus.subscribe("switchState", ( data ) => {
-				// console.log("Trying to move to state ", data);
 				const states = this._config.states;
 				const statesLen = states.length;
 				
@@ -769,7 +792,7 @@ var fw = (function () {
 
 			// Make sure we are okay to go
 			if( nodeOne === nodeTwo ) {
-				console.log("ERROR: 'SWAP' both the nodes must be different!");
+				console.log(`ERROR: 'SWAP' both the nodes must be different!`);
 				return false;
 			} else if( nodeOne > nodeTwo ) {
 				let temp = nodeOne;
@@ -778,7 +801,7 @@ var fw = (function () {
 			}
 
 			if( nodeOne < 0 || nodeTwo < 0 ) {
-				console.log("ERROR: 'SWAP' both the nodes must be index & index can not be negative!");
+				console.log(`ERROR: 'SWAP' both the nodes must be index & index can not be negative!`);
 				return false;
 			}
 
@@ -823,7 +846,7 @@ var fw = (function () {
 
 		traverse( fn ) {
 			if(!fn || typeof fn !== 'function') {
-				console.log("ERROR: 'TRAVERSE' function is undefined!");
+				console.log(`ERROR: 'TRAVERSE' function is undefined!`);
 				return false;
 			}
 			let current = this.head;
@@ -836,7 +859,7 @@ var fw = (function () {
 
 		traverseReverse( fn ) {
 			if(!fn || typeof fn !== 'function') {
-				console.log("ERROR: 'TRAVERSE_REVERSE' function is undefined!");
+				console.log(`ERROR: 'TRAVERSE_REVERSE' function is undefined!`);
 				return false;
 			}
 			let current = this.tail;
@@ -1072,7 +1095,7 @@ var fw = (function () {
 	 * Very simple lightweight "MVCS" framework, including
 	 * an optional state machine and utils.
 	 */
-	var fw = {
+	var fw$1 = {
 		core: {
 			createStateMachine: function(stateConfig) {
 				new StateMachine().init(stateConfig);
@@ -1095,10 +1118,10 @@ var fw = (function () {
 			viewCore: ViewCore
 		},
 		utils: {
-			audioManager: new AudioManager(),
+			audioManager: new AudioManager()
 		}
 	};
 
-	return fw;
+	return fw$1;
 
 }());

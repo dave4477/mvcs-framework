@@ -1,8 +1,6 @@
-
 import UserModel from './models/UserModel.js';
 import ViewLoaderService from './services/ViewLoaderService.js';
 import InitAppController from './controllers/InitAppController.js';
-import MainView from './views/mainview/MainView.js';
 
 export default class Main {
 	constructor(){
@@ -22,9 +20,6 @@ export default class Main {
 
 		// init controllers
 		new InitAppController();
-
-		// init views
-		new MainView();
 
 		// init stateMachine's config
 		fw.core.createStateMachine(result[url]);

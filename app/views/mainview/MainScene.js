@@ -1,4 +1,3 @@
-//import fw from './../../../../src/core/fw.js';
 import * as THREE from './../../libs/three.module.js';
 import { Physijs } from './../../libs/physi.js';
 import SkyBox from './SkyBox.js';
@@ -10,10 +9,12 @@ import PlayerInput from './PlayerInput.js';
 
 export default class MainScene extends fw.core.viewCore {
     constructor() {
-        super("MAIN_SCENE");
+        super("MainScene");
 
         Physijs.scripts.worker = './libs/physijs_worker.js';
         Physijs.scripts.ammo = './ammo.js';
+        // Physijs.scripts.worker = './/libs/worker.wasm.js';
+        // Physijs.scripts.ammo = './../../libs/ammo.wasm.js';
 
         this.renderer = null;
         this.scene = null;

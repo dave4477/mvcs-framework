@@ -10,7 +10,7 @@ const MASS = 1;
 
 export default class Character extends fw.core.viewCore {
     constructor(jumpForce = FORCE_JUMP, moveForce = FORCE_MOVE, damping = DAMPING, mass = MASS){
-        super("CHARACTER");
+        super("Character");
 
         this.character = {};
         this.objectLoader = new ObjectLoaders();

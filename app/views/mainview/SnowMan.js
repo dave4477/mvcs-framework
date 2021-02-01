@@ -4,7 +4,7 @@ import ObjectLoaders from './ObjectLoaders.js';
 
 export default class SnowMan extends fw.core.viewCore {
     constructor() {
-        super("SNOW_MAN");
+        super("SnowMan");
         this.objLoader = new ObjectLoaders();
     }
 

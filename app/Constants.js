@@ -11,8 +11,13 @@ export default {
 	controllers: {
 		INIT_APP_CONTROLLER: "InitAppController"
 	},
+	servives: {
+		VIEW_LOADER_SERVICE: "ViewLoaderService"
+	},
 	views: {
-		MAIN_VIEW: "MainView"
+		MAIN_VIEW: "MainView",
+		MAIN_SCENE: "MainScene",
+		CHARACTER: "Character",
+		SNOW_MAN: "SnowMan"
 	}
-	
 }
