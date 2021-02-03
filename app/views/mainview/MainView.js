@@ -6,8 +6,8 @@ export default class MainView extends fw.core.viewCore {
 		super("MainView");
 	}
 	
-	addHTML(html) {
-		this.addView(html);
+	addHTML(html, parent = null) {
+		this.addView(html, parent);
 		this.mainScene = new MainScene();
 		this.mainScene.initScene();
 		this.addContextListener(Constants.events.USER_MODEL_UPDATED, this.updateView);

@@ -2,6 +2,7 @@ import * as THREE from './../../../app/libs/three.module.js';
 import { DDSLoader } from './../../../app/libs/jsm/loaders/DDSLoader.js';
 import { MTLLoader } from './../../../app/libs/jsm/loaders/MTLLoader.js';
 import { OBJLoader } from './../../../app/libs/jsm/loaders/OBJLoader.js';
+import { FBXLoader } from './../../../app/libs/jsm/loaders/FBXLoader.js';
 
 export default class ObjectLoaders {
     constructor() {
@@ -12,6 +13,15 @@ export default class ObjectLoaders {
         return new Promise((resolve, reject) => {
             loader.load(url, (loadedMesh) => {
                 resolve(loadedMesh);
+            });
+        });
+    }
+
+    loadFBX(url) {
+        return new Promise((resolve, reject) => {
+            const loader = new FBXLoader();
+            loader.load(url, (object) => {
+                resolve(object);
             });
         });
     }

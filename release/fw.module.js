@@ -321,64 +321,9 @@ var fw = (function () {
 		}
 	}
 
-	class ServiceCore {
-		constructor(name) {
-			MVCSCore.serviceMap[name] = this;
-			this.backoff = new Backoff();
-		}
-		
-		dispatch(e, args) {
-			EventBus.publish(e, args);
-		}
-		
-		getModelByName(name) {
-			return MVCSCore.modelMap[name];
-		}
-		
-		getServiceByName() {
-			return MVCSCore.serviceMap[name];
-		}	
-		
-		async loadView(url) {
-			return new Promise((resolve, reject) =>{
-				this.backoff.getURL(url).then((loadedView) =>{
-					if (loadedView) {
-						fw.core.parsers.viewParser.parseHTML(loadedView).then(html => {
-							// Check if there is a script attached.
-							const content = html.getElementsByTagName('body')[0].firstChild;
-							const script = content.hasAttribute('data-api') ? content.getAttribute('data-api') : null;
-							if (script) {
-								import(script).then(loadedscript => {
-									resolve( {
-										script: loadedscript.default,
-										html: html
-									});
-								});
-							} else {
-								resolve({
-									script: null,
-									html: html
-								});
-							}
-						});
-					} else {
-						console.log(`Something went wrong: ${loadedView}`);
-						reject();
-					}
-				});
-			});
-		}
-
-		async httpGet(url, data = null) {
-			return this.backoff.getURL(url);
-		}
-		async httpPost(url, data = null) {
-			return this.backoff.postURL(url);
-		}
-	}
-
 	class ViewCore {
 		constructor(name) {
+			console.log(`Creating view ${name}`);
 			MVCSCore.viewMap[name] = this;
 			this._contextListeners = [];
 			this._viewListeners = [];
@@ -478,6 +423,69 @@ var fw = (function () {
 		}
 	}
 
+	class ServiceCore {
+		constructor(name) {
+			MVCSCore.serviceMap[name] = this;
+			this.backoff = new Backoff();
+		}
+		
+		dispatch(e, args) {
+			EventBus.publish(e, args);
+		}
+		
+		getModelByName(name) {
+			return MVCSCore.modelMap[name];
+		}
+		
+		getServiceByName() {
+			return MVCSCore.serviceMap[name];
+		}	
+		
+		async loadView(url) {
+			return new Promise((resolve, reject) =>{
+				this.backoff.getURL(url).then((loadedView) =>{
+					if (loadedView) {
+						fw.core.parsers.viewParser.parseHTML(loadedView).then(html => {
+							// Check if there is a script attached.
+							const content = html.getElementsByTagName('body')[0].firstChild;
+							const script = content.hasAttribute('data-api') ? content.getAttribute('data-api') : null;
+							if (script) {
+								import(script).then(loadedscript => {
+									resolve( {
+										script: loadedscript.default,
+										html: html
+									});
+								});
+							} else {
+								const id = content.getAttribute('id');
+								const script = class generatedViewClass extends ViewCore {
+									constructor(name) {
+										super(name || id);
+									}
+								};
+
+								resolve({
+									script: script,
+									html: html
+								});
+							}
+						});
+					} else {
+						console.log(`Something went wrong: ${loadedView}`);
+						reject();
+					}
+				});
+			});
+		}
+
+		async httpGet(url, data = null) {
+			return this.backoff.getURL(url);
+		}
+		async httpPost(url, data = null) {
+			return this.backoff.postURL(url);
+		}
+	}
+
 	/**
 	 * Switching states should:
 	 * 1. postProcess current state
@@ -502,7 +510,7 @@ var fw = (function () {
 			this._currentState = SYSTEM_STATE.stateName;
 			config.states.current = this._currentState;
 			SYSTEM_STATE.outbound.push(config.initialState);
-			const newItem = this._config.states.push(SYSTEM_STATE);
+			this._config.states.push(SYSTEM_STATE);
 
 			EventBus.stateConfig = config.states;
 			

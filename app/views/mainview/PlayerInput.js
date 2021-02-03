@@ -1,34 +1,38 @@
 const keyRegister = {
     "ArrowLeft": false,
     "ArrowRight": false,
-    "Space": false
+    "Space": false,
+    "KeyA": false,
+    "KeyD": false,
+    "KeyP": false,
+    "KeyW": false,
+    "KeyX": false
 };
 
-export default class PlayerInput {
+export default class PlayerInput extends fw.core.viewCore {
     constructor(player) {
+        super("PlayerInput");
         this.player = player;
         this.addKeyListeners();
     }
 
+    get pressedKeys() {
+        return keyRegister;
+    }
+
     addKeyListeners() {
         document.body.addEventListener('keydown', (e) => {
-            keyRegister[e.code] = true;
-            this.player.keyPressed = e.code;
+            if (Object.keys(keyRegister).indexOf(e.code)>-1) {
+                keyRegister[e.code] = true;
+                this.dispatchToView('KeyPressed', keyRegister);
+            }
         });
         document.body.addEventListener('keyup', (e) => {
-            let keyPressed = [];
-            keyRegister[e.code] = false;
-
-            Object.keys(keyRegister).map(key => {
-                if (keyRegister[key] == true) {
-                    keyPressed.push(key);
-                }
-            });
-            if (keyPressed.length) {
-                this.player.keyPressed = keyPressed[0];
-            } else {
-                this.player.keyPressed = null;
+            if (Object.keys(keyRegister).indexOf(e.code)>-1) {
+                keyRegister[e.code] = false;
             }
+            this.dispatchToView('KeyUp', e.code);
+            this.dispatchToView('KeyPressed', keyRegister);
         });
     }
 

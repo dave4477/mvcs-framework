@@ -17,6 +17,27 @@ module.exports = function (grunt) {
                 dest: './release/fw.js'
             }
         },
+		rollup: {
+			options: {
+			  'format' : 'iife',
+			  'name' : 'fw',
+			  /*
+				plugins: function () {
+				  return [
+					babel({
+					  exclude: './node_modules/**',
+					  presets: ['es2015-rollup'],
+					}),
+				  ];
+				},			  
+				*/
+			},
+			main: {
+				dest: 'release/fw.module.js',
+				src: 'src/core/fw.js' // --format iife --name "fw"
+
+			},
+		},
         uglify: {
             build: {
                 src: './release/fw.script.js',
@@ -28,10 +49,12 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-requirejs');
     grunt.loadNpmTasks('grunt-file-replace');
     grunt.loadNpmTasks('grunt-contrib-concat');
+	grunt.loadNpmTasks('grunt-rollup');
     grunt.loadNpmTasks('grunt-contrib-uglify');
 
     grunt.registerTask('default', ['uglify']);
     grunt.registerTask('fw', ['uglify']);
+	grunt.registerTask('roll', ['rollup']);
     grunt.registerTask('deployCompiled', function () {
 		console.log("current workspace");
 		console.log("deployed to app !");

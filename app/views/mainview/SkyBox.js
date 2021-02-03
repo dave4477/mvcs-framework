@@ -6,10 +6,11 @@ export default class SkyBox {
 
     static create() {
         const loader = new THREE.TextureLoader();
-        const imagePrefix = "images/dawnmountain-";
+        // const imagePrefix = "images/dawnmountain-";
+        const imagePrefix = "images/stormydays-";
         const directions  = ["xpos", "xneg", "ypos", "yneg", "zpos", "zneg"];
         const imageSuffix = ".png";
-        const skyGeometry = new THREE.CubeGeometry( 500, 500, 500 );
+        const skyGeometry = new THREE.CubeGeometry( 1000, 1000, 1000 );
 
         var materialArray = [];
         for (let i = 0; i < 6; i++)

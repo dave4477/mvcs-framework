@@ -2,18 +2,20 @@ import * as THREE from './../../../app/libs/three.module.js';
 import ObjectLoaders from './ObjectLoaders.js';
 
 const levelMap = [
-    {posX:6, posY:-8, posZ:0, geomX:16, geomY:16, geomZ:4},
-    {posX:25, posY:-8, posZ:0, geomX:16, geomY:16, geomZ:4},
-    {posX:43, posY:-9, posZ:0, geomX:16, geomY:16, geomZ:4},
-    {posX:59, posY:-9, posZ:0, geomX:16, geomY:16, geomZ:4},
+    {type:"ground", posX:12, posY:-8, posZ:0, geomX:32, geomY:16, geomZ:4},
+    {type:"ground", posX:48, posY:-8, posZ:0, geomX:34, geomY:16, geomZ:4},
 
         // 1st floor
-        {posX:59, posY:1, posZ:0, geomX:6, geomY:1, geomZ:1},
+        {type:"ground", posX:68, posY:2, posZ:0, geomX:6, geomY:1, geomZ:1},
             // 2nd
-            {posX:68.5, posY:4, posZ:0, geomX:6, geomY:1, geomZ:1},
+            {type:"ground", posX:77, posY:5, posZ:0, geomX:8, geomY:1, geomZ:1},
 
-    {posX:75, posY:-9, posZ:0, geomX:16, geomY:16, geomZ:4},
-    {posX:92, posY:-8, posZ:0, geomX:16, geomY:16, geomZ:4}
+        // 1st floor
+        {type:"ground", posX:86, posY:2, posZ:0, geomX:6, geomY:1, geomZ:1},
+
+    {type:"ground", posX:155, posY:-8, posZ:0, geomX:128, geomY:16, geomZ:4},
+
+    {type:"ground-falling", posX:222, posY:0, posZ:0, geomX:4, geomY:0.5, geomZ:4}
 ];
 
 export default class Platforms {
@@ -21,13 +23,12 @@ export default class Platforms {
     }
     
     static create(scene) {
-        // // Ground
+        // Ground
         const loader = new THREE.TextureLoader();
-
         for (let i = 0; i < levelMap.length; i++) {
             const obj = levelMap[i];
             const ground_material = Physijs.createMaterial(
-                new THREE.MeshLambertMaterial({map: loader.load('images/rocks.jpg')}),
+                new THREE.MeshLambertMaterial({map: loader.load('images/groundtexture02.jpg')}),
                 .0, // high friction
                 0 // low restitution
             );
@@ -41,17 +42,13 @@ export default class Platforms {
             );
             ground.position.set(obj.posX, obj.posY, obj.posZ);
             ground.receiveShadow = true;
-            ground.name = "ground";
-
-            // const objectLoader = new ObjectLoaders();
-            // objectLoader.loadObjMTL('./assets/grass/', 'grass.mtl', './assets/grass/', 'grass.obj').then((object) => {
-            //     object.position.y = ground.geometry.boundingBox.max.y + 0.05;
-            // ground.add(object);
+            ground.name = obj.type;
             scene.add(ground);
-            //});
         }
 
     }
+
+
 
     static createBottomCatcher(scene) {
         const loader = new THREE.TextureLoader();
@@ -69,7 +66,8 @@ export default class Platforms {
             ground_material,
             0 // mass
         );
-        ground.position.set(0, -50, 0);
+        ground.visible = false;
+        ground.position.set(0, -30, 0);
         ground.name = "bottomCatcher";
         scene.add(ground);
     }

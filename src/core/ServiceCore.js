@@ -1,6 +1,7 @@
 import EventBus from './EventBus.js';
 import MVCSCore from './MVCSCore.js';
 import Backoff from './Backoff.js';
+import ViewCore from './ViewCore.js';
 
 export default class ServiceCore {
 	constructor(name) {
@@ -36,8 +37,15 @@ export default class ServiceCore {
 								});
 							});
 						} else {
+							const id = content.getAttribute('id');
+							const script = class generatedViewClass extends ViewCore {
+								constructor(name) {
+									super(name || id);
+								}
+							};
+
 							resolve({
-								script: null,
+								script: script,
 								html: html
 							});
 						}
