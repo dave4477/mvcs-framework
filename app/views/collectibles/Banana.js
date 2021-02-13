@@ -8,6 +8,7 @@ export default class Banana extends fw.core.viewCore {
         this._y = y;
         this._collectible = null;
         this._object = null;
+        this.points = 10;
     }
     
     create(container) {

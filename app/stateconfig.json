@@ -26,7 +26,9 @@
 			"ResumeSimulation",
 			"SimulationPaused",
 			"SimulationResumed",
+			"UpdatePlayerScore",
 			"PlayerDied",
+			"PlayerRespawned",
 			"PlayerModelUpdated",
 			"LoadView"
 		]

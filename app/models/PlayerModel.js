@@ -22,7 +22,9 @@ export default class PlayerModel extends fw.core.modelCore {
 	}
 
 	set score(value) {
-		this._score = value;
+		this._score += value;
+		console.log("score:", this._score);
+		this.dispatch(Constants.events.PLAYER_MODEL_UPDATED, {alive:this._isAlive, score:this._score});
 	}
 
 }

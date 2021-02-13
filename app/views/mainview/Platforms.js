@@ -10,8 +10,8 @@ const levelMap = [
             // 2nd
             {type:"ground", x:77, y:5, z:0, width:8, height:1, depth:8},
 
-        // 1st floor
-        {type:"ground", x:86, y:2, z:0, width:6, height:1, depth:8},
+        {type:"ground-falling", x:86, y:2, z:0, width:4, height:0.4, depth:4},
+
 
     {type:"ground", x:155, y:-8, z:0, width:128, height:16, depth:8},
 

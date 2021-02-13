@@ -183,9 +183,9 @@ export default class Character extends fw.core.viewCore {
                 break;
 
             case "spike":
-                // if (targetObject.userData.isDeadly) {
-                //     this.dispatchToContext(Constants.events.PLAYER_DIED);
-                // }
+                if (targetObject.userData.isDeadly) {
+                    this.dispatchToContext(Constants.events.PLAYER_DIED);
+                }
                 break;
             case "crusher":
             case "bear":
@@ -193,13 +193,6 @@ export default class Character extends fw.core.viewCore {
                 this.dispatchToContext(Constants.events.PLAYER_DIED);
                 break;
         }
-    }
-
-    respawn() {
-        this.character.mesh.__dirtyPosition = true;
-        this.character.mesh.position.y = 4;
-        this.character.mesh.position.x = 0;
-        this.character.mesh.position.z = 0;
     }
 
     checkRay(rc) {
@@ -210,6 +203,7 @@ export default class Character extends fw.core.viewCore {
             for (let i = 0; i < intersects.length; i++) {
                 if (intersects[i].object.name == "Collectible") {
                     if (intersects[i].distance < 1) {
+                        this.dispatchToContext(Constants.events.UPDATE_PLAYER_SCORE, {points: intersects[i].object.userData.points});
                         intersects[i].object.parent.remove(intersects[i].object);
                     }
                 }
@@ -217,8 +211,15 @@ export default class Character extends fw.core.viewCore {
 
         }
     }
-    updatePlayer() {
 
+    respawn() {
+        this.character.mesh.__dirtyPosition = true;
+        this.character.mesh.position.y = 4;
+        this.character.mesh.position.x = 0;
+        this.character.mesh.position.z = 0;
+    }
+
+    updatePlayer() {
         this.checkRay(this.rayCastR);
         this.checkRay(this.rayCastL);
         this.checkRay(this.rayCastU);

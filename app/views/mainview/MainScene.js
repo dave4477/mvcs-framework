@@ -23,8 +23,6 @@ export default class MainScene extends fw.core.viewCore {
 
         Physijs.scripts.worker = './libs/physijs_worker.js';
         Physijs.scripts.ammo = './ammo.js';
-        // Physijs.scripts.worker = './/libs/worker.wasm.js';
-        // Physijs.scripts.ammo = './../../libs/ammo.wasm.js';
 
         this.renderer = null;
         this.scene = null;
@@ -42,7 +40,7 @@ export default class MainScene extends fw.core.viewCore {
         this._angle = 0;
         this._radius = 14;
         this._isPaused = false;
-        this._playerData = {isAlive:true, score:0};
+        this._playerData = {alive:true, score:0};
 
         this._fallingRocks = null;
 
@@ -64,7 +62,7 @@ export default class MainScene extends fw.core.viewCore {
         if (e) {
             this._playerData = e;
 
-            if (!e.isAlive) {
+            if (!e.alive) {
                 const vec3 = new THREE.Vector3(0, this._cameraY, 14);
                 // Create a tween for position first
                 var tweenObj = {x:this.camera.position.x, y:this.camera.position.y};
@@ -77,7 +75,8 @@ export default class MainScene extends fw.core.viewCore {
                     })
                     .onComplete(() => {
                         this.player.respawn();
-                        this._playerData.isAlive = true;
+                        this.dispatchToContext(Constants.events.PLAYER_RESPAWNED);
+                        //this._playerData.alive = true;
                     })
                     .start();
             }
@@ -109,8 +108,7 @@ export default class MainScene extends fw.core.viewCore {
 
         this.camera = camera1;
 
-        this.camera.position.set( 0, 1, 20 );
-        this.camera.lookAt( this.scene.position );
+        this.camera.position.set( 0, 5, 15 );
         this.scene.add( this.camera );
 
         // Light
@@ -135,7 +133,6 @@ export default class MainScene extends fw.core.viewCore {
         }
 
         this.addPlatforms();
-        this.addCharacter();
         this.addSnowMen();
         this.addSkyBox();
         this.addPalms();
@@ -152,6 +149,12 @@ export default class MainScene extends fw.core.viewCore {
         document.addEventListener("visibilitychange", this.handleVisibilityChange.bind(this), false);
 
         this.scene.simulate();
+
+        setTimeout(this.startGame.bind(this), 3000);
+    }
+
+    startGame() {
+        this.addCharacter();
     }
 
     handleVisibilityChange(e) {
@@ -257,7 +260,7 @@ export default class MainScene extends fw.core.viewCore {
     onPlayerLoaded(data) {
         this.character = data;
         this.character.mesh.position.y = 4;
-        this.character.mesh.position.x = 190;
+        this.character.mesh.position.x = 0;
         this.scene.add( this.character.mesh);
         this.scene.add( this.character.model);
         this.playerInput = new PlayerInput(this.player);
@@ -265,7 +268,7 @@ export default class MainScene extends fw.core.viewCore {
     
 
     updateCamera() {
-        if (this.camera && this._playerData.isAlive) {
+        if (this.camera && this._playerData.alive) {
             const player = this.character.mesh;
             const vec3 = new THREE.Vector3(0, this._cameraY, 14);
 
@@ -329,7 +332,7 @@ export default class MainScene extends fw.core.viewCore {
 
             this.dispatchToView('frameUpdate');
 
-            if (this.character && this.character.model && this._playerData.isAlive) {
+            if (this.character && this.character.model && this._playerData.alive) {
                 this.player.updatePlayer();
                 this.updateCamera();
             }

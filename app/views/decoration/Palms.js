@@ -14,9 +14,14 @@ const palm1Positions = [
 
 ];
 const palm2Positions = [
+    {posX:100, posY:-1.5, posZ:-8, scale:0.5, asset:'./assets/palm02/Palm2.fbx'},
+    {posX:104, posY:-2, posZ:-8, scale:0.5, asset:'./assets/palm02/Palm2.fbx'},
+    {posX:105, posY:-2, posZ:-7, scale:0.5, asset:'./assets/palm02/Palm2.fbx'},
+    {posX:110, posY:-3, posZ:-10, scale:0.5, asset:'./assets/palm02/Palm2.fbx'},
+
     {posX:130, posY:-4, posZ:-12, scale:0.5, asset:'./assets/palm02/Palm1.fbx'},
     {posX:134, posY:-4, posZ:-10, scale:0.5, asset:'./assets/palm02/Palm1.fbx'},
-    {posX:136, posY:-1, posZ:-8, scale:0.5, asset:'./assets/palm02/Palm2.fbx'},
+    {posX:136, posY:-1.5, posZ:-8, scale:0.5, asset:'./assets/palm02/Palm2.fbx'},
     {posX:144, posY:-4, posZ:-10, scale:0.5, asset:'./assets/palm02/Palm1.fbx'},
     {posX:180, posY:-2, posZ:-8, scale:0.5, asset:'./assets/palm02/Palm2.fbx'},
     {posX:200, posY:-2, posZ:-6, scale:0.5, asset:'./assets/palm02/Palm2.fbx'}

@@ -9,7 +9,8 @@ export default {
 		SIMULATION_RESUMED: "SimulationResumed",
 		PLAYER_DIED: "PlayerDied",
 		PLAYER_RESPAWNED: "PlayerRespawned",
-		PLAYER_MODEL_UPDATED: "PlayerModelUpdated"
+		PLAYER_MODEL_UPDATED: "PlayerModelUpdated",
+		UPDATE_PLAYER_SCORE: "UpdatePlayerScore"
 	},
 	models: {
 		SIMULATION_MODEL: "SimulationModel",

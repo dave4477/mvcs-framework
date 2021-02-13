@@ -9,7 +9,11 @@ export default class InitAppController extends fw.core.controllerCore {
 
 	startApp() {
 		console.log(`InitAppController::startApp`);		
-		this.loadView('./views/mainlayout/mainLayout.html', './views/mainview/mainView.html', './views/uiview/ui.html');
+		this.loadView(
+			'./views/mainlayout/mainLayout.html',
+			'./views/mainview/mainView.html',
+			'./views/uiview/ui.html'
+		);
 
 		this.addListener(Constants.events.PAUSE_SIMULATION, ()=> {
 			this.simulationModel.isPaused = true;

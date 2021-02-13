@@ -20,5 +20,9 @@ export default class PlayerController extends fw.core.controllerCore {
 			this.playerModel.isAlive = true;
 		});
 
+		this.addListener(Constants.events.UPDATE_PLAYER_SCORE, (data)=> {
+			this.playerModel.score = data.points;
+		});
+
 	}
 }
