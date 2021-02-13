@@ -9,18 +9,25 @@ export default class Box extends fw.core.viewCore {
     }
 
     create() {
-        const boxGeometry = new THREE.BoxGeometry(1, 1, 1);
+        const boxGeometry =new THREE.SphereGeometry(0.5, 8, 8, 0);
+        //const boxGeometry = new THREE.BoxGeometry(1, 1, 1);
         let box;
         let material;
-        material = Physijs.createMaterial(new THREE.MeshLambertMaterial({ map: this.loader.load( 'images/plywood.jpg' ) }), .9, .6 );
+        material = Physijs.createMaterial(new THREE.MeshLambertMaterial({ map: this.loader.load( 'images/rock.jpg' ) }), .9, .4 );
         material.map.wrapS = material.map.wrapT = THREE.RepeatWrapping;
         material.map.repeat.set( .5, .5 );
 
-        box = new Physijs.BoxMesh(boxGeometry, material, 1.2);
+        box = new Physijs.SphereMesh(boxGeometry, material, 0.5);
+        //box = new Physijs.BoxMesh(boxGeometry, material, 0.5);
         box.collisions = 0;
         box.name = "box";
         box.addEventListener('collision', this.onCollisionHandler);
         box.castShadow = true;
+
+        // This is expensive.
+        // box.setCcdMotionThreshold( 0.5 );
+        // box.setCcdSweptSphereRadius( 0.1 );
+
         this.box = box;
         return box;
     }
@@ -30,10 +37,15 @@ export default class Box extends fw.core.viewCore {
             if (this.box && this.box.parent) {
                 this.box.__dirtyPosition = true;
                 this.box.__dirtyRotation = true;
+                this.box.collisions = 0;
+                this.box.applyCentralImpulse(new THREE.Vector3(-2, 0, 0));
+                this.box.setAngularVelocity(new THREE.Vector3(0, 0, 10));
 
-                this.box.position.x = Math.random() * 100;
-                this.box.position.y = 5;
-                this.box.position.z = 0;
+
+                this.box.rotation.set(0,0,0);
+
+                this.box.position.set( 10, 5, 0);
+
 
             }
         }

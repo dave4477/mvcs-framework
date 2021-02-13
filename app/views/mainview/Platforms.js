@@ -1,21 +1,35 @@
 import * as THREE from './../../../app/libs/three.module.js';
-import ObjectLoaders from './ObjectLoaders.js';
+import Platform from './Platform.js';
 
 const levelMap = [
-    {type:"ground", posX:12, posY:-8, posZ:0, geomX:32, geomY:16, geomZ:4},
-    {type:"ground", posX:48, posY:-8, posZ:0, geomX:34, geomY:16, geomZ:4},
+    {type:"ground", x:12, y:-8, z:0, width:32, height:16, depth:12},
+    {type:"ground", x:48, y:-8, z:0, width:34, height:16, depth:8},
 
         // 1st floor
-        {type:"ground", posX:68, posY:2, posZ:0, geomX:6, geomY:1, geomZ:1},
+        {type:"ground", x:68, y:2, z:0, width:6, height:1, depth:8},
             // 2nd
-            {type:"ground", posX:77, posY:5, posZ:0, geomX:8, geomY:1, geomZ:1},
+            {type:"ground", x:77, y:5, z:0, width:8, height:1, depth:8},
 
         // 1st floor
-        {type:"ground", posX:86, posY:2, posZ:0, geomX:6, geomY:1, geomZ:1},
+        {type:"ground", x:86, y:2, z:0, width:6, height:1, depth:8},
 
-    {type:"ground", posX:155, posY:-8, posZ:0, geomX:128, geomY:16, geomZ:4},
+    {type:"ground", x:155, y:-8, z:0, width:128, height:16, depth:8},
 
-    {type:"ground-falling", posX:222, posY:0, posZ:0, geomX:4, geomY:0.5, geomZ:4}
+    {type:"ground-falling", x:225, y:1, z:0, width:4, height:0.4, depth:4},
+
+    {type:"ground", x:235, y:3, z:0, width:8, height:2, depth:4},
+
+    {type:"ground-falling", x:225, y:12, z:0, width:4, height:0.4, depth:4},
+
+    {type:"ground", x:202, y:14, z:0, width:34, height:2, depth:4},
+    {type:"ground", x:170, y:14, z:0, width:16, height:2, depth:4},
+    {type:"ground-falling", x:156, y:14, z:0, width:4, height:0.4, depth:4},
+    {type:"ground", x:142, y:14, z:0, width:16, height:2, depth:4},
+
+    // moving platform is not added here but is between here.
+
+    {type:"ground", x:120, y:14, z:0, width:16, height:2, depth:4}
+
 ];
 
 export default class Platforms {
@@ -24,28 +38,13 @@ export default class Platforms {
     
     static create(scene) {
         // Ground
-        const loader = new THREE.TextureLoader();
         for (let i = 0; i < levelMap.length; i++) {
-            const obj = levelMap[i];
-            const ground_material = Physijs.createMaterial(
-                new THREE.MeshLambertMaterial({map: loader.load('images/groundtexture02.jpg')}),
-                .0, // high friction
-                0 // low restitution
-            );
-            ground_material.map.wrapS = ground_material.map.wrapT = THREE.RepeatWrapping;
-            ground_material.map.repeat.set(1, 1);
-
-            const ground = new Physijs.BoxMesh(
-                new THREE.BoxGeometry(obj.geomX, obj.geomY, obj.geomZ),
-                ground_material,
-                0 // mass
-            );
-            ground.position.set(obj.posX, obj.posY, obj.posZ);
-            ground.receiveShadow = true;
-            ground.name = obj.type;
+            const groundData = levelMap[i];
+            const metrics = new THREE.Vector3(groundData.width, groundData.height, groundData.depth);
+            const position = new THREE.Vector3(groundData.x, groundData.y, groundData.z);
+            const ground = Platform.create(groundData.type, position , metrics);
             scene.add(ground);
         }
-
     }
 
 
@@ -62,7 +61,7 @@ export default class Platforms {
         ground_material.map.repeat.set(3, 3);
 
         const ground = new Physijs.BoxMesh(
-            new THREE.BoxGeometry(500, 10, 20),
+            new THREE.BoxGeometry(1500, 20, 500),
             ground_material,
             0 // mass
         );

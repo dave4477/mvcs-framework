@@ -330,8 +330,9 @@ var fw = function () {
 
   class ViewCore {
     constructor(name) {
-      console.log(`Creating view ${name}`);
+      // console.log(`Creating view ${name}`);
       MVCSCore.viewMap[name] = this;
+      this._name = name;
       this._contextListeners = [];
       this._viewListeners = [];
     }
@@ -354,6 +355,12 @@ var fw = function () {
       const content = html.getElementsByTagName('body')[0].firstChild;
       parent.appendChild(content);
       return content;
+    }
+
+    removeView() {
+      this.removeAllContextListeners();
+      this.removeAllViewListeners();
+      delete MVCSCore.viewMap[this._name];
     }
 
     getViewByName(name) {

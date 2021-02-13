@@ -323,12 +323,13 @@ var fw = (function () {
 
 	class ViewCore {
 		constructor(name) {
-			console.log(`Creating view ${name}`);
+			// console.log(`Creating view ${name}`);
 			MVCSCore.viewMap[name] = this;
+			this._name = name;
 			this._contextListeners = [];
 			this._viewListeners = [];
 		}
-		
+
 		/**
 		 * Appends HTML node to a given parent.
 		 * Returns a promise if a module.js is attached
@@ -345,6 +346,12 @@ var fw = (function () {
 			const content = html.getElementsByTagName('body')[0].firstChild;
 			parent.appendChild(content);
 			return content;
+		}
+
+		removeView() {
+			this.removeAllContextListeners();
+			this.removeAllViewListeners();
+			delete MVCSCore.viewMap[this._name];
 		}
 
 		getViewByName(name) {
@@ -510,7 +517,7 @@ var fw = (function () {
 			this._currentState = SYSTEM_STATE.stateName;
 			config.states.current = this._currentState;
 			SYSTEM_STATE.outbound.push(config.initialState);
-			this._config.states.push(SYSTEM_STATE);
+			const newItem = this._config.states.push(SYSTEM_STATE);
 
 			EventBus.stateConfig = config.states;
 			

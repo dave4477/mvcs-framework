@@ -3,13 +3,13 @@ import MVCSCore from './MVCSCore.js';
 
 export default class ViewCore {
 	constructor(name) {
-		console.log(`Creating view ${name}`);
+		// console.log(`Creating view ${name}`);
 		MVCSCore.viewMap[name] = this;
 		this._name = name;
 		this._contextListeners = [];
 		this._viewListeners = [];
 	}
-	
+
 	/**
 	 * Appends HTML node to a given parent.
 	 * Returns a promise if a module.js is attached

@@ -3,11 +3,22 @@ import Constants from './../Constants.js';
 export default class InitAppController extends fw.core.controllerCore {
 	constructor() {
 		super();
+
+		this.simulationModel = this.getModelByName(Constants.models.SIMULATION_MODEL);
 	}
 
 	startApp() {
 		console.log(`InitAppController::startApp`);		
 		this.loadView('./views/mainlayout/mainLayout.html', './views/mainview/mainView.html', './views/uiview/ui.html');
+
+		this.addListener(Constants.events.PAUSE_SIMULATION, ()=> {
+			this.simulationModel.isPaused = true;
+		});
+
+		this.addListener(Constants.events.RESUME_SIMULATION, ()=> {
+			this.simulationModel.isPaused = false;
+		});
+
 	}
 
 	/**
@@ -31,6 +42,8 @@ export default class InitAppController extends fw.core.controllerCore {
 		view = new uiView.script();
 		view.addView(uiView.html, uiViewContainer);
 		view.init();
+		
+		this.dispatch(Constants.events.SWITCH_STATE, "game");
 
 	}
 }

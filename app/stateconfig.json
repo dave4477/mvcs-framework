@@ -8,10 +8,26 @@
 		],
 		"postProcess":[
 		],
+		"outbound":["game"],
+		"events":[
+			"LoadView"
+		]
+	},
+	{
+		"stateName": "game",
+		"preProcess":[
+			"PlayerController:startGame"
+		],
+		"postProcess":[
+		],
 		"outbound":["popup"],
 		"events":[
-			"UserModelUpdated",
-			"UpdateUserModel",
+			"PauseSimulation",
+			"ResumeSimulation",
+			"SimulationPaused",
+			"SimulationResumed",
+			"PlayerDied",
+			"PlayerModelUpdated",
 			"LoadView"
 		]
 	},
@@ -21,7 +37,6 @@
 		"postProcess":[],
 		"outbound":["intro"],
 		"events":[
-			"UserModelUpdated"
 		]
 	}]
 }

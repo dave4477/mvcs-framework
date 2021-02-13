@@ -1,3 +1,5 @@
+import Constants from './../../Constants.js';
+
 const keyRegister = {
     "ArrowLeft": false,
     "ArrowRight": false,
@@ -6,7 +8,7 @@ const keyRegister = {
 
 export default class UIView extends fw.core.viewCore {
     constructor() {
-        super("UIView");
+        super(Constants.views.UI_VIEW);
 
         this.onLeftHandlerDown = this.onLeftTouchStart.bind(this);
         this.onLeftHandlerUp = this.onLeftTouchEnd.bind(this);

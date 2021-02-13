@@ -1,6 +1,6 @@
 //import fw from './../../../../src/core/fw.js';
 import * as THREE from './../../../app/libs/three.module.js';
-import ObjectLoaders from './ObjectLoaders.js';
+import ObjectLoaders from '../helpers/ObjectLoaders.js';
 
 export default class SnowMan extends fw.core.viewCore {
     constructor() {
@@ -33,6 +33,14 @@ export default class SnowMan extends fw.core.viewCore {
             loadedMesh.position.x = -0.8;
             loadedMesh.position.z = -0.6;
             bMesh.add(loadedMesh);
+            bMesh.addEventListener('collision', (targetObject) => {
+                if (targetObject.name === "bottomCatcher") {
+                    bMesh.position.x = 150;
+                    bMesh.position.y = 1;
+                    bMesh.position.z = 0;
+
+                }
+            });
             this.dispatchToView('SnowManLoaded', bMesh);
         });
     }

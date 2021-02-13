@@ -38,22 +38,31 @@ html, body {
     position: absolute;
     width: 100px;
     height: 100px;
-    background: rgba(100,100,255,0.5);
+    /*background: rgba(100,100,255,0.5);*/
 }
 .layout .uiView .ui #leftArrow {
-    right: 110px;
+    right: 150px;
     bottom: 0;
+    background-image:url('./../images/arrow.left.png');
+    background-repeat: no-repeat;
+    background-position: center center;
 }
 
 .layout .uiView .ui #rightArrow {
-    right: 0;
+    right: 10px;
     bottom: 0;
+    background-image:url('./../images/arrow.right.png');
+    background-repeat: no-repeat;
+    background-position: center center;
+
 }
 
 .layout .uiView .ui #jumpArrow {
     left: 0;
     bottom: 0;
-    border: 1px solid black;
+    background-image:url('./../images/arrow.up.png');
+    background-repeat: no-repeat;
+    background-position: center center;
 }
 
 .popupView {

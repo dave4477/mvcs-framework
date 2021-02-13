@@ -10,7 +10,7 @@ export default class SkyBox {
         const imagePrefix = "images/stormydays-";
         const directions  = ["xpos", "xneg", "ypos", "yneg", "zpos", "zneg"];
         const imageSuffix = ".png";
-        const skyGeometry = new THREE.CubeGeometry( 1000, 1000, 1000 );
+        const skyGeometry = new THREE.CubeGeometry( 1500, 1500, 1500 );
 
         var materialArray = [];
         for (let i = 0; i < 6; i++)
