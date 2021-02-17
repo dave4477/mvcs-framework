@@ -29,7 +29,7 @@ export default class InitAppController extends fw.core.controllerCore {
 	 * Dynamically loads and attach view.
  	 */
 	async loadView(layoutUrl, mainViewUrl, uiViewUrl) {
-		const viewLoaderService = this.getServiceByName(Constants.servives.VIEW_LOADER_SERVICE);
+		const viewLoaderService = this.getServiceByName(Constants.services.VIEW_LOADER_SERVICE);
 
 		const layoutView = await viewLoaderService.loadView(layoutUrl);
 		let view = new layoutView.script();

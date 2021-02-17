@@ -5,7 +5,7 @@ import Constants from './../../Constants.js';
 export default class FallingRocks extends fw.core.viewCore {
     constructor(x, y, scene, interval = 1500) {
 
-        super("FallingRocks");
+        super(Constants.views.FALLING_ROCKS);
 
         this._rocks = [];
         this._x = x;
@@ -18,8 +18,7 @@ export default class FallingRocks extends fw.core.viewCore {
         this.addContextListener(Constants.events.SIMULATION_PAUSED, this.pause);
         this.addContextListener(Constants.events.SIMULATION_RESUMED, this.resume);
     }
-
-
+    
     create() {
         this._timer = setTimeout( () => {
 

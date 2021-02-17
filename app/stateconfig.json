@@ -16,7 +16,7 @@
 	{
 		"stateName": "game",
 		"preProcess":[
-			"PlayerController:startGame"
+			"GameController:loadLevelData"
 		],
 		"postProcess":[
 		],
@@ -30,6 +30,7 @@
 			"PlayerDied",
 			"PlayerRespawned",
 			"PlayerModelUpdated",
+			"LevelDataReceived",
 			"LoadView"
 		]
 	},

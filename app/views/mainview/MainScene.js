@@ -1,29 +1,19 @@
 import * as THREE from './../../libs/three.module.js';
 import { Physijs } from './../../libs/physi.js';
 import Constants from './../../Constants.js';
-import SkyBox from './SkyBox.js';
-import Platforms from './Platforms.js';
 import Character from './Character.js';
-import SnowMan from './SnowMan.js';
-import Banana from './../collectibles/Banana.js';
-import FallingRocks from './../obstacles/FallingRocks.js';
-import Palms from './../decoration/Palms.js';
 import PlayerInput from './PlayerInput.js';
 import DebugSettings from './../../DebugSettings.js';
-import Collectibles from './../collectibles/Collectibles.js';
-import Spikes from './../obstacles/Spikes.js';
-import RisingSpikes from './../obstacles/RisingSpikes.js';
-import Crusher from './../obstacles/Crusher.js';
-import Launcher from './../interaction/Launcher.js';
-import Bear from './../obstacles/Bear.js';
+import LevelParser from './../parsers/LevelParser.js';
 
 export default class MainScene extends fw.core.viewCore {
     constructor() {
-        super("MainScene");
+        super(Constants.views.MAIN_SCENE);
 
         Physijs.scripts.worker = './libs/physijs_worker.js';
         Physijs.scripts.ammo = './ammo.js';
 
+        this.levelParser = null;
         this.renderer = null;
         this.scene = null;
         this.ground = null;
@@ -32,17 +22,12 @@ export default class MainScene extends fw.core.viewCore {
         this.character = null;
         this.player = null;
         this.playerInput = null;
-        this.loader = new THREE.TextureLoader();
 
         this._cameraY = 1.5;
         this._cameraTween = null;
-
         this._angle = 0;
         this._radius = 14;
         this._isPaused = false;
-        this._playerData = {alive:true, score:0};
-
-        this._fallingRocks = null;
 
         this._addViewListeners();
         this._addContextListeners();
@@ -50,7 +35,6 @@ export default class MainScene extends fw.core.viewCore {
 
     _addViewListeners() {
         this.addViewListener('ObjectLoaded', this.onPlayerLoaded);
-        this.addViewListener('SnowManLoaded', this.onSnowManLoaded);
         this.addViewListener('KeyUp', this.onPauseScene);
     }
 
@@ -62,25 +46,48 @@ export default class MainScene extends fw.core.viewCore {
         if (e) {
             this._playerData = e;
 
+            // Player died, tween the camera back to spawning point.
             if (!e.alive) {
                 const vec3 = new THREE.Vector3(0, this._cameraY, 14);
                 // Create a tween for position first
                 var tweenObj = {x:this.camera.position.x, y:this.camera.position.y};
                 this._cameraTween = new TWEEN.Tween(tweenObj)
-                    .to({x: 0, y:4}, 2000)
+                    .to({x: this._playerData.posX, y:this._playerData.posY}, 2000)
                     .easing(TWEEN.Easing.Quadratic.Out)
                     .onUpdate((object) => {
                         this.camera.position.copy(new THREE.Vector3(object.x, object.y, 0)).add(vec3);
                         this.camera.lookAt(new THREE.Vector3(object.x, object.y, 0));
+
+                        this.light.position.copy(new THREE.Vector3(object.x, object.y, 0)).add(new THREE.Vector3(0, 10, -10));
+                        this.light.target.position.copy(new THREE.Vector3(object.x, 0, 0)).add(new THREE.Vector3(0, 5, 0));
                     })
                     .onComplete(() => {
                         this.player.respawn();
                         this.dispatchToContext(Constants.events.PLAYER_RESPAWNED);
-                        //this._playerData.alive = true;
                     })
                     .start();
             }
         }
+    }
+
+    panCamera(to, duration = 2000) {
+        const vec3 = new THREE.Vector3(0, this._cameraY, 14);
+        var tweenObj = {x:this.camera.position.x, y:this.camera.position.y, z:0};
+        this._cameraTween = new TWEEN.Tween(tweenObj)
+            .to({x: to.x, y:to.y, z:to.z}, duration)
+            .repeat(1)
+            .yoyo(true)
+            .easing(TWEEN.Easing.Quadratic.Out)
+            .delay(2000)
+            .repeatDelay(500)
+            .onUpdate((object) => {
+                const updatedVec = new THREE.Vector3(object.x, object.y, object.z);
+                this.camera.position.copy(updatedVec).add(vec3);
+                this.camera.lookAt(updatedVec);
+            }).onComplete(() => {
+                this.addPlayer();
+            })
+            .start();
     }
 
     createRenderer() {
@@ -91,24 +98,25 @@ export default class MainScene extends fw.core.viewCore {
         return renderer;
     }
 
-    initScene() {
+    initScene(levelData, playerData) {
+
+        this._levelData = levelData;
+        this._playerData = playerData;
+
         this.renderer = this.createRenderer();
 
         const viewport = document.getElementById( 'viewport' );
-        if (viewport.childElementCount) {
-            viewport.innerHTML = "";
-        }
         viewport.appendChild( this.renderer.domElement );
 
         this.scene = new Physijs.Scene;
         this.scene.setGravity(new THREE.Vector3(0, -50, 0));
 
         const camera1 = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 1000);
-        const camera2 = new THREE.OrthographicCamera(-10,10,10,-10, 0.1, 1500);
+        const camera2 = new THREE.OrthographicCamera(-25,25,25,-25, 0.1, 1500);
 
         this.camera = camera1;
 
-        this.camera.position.set( 0, 5, 15 );
+        this.camera.position.set( this._playerData.posX, this._playerData.posY, 14 );
         this.scene.add( this.camera );
 
         // Light
@@ -119,7 +127,7 @@ export default class MainScene extends fw.core.viewCore {
         this.light.position.set(0, 5, 10);
         this.light.target.position.copy(this.scene.position);
         this.light.castShadow = true;
-        this.light.shadow.camera = new THREE.OrthographicCamera( -10, 10, 10, -10, 0.5, 1000 );
+        this.light.shadow.camera = new THREE.OrthographicCamera( -15, 15, 10, -10, 0.5, 1000 );
 
         this.scene.add(this.light);
         this.scene.add(this.light.target);
@@ -132,33 +140,15 @@ export default class MainScene extends fw.core.viewCore {
             this.scene.add(chelper);
         }
 
-        this.addPlatforms();
-        this.addSnowMen();
-        this.addSkyBox();
-        this.addPalms();
-        this.addSpikes();
-        // this.addRisingSpikes();
-        this.addCollectibles();
-        this.spawnRocks();
-        this.addCrushers();
-        this.addLaunchers();
-        this.addBears();
 
-        window.requestAnimationFrame(() => this.render() );
-        window.addEventListener('resize', this.handleResize.bind(this));
-        document.addEventListener("visibilitychange", this.handleVisibilityChange.bind(this), false);
+        this.levelParser = new LevelParser(this.scene);
+        this.levelParser.setupLevel(this._levelData, this._playerData.level);
 
-        this.scene.simulate();
-
-        setTimeout(this.startGame.bind(this), 3000);
-    }
-
-    startGame() {
         this.addCharacter();
+        this.startGame();
     }
 
     handleVisibilityChange(e) {
-        console.log("visibility changed to:", e);
         if (document.visibilityState == "hidden") {
             this.pause();
         } else {
@@ -172,86 +162,6 @@ export default class MainScene extends fw.core.viewCore {
         }
     }
 
-    addPlatforms() {
-        Platforms.create(this.scene);
-        Platforms.createBottomCatcher(this.scene);
-    }
-
-    addPalms() {
-        const palms = new Palms();
-        palms.create(this.scene);
-    }
-
-    addSpikes() {
-        this.scene.add(new Spikes().create(45, 0));
-        this.scene.add(new Spikes().create(46, 0));
-        this.scene.add(new Spikes().create(47, 0));
-        this.scene.add(new Spikes().create(48, 0));
-
-        this.scene.add(new Spikes().create(170, 0));
-        this.scene.add(new Spikes().create(171, 0));
-        this.scene.add(new Spikes().create(172, 0));
-        this.scene.add(new Spikes().create(173, 0));
-
-        this.scene.add(new Spikes().create(178, 0));
-
-        this.scene.add(new Spikes().create(183, 0));
-        this.scene.add(new Spikes().create(184, 0));
-        this.scene.add(new Spikes().create(185, 0));
-
-    }
-
-    addRisingSpikes() {
-        var risingSpikes = new RisingSpikes(this.scene);
-        risingSpikes.create(200, 0, 10);
-    }
-    addCrushers() {
-        this.scene.add(new Crusher(new THREE.Vector3(110, 5, 0), new THREE.Vector3(2,2,8), 0).create());
-        this.scene.add(new Crusher(new THREE.Vector3(116, 5, 0), new THREE.Vector3(2,2,8), 1500).create());
-        this.scene.add(new Crusher(new THREE.Vector3(122, 5, 0), new THREE.Vector3(2,2,8), 0).create());
-        // this.scene.add(new Crusher(new THREE.Vector3(128, 5, 0), new THREE.Vector3(2,2,8), 3000).create());
-    }
-
-    addLaunchers() {
-        this.scene.add(new Launcher().create(new THREE.Vector3(236, 4, 0), new THREE.Vector3(2,1,2), 60));
-
-    }
-
-    addBears() {
-        new Bear(200, 0, 215, 2000).create(this.scene);
-        new Bear(136, 15, 146, 1000).create(this.scene);
-    }
-
-    addCollectibles() {
-        for (let i = 0; i < Collectibles.length; i++) {
-            const x = Collectibles[i].x;
-            const y = Collectibles[i].y;
-            const banana = new Banana(x, y);
-            banana.create(this.scene);
-        }
-    }
-
-    addSkyBox() {
-        const skyBox = SkyBox.create();
-        this.scene.add( skyBox );
-    }
-
-    spawnRocks() {
-        this._fallingRocks = new FallingRocks(28, 10, this.scene);
-        this._fallingRocks.create();
-    }
-
-
-    addSnowMen() {
-        new SnowMan().create();
-    }
-
-    onSnowManLoaded(snowMan) {
-        snowMan.position.x = 150;
-        snowMan.position.y = 1;
-        this.scene.add(snowMan);
-    }
-
     addCharacter() {
         this.player = new Character();
         this.player.create();
@@ -259,16 +169,28 @@ export default class MainScene extends fw.core.viewCore {
 
     onPlayerLoaded(data) {
         this.character = data;
-        this.character.mesh.position.y = 4;
-        this.character.mesh.position.x = 0;
-        this.scene.add( this.character.mesh);
-        this.scene.add( this.character.model);
+        this.character.mesh.position.x = this._playerData.posX;
+        this.character.mesh.position.y = this._playerData.posY;
         this.playerInput = new PlayerInput(this.player);
     }
+
+    addPlayer() {
+        this.scene.add( this.character.mesh);
+        this.scene.add( this.character.model);
+    }
     
+    startGame() {
+        window.requestAnimationFrame(() => this.render() );
+        window.addEventListener('resize', this.handleResize.bind(this));
+        document.addEventListener("visibilitychange", this.handleVisibilityChange.bind(this), false);
+
+        this.scene.simulate();
+
+        this.panCamera({x:220, y:14, z:30}, 6000);
+    }
 
     updateCamera() {
-        if (this.camera && this._playerData.alive) {
+        if (this.camera && this._playerData.alive && this.character.mesh.parent) {
             const player = this.character.mesh;
             const vec3 = new THREE.Vector3(0, this._cameraY, 14);
 
@@ -298,7 +220,6 @@ export default class MainScene extends fw.core.viewCore {
             // Make character have shadow.
             this.light.position.copy(player.position).add(new THREE.Vector3(0, 10, -10));
             this.light.target.position.copy(new THREE.Vector3(player.position.x, 0, 0)).add(new THREE.Vector3(0, 5, 0));
-
         }
     }
 
@@ -326,18 +247,18 @@ export default class MainScene extends fw.core.viewCore {
         this.dispatchToContext(Constants.events.RESUME_SIMULATION);
     }
 
-    render() {
+    render(dt) {
         if (!this._isPaused) {
             this.scene.simulate(undefined, 1);
 
-            this.dispatchToView('frameUpdate');
+            this.dispatchToView('frameUpdate', dt);
 
             if (this.character && this.character.model && this._playerData.alive) {
                 this.player.updatePlayer();
                 this.updateCamera();
             }
             if (this._cameraTween) {
-                TWEEN.update();
+                TWEEN.update(dt);
             }
             window.requestAnimationFrame(() => this.render());
             this.renderer.render(this.scene, this.camera);

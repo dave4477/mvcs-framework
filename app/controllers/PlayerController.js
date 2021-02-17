@@ -5,12 +5,7 @@ export default class PlayerController extends fw.core.controllerCore {
 		super();
 
 		this.playerModel = this.getModelByName(Constants.models.PLAYER_MODEL);
-	}
-
-	startGame() {
-		console.log(`PlayerController::startGame`);
-
-		this.getViewByName(Constants.views.MAIN_VIEW).initScene();
+		this.simulationModel = this.getModelByName(Constants.models.SIMULATION_MODEL);
 
 		this.addListener(Constants.events.PLAYER_DIED, ()=> {
 			this.playerModel.isAlive = false;
@@ -25,4 +20,5 @@ export default class PlayerController extends fw.core.controllerCore {
 		});
 
 	}
+
 }

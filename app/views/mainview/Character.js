@@ -3,6 +3,7 @@ import ObjectLoaders from '../helpers/ObjectLoaders.js';
 import DebugSettings from './../../DebugSettings.js';
 import RayCast from './../helpers/RayCast.js';
 import Constants from './../../Constants.js';
+
 const FORCE_JUMP = 25;
 const FORCE_MOVE = 0.5;
 const DAMPING = 0.92;
@@ -122,11 +123,12 @@ export default class Character extends fw.core.viewCore {
             // mesh.setCcdMotionThreshold( 1 );
             // mesh.setCcdSweptSphereRadius( 0.5 );
 
-            this.createRayCasts(mesh);
 
             mesh.addEventListener('collision', this.handlePlayerCollision.bind(this));
             mesh.setAngularFactor(new THREE.Vector3(0,0,0));
             this.character = { model: parent, mesh: mesh };
+            this.createRayCasts(mesh);
+
             this.dispatchToView('ObjectLoaded', this.character);
         });
     }
@@ -173,7 +175,7 @@ export default class Character extends fw.core.viewCore {
                         targetObject.position.x = targetVec.x;
                         targetObject.position.z = targetVec.z;
                     }, 3000);
-                }, 650);
+                }, 100);
 
                 break;
 
@@ -196,7 +198,7 @@ export default class Character extends fw.core.viewCore {
     }
 
     checkRay(rc) {
-        if (this.character.mesh) {
+        if (this.character.mesh && this.character.mesh.parent) {
             const scene = this.character.mesh.parent;
             const intersects = rc.intersectObjects(scene.children);
 
@@ -214,8 +216,8 @@ export default class Character extends fw.core.viewCore {
 
     respawn() {
         this.character.mesh.__dirtyPosition = true;
-        this.character.mesh.position.y = 4;
-        this.character.mesh.position.x = 0;
+        this.character.mesh.position.y = this._playerData.posY;
+        this.character.mesh.position.x = this._playerData.posX;
         this.character.mesh.position.z = 0;
     }
 

@@ -9,7 +9,7 @@ export default class Platform {
         if (type == "ground-falling") {
             texture = 'images/Medium4.jpg';
         } else {
-            texture = 'images/groundtexture02.jpg'
+            texture = 'images/groundtexture01.jpg'
         }
         const ground_material = Physijs.createMaterial( new THREE.MeshLambertMaterial({map: loader.load(texture)}), 0, 0 );
         ground_material.map.wrapS = ground_material.map.wrapT = THREE.RepeatWrapping;

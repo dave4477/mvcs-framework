@@ -20,8 +20,15 @@ export default class Banana extends fw.core.viewCore {
             object.scale.z = 0.005;
 
             object.position.x = -0.05;
-            //this.addShadows(object);
             this._object = object;
+
+            const texture = new THREE.TextureLoader().load('assets/banana/Banana_BaseColor.png');
+
+            object.traverse( function ( child ) {
+                if ( child.isMesh ) {
+                    child.material.map = texture; // assign your diffuse texture here
+                }
+            } );
 
             const mesh = new Physijs.BoxMesh(
                 new THREE.CubeGeometry( 0.3, 0.6, 0.3 ),

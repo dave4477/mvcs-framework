@@ -1,0 +1,98 @@
+{
+  "levels": [
+    {
+      "skybox": {
+        "path":"images/skybox/stormydays/"
+      },
+      "platforms": [
+        {"type":"ground", "x":12, "y":-8, "z":0, "width":32, "height":16, "depth":12},
+        {"type":"ground", "x":48, "y":-8, "z":0, "width":34, "height":16, "depth":8},
+        {"type":"ground", "x":68, "y":2, "z":0, "width":6, "height":1, "depth":8},
+        {"type":"ground", "x":77, "y":5, "z":0, "width":8, "height":1, "depth":8},
+        {"type":"ground-falling", "x":86, "y":2, "z":0, "width":4, "height":0.4, "depth":4},
+        {"type":"ground", "x":155, "y":-8, "z":0, "width":128, "height":16, "depth":8},
+        {"type":"ground-falling", "x":225, "y":1, "z":0, "width":4, "height":0.4, "depth":4},
+        {"type":"ground", "x":235, "y":3, "z":0, "width":8, "height":2, "depth":4},
+        {"type":"ground-falling", "x":225, "y":12, "z":0, "width":4, "height":0.4, "depth":4},
+        {"type":"ground", "x":202, "y":14, "z":0, "width":34, "height":2, "depth":4},
+        {"type":"ground", "x":170, "y":14, "z":0, "width":16, "height":2, "depth":4},
+        {"type":"ground-falling", "x":156, "y":14, "z":0, "width":4, "height":0.4, "depth":4},
+        {"type":"ground", "x":142, "y":14, "z":0, "width":16, "height":2, "depth":4},
+        {"type":"ground", "x":120, "y":14, "z":0, "width":16, "height":2, "depth":4}
+      ],
+
+      "decorations": [
+        {"x":37, "y":-2, "z":-6, "scale":0.5, "rotationY":0.6, "asset":"./assets/palm01/Palm_01.fbx"},
+        {"x":42, "y":-3, "z":-8, "scale":0.5, "rotationY":0.6, "asset":"./assets/palm01/Palm_01.fbx"},
+        {"x":47, "y":-1, "z":-4, "scale":0.5, "rotationY":0.6, "asset":"./assets/palm01/Palm_01.fbx"},
+        {"x":48, "y":-2, "z":-6, "scale":0.5, "rotationY":0.6, "asset":"./assets/palm01/Palm_01.fbx"},
+        {"x":53, "y":-3, "z":-8, "scale":0.5, "rotationY":0.6, "asset":"./assets/palm01/Palm_01.fbx"},
+        {"x":56, "y":-2, "z":-6, "scale":0.5, "rotationY":0.6, "asset":"./assets/palm01/Palm_01.fbx"},
+        {"x":60, "y":-3, "z":-8, "scale":0.5, "rotationY":0.6, "asset":"./assets/palm01/Palm_01.fbx"},
+
+        {"x":100, "y":-1.5, "z":-8, "scale":0.5, "asset":"./assets/palm02/Palm2.fbx"},
+        {"x":104, "y":-2, "z":-8, "scale":0.5, "asset":"./assets/palm02/Palm2.fbx"},
+        {"x":105, "y":-2, "z":-7, "scale":0.5, "asset":"./assets/palm02/Palm2.fbx"},
+        {"x":110, "y":-3, "z":-10, "scale":0.5, "asset":"./assets/palm02/Palm2.fbx"},
+  
+        {"x":130, "y":-4, "z":-12, "scale":0.5, "asset":"./assets/palm02/Palm1.fbx"},
+        {"x":134, "y":-4, "z":-10, "scale":0.5, "asset":"./assets/palm02/Palm1.fbx"},
+        {"x":136, "y":-1.5, "z":-8, "scale":0.5, "asset":"./assets/palm02/Palm2.fbx"},
+        {"x":144, "y":-4, "z":-10, "scale":0.5, "asset":"./assets/palm02/Palm1.fbx"},
+        {"x":180, "y":-2, "z":-8, "scale":0.5, "asset":"./assets/palm02/Palm2.fbx"},
+        {"x":200, "y":-2, "z":-6, "scale":0.5, "asset":"./assets/palm02/Palm2.fbx"}        
+      ],
+      
+      "collectibles": [
+        {"y":6.5, "x":74, "type": "banana"},
+        {"y":6.5, "x":75, "type": "banana"},
+        {"y":6.5, "x":76, "type": "banana"},
+        {"y":6.5, "x":77, "type": "banana"},
+        {"y":6.5, "x":78, "type": "banana"},
+        {"y":6.5, "x":79, "type": "banana"},
+        {"y":6.5, "x":80, "type": "banana"},
+
+        {"y":16, "x":168, "type": "banana"},
+        {"y":16, "x":169, "type": "banana"},
+        {"y":16, "x":170, "type": "banana"},
+        {"y":16, "x":171, "type": "banana"},
+        {"y":16, "x":172, "type": "banana"},
+        {"y":16, "x":173, "type": "banana"},
+        {"y":16, "x":174, "type": "banana"},
+        {"y":16, "x":175, "type": "banana"}
+
+      ],
+
+      "obstacles": [
+        {"type": "spike", "x":45, "y": 0 },
+        {"type": "spike", "x":46, "y": 0 },
+        {"type": "spike", "x":47, "y": 0 },
+        {"type": "spike", "x":48, "y": 0 },
+        {"type": "spike", "x":170, "y": 0 },
+        {"type": "spike", "x":171, "y": 0 },
+        {"type": "spike", "x":172, "y": 0 },
+        {"type": "spike", "x":173, "y": 0 },
+        {"type": "spike", "x":178, "y": 0 },
+        {"type": "spike", "x":183, "y": 0 },
+        {"type": "spike", "x":184, "y": 0 },
+        {"type": "spike", "x":185, "y": 0 },
+
+        {"type": "spike", "x":190, "y": 15 },
+        {"type": "spike", "x":191, "y": 15 },
+        {"type": "spike", "x":192, "y": 15 },
+        {"type": "spike", "x":193, "y": 15 },
+
+
+        {"type": "fallingRocks", "x":28, "y":10 },
+        {"type": "crusher", "x":110, "y":5, "z":0, "width":2, "height":2, "depth":8, "delay":0 },
+        {"type": "crusher", "x":116, "y":5, "z":0, "width":2, "height":2, "depth":8, "delay":1500 },
+        {"type": "crusher", "x":122, "y":5, "z":0, "width":2, "height":2, "depth":8, "delay":0 },
+        {"type": "bear", "x":200, "y":0, "endX":215, "duration":2000 },
+        {"type": "bear", "x":136, "y":15, "endX":146, "duration":1000 }
+      ],
+
+      "helpers": [
+        {"type":"launcher", "x":236, "y":4, "z":0, "width":2, "height":1, "depth":2, "launchForce":60}
+      ]
+    }]
+}

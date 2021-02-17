@@ -10,7 +10,9 @@ export default {
 		PLAYER_DIED: "PlayerDied",
 		PLAYER_RESPAWNED: "PlayerRespawned",
 		PLAYER_MODEL_UPDATED: "PlayerModelUpdated",
-		UPDATE_PLAYER_SCORE: "UpdatePlayerScore"
+		UPDATE_PLAYER_SCORE: "UpdatePlayerScore",
+		REQUEST_LEVEL_DATA: "RequestLevelData",
+		LEVEL_DATA_RECEIVED: "LevelDataReceived"
 	},
 	models: {
 		SIMULATION_MODEL: "SimulationModel",
@@ -19,16 +21,19 @@ export default {
 	controllers: {
 		INIT_APP_CONTROLLER: "InitAppController"
 	},
-	servives: {
-		VIEW_LOADER_SERVICE: "ViewLoaderService"
+	services: {
+		VIEW_LOADER_SERVICE: "ViewLoaderService",
+		GAME_SERVICE: "GameService"
 	},
 	views: {
 		MAIN_VIEW: "MainView",
 		MAIN_SCENE: "MainScene",
+		LEVEL_PARSER: "LevelParser",
 		UI_VIEW: "UIView",
 		CHARACTER: "Character",
 		BEAR: "Bear",
 		CRUSHER: "Crusher",
+		FALLING_ROCKS: "FallingRocks",
 		ROCK: "Rock",
 		SNOW_MAN: "SnowMan"
 	}

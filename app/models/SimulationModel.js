@@ -2,9 +2,10 @@ import Constants from './../Constants.js';
 
 export default class SimulationModel extends fw.core.modelCore {
     constructor() {
-        super("SimulationModel");
+        super(Constants.models.SIMULATION_MODEL);
 
         this._isPaused = false;
+        this._levelData = null;
     }
 
     get isPaused() {
@@ -18,5 +19,14 @@ export default class SimulationModel extends fw.core.modelCore {
         } else {
             this.dispatch(Constants.events.SIMULATION_RESUMED);
         }
+    }
+
+    set levelData(value) {
+        this._levelData = value;
+        this.dispatch(Constants.events.LEVEL_DATA_RECEIVED);
+    }
+
+    get levelData() {
+        return this._levelData;
     }
 }

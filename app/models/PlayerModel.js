@@ -2,10 +2,13 @@ import Constants from './../Constants.js';
 
 export default class PlayerModel extends fw.core.modelCore {
 	constructor() {
-		super("PlayerModel");
+		super(Constants.models.PLAYER_MODEL);
 
 		this._isAlive = true;
 		this._score = 0;
+		this._level = 0;
+		this._posX = 200;
+		this._posY = 14;
 	}
 	
 	get isAlive() {
@@ -14,7 +17,7 @@ export default class PlayerModel extends fw.core.modelCore {
 
 	set isAlive(value) {
 		this._isAlive = value;
-		this.dispatch(Constants.events.PLAYER_MODEL_UPDATED, {alive:this._isAlive, score:this._score})
+		this.dispatchPlayerData();
 	}
 
 	get score() {
@@ -24,7 +27,25 @@ export default class PlayerModel extends fw.core.modelCore {
 	set score(value) {
 		this._score += value;
 		console.log("score:", this._score);
-		this.dispatch(Constants.events.PLAYER_MODEL_UPDATED, {alive:this._isAlive, score:this._score});
+		this.dispatchPlayerData();
 	}
 
+	set level(value) {
+		this._level = value;
+
+	}
+
+	getPlayerData() {
+		return Object.freeze({
+			alive: this._isAlive,
+			score: this._score,
+			level: this._level,
+			posX: this._posX,
+			posY: this._posY
+		});
+	}
+
+	dispatchPlayerData() {
+		this.dispatch(Constants.events.PLAYER_MODEL_UPDATED, this.getPlayerData());
+	}
 }
