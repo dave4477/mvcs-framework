@@ -13,7 +13,7 @@ export default class Box extends fw.core.viewCore {
         //const boxGeometry = new THREE.BoxGeometry(1, 1, 1);
         let box;
         let material;
-        material = Physijs.createMaterial(new THREE.MeshLambertMaterial({ map: this.loader.load( 'images/rock.jpg' ) }), .9, .4 );
+        material = Physijs.createMaterial(new THREE.MeshLambertMaterial({ map: this.loader.load( 'images/instance.jpg' ) }), .9, .4 );
         material.map.wrapS = material.map.wrapT = THREE.RepeatWrapping;
         material.map.repeat.set( .5, .5 );
 

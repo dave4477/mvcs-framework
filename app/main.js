@@ -5,6 +5,7 @@ import GameService from './services/GameService.js';
 import InitAppController from './controllers/InitAppController.js';
 import PlayerController from './controllers/PlayerController.js';
 import GameController from './controllers/GameController.js';
+import LoadingViewController from './controllers/LoadingViewController.js';
 
 export default class Main {
 	constructor(){
@@ -28,6 +29,7 @@ export default class Main {
 		new InitAppController();
 		new PlayerController();
 		new GameController();
+		new LoadingViewController();
 		
 		// init stateMachine's config
 		fw.core.createStateMachine(result[url]);

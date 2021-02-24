@@ -8,15 +8,32 @@
 		],
 		"postProcess":[
 		],
-		"outbound":["game"],
+		"outbound":["loading"],
 		"events":[
 			"LoadView"
 		]
 	},
+
+	{
+		"stateName": "loading",
+		"preProcess":[
+			"GameController:loadLevelData"
+		],
+		"postProcess":[
+		],
+		"outbound":["game"],
+		"events":[
+			"LoadView",
+			"AssetsLoaded"
+		]
+	},
+
+
 	{
 		"stateName": "game",
 		"preProcess":[
-			"GameController:loadLevelData"
+			"LoadingViewController:hide",
+			"GameController:startGame"
 		],
 		"postProcess":[
 		],
@@ -31,7 +48,8 @@
 			"PlayerRespawned",
 			"PlayerModelUpdated",
 			"LevelDataReceived",
-			"LoadView"
+			"LoadView",
+			"LevelFinished"
 		]
 	},
 	{

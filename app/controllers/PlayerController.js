@@ -19,6 +19,10 @@ export default class PlayerController extends fw.core.controllerCore {
 			this.playerModel.score = data.points;
 		});
 
+		this.addListener(Constants.events.LEVEL_FINISHED, (data) => {
+			this.playerModel.level = data;
+		});
+
 	}
 
 }

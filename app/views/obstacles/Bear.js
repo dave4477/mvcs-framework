@@ -38,7 +38,7 @@ export default class Bear extends fw.core.viewCore {
             const mesh = new Physijs.BoxMesh(
                 new THREE.CubeGeometry( 1, 2.7, 1 ),
                 Physijs.createMaterial(
-                    new THREE.MeshPhongMaterial({transparent:true, opacity:0.0, color:0x00FF00}),
+                    new THREE.MeshPhongMaterial({transparent:true, opacity:0.0, color:0xFF0000}),
                     1,
                     0.5
                 ),

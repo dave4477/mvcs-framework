@@ -3,6 +3,7 @@ export default {
 	events: {
 		SWITCH_STATE: "switchState",
 		LOAD_VIEW: "LoadView",
+		ASSETS_LOADED: "AssetsLoaded",
 		PAUSE_SIMULATION: "PauseSimulation",
 		RESUME_SIMULATION: "ResumeSimulation",
 		SIMULATION_PAUSED: "SimulationPaused",
@@ -12,7 +13,9 @@ export default {
 		PLAYER_MODEL_UPDATED: "PlayerModelUpdated",
 		UPDATE_PLAYER_SCORE: "UpdatePlayerScore",
 		REQUEST_LEVEL_DATA: "RequestLevelData",
-		LEVEL_DATA_RECEIVED: "LevelDataReceived"
+		LEVEL_DATA_RECEIVED: "LevelDataReceived",
+		TIMEBONUS_UPDATED: "TimeBonusUpdated",
+		LEVEL_FINISHED: "LevelFinished"
 	},
 	models: {
 		SIMULATION_MODEL: "SimulationModel",
@@ -26,6 +29,7 @@ export default {
 		GAME_SERVICE: "GameService"
 	},
 	views: {
+		LOADING_VIEW: "LoadingView",
 		MAIN_VIEW: "MainView",
 		MAIN_SCENE: "MainScene",
 		LEVEL_PARSER: "LevelParser",
@@ -35,6 +39,11 @@ export default {
 		CRUSHER: "Crusher",
 		FALLING_ROCKS: "FallingRocks",
 		ROCK: "Rock",
-		SNOW_MAN: "SnowMan"
+		PARROT: "Parrot",
+		FLAMINGO: "Flamingo",
+		STORK: "Stork",
+		LEVEL_FINISH: "LevelFinish",
+		SNOW_MAN: "SnowMan",
+		OBJECTS_PRELOADER: "ObjectsPreloader"
 	}
 }

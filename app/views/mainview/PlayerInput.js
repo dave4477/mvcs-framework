@@ -6,7 +6,8 @@ const keyRegister = {
     "KeyD": false,
     "KeyP": false,
     "KeyW": false,
-    "KeyX": false
+    "KeyX": false,
+    "KeyS": false
 };
 
 export default class PlayerInput extends fw.core.viewCore {

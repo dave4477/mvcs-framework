@@ -1,7 +1,7 @@
 import * as THREE from './../../../app/libs/three.module.js';
 
 export default class RayCast {
-    constructor(origin, direction, near = 0, far = 100) {
+    constructor(origin, direction, near = 0, far = 10) {
         this.raycaster = new THREE.Raycaster(origin, direction, near, far);
         return this.raycaster;
     }

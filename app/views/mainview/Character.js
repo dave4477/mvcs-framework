@@ -31,6 +31,7 @@ export default class Character extends fw.core.viewCore {
         this._clock = new THREE.Clock();
         this._action = null;
         this._isPaused = false;
+        this._isAlive = true;
         this.addContextListeners();
         this.addViewListeners();
     }
@@ -38,6 +39,11 @@ export default class Character extends fw.core.viewCore {
     addContextListeners() {
         this.addContextListener(Constants.events.SIMULATION_PAUSED, this.pause);
         this.addContextListener(Constants.events.SIMULATION_RESUMED, this.resume);
+        this.addContextListener(Constants.events.PLAYER_MODEL_UPDATED, this.playerUpdated);
+    }
+
+    playerUpdated(data) {
+        this._isAlive = data.alive;
     }
 
     addViewListeners() {
@@ -102,7 +108,7 @@ export default class Character extends fw.core.viewCore {
             this._action = this._mixer.clipAction( object.animations[ 0 ] );
             this.animatePlayer();
 
-            const parent = new THREE.Mesh( new THREE.CubeGeometry( 1, 1.7, 1 ), new THREE.MeshBasicMaterial({transparent:true, color:0x3333CC, opacity:0}) );
+            const parent = new THREE.Mesh( new THREE.CubeGeometry( 1, 1.7, 1 ), new THREE.MeshBasicMaterial({transparent:true, color:0x00FF00, opacity:0}) );
             parent.add(object);
 
             const opacity = DebugSettings.showRigidBody ? 0.2 : 0;
@@ -148,13 +154,21 @@ export default class Character extends fw.core.viewCore {
 
     createRayCasts(mesh) {
         this.rayCastR = new RayCast(mesh.position, new THREE.Vector3(1, 0, 0));
+        this.rayCastRT = new RayCast(mesh.position, new THREE.Vector3(1, 1, 0));
+        this.rayCastRB = new RayCast(mesh.position, new THREE.Vector3(1, -1, 0));
         this.rayCastL = new RayCast(mesh.position, new THREE.Vector3(-1, 0, 0));
+        this.rayCastLT = new RayCast(mesh.position, new THREE.Vector3(-1, 1, 0));
+        this.rayCastLB = new RayCast(mesh.position, new THREE.Vector3(-1, -1, 0));
         this.rayCastU = new RayCast(mesh.position, new THREE.Vector3(0, 1, 0));
         this.rayCastD = new RayCast(mesh.position, new THREE.Vector3(0, -1, 0));
     }
 
     handlePlayerCollision(targetObject, linearVelocity, angularVelocity) {
         //console.log(`collided with:`, targetObject, ` linearV: ${linearVelocity} angularV: ${angularVelocity}`);
+        if (!this._isAlive) {
+            return;
+        }
+
         switch (targetObject.name) {
             case "ground":
             case "box":
@@ -191,20 +205,26 @@ export default class Character extends fw.core.viewCore {
                 break;
             case "crusher":
             case "bear":
+            case "parrot":
+            case "flamingo":
+            case "stork":
             case "bottomCatcher":
                 this.dispatchToContext(Constants.events.PLAYER_DIED);
                 break;
+            
+            case "finish":
+                this.dispatchToContext(Constants.events.LEVEL_FINISHED, 1);
         }
     }
 
-    checkRay(rc) {
+    checkRay(rc, distance) {
         if (this.character.mesh && this.character.mesh.parent) {
             const scene = this.character.mesh.parent;
             const intersects = rc.intersectObjects(scene.children);
 
             for (let i = 0; i < intersects.length; i++) {
                 if (intersects[i].object.name == "Collectible") {
-                    if (intersects[i].distance < 1) {
+                    if (intersects[i].distance < distance) {
                         this.dispatchToContext(Constants.events.UPDATE_PLAYER_SCORE, {points: intersects[i].object.userData.points});
                         intersects[i].object.parent.remove(intersects[i].object);
                     }
@@ -214,18 +234,26 @@ export default class Character extends fw.core.viewCore {
         }
     }
 
-    respawn() {
+    respawn(x, y) {
         this.character.mesh.__dirtyPosition = true;
-        this.character.mesh.position.y = this._playerData.posY;
-        this.character.mesh.position.x = this._playerData.posX;
+        this.character.mesh.position.x = x;
+        this.character.mesh.position.y = y;
         this.character.mesh.position.z = 0;
     }
 
     updatePlayer() {
-        this.checkRay(this.rayCastR);
-        this.checkRay(this.rayCastL);
-        this.checkRay(this.rayCastU);
-        this.checkRay(this.rayCastD);
+        this.checkRay(this.rayCastR, 1.2);
+
+        this.checkRay(this.rayCastRT, 1.2);
+        this.checkRay(this.rayCastRB, 1.2);
+
+        this.checkRay(this.rayCastL, 1.2);
+
+        this.checkRay(this.rayCastLT, 1.2);
+        this.checkRay(this.rayCastLB, 1.2);
+
+        this.checkRay(this.rayCastU, 1.5);
+        this.checkRay(this.rayCastD, 1.5);
 
         this.updatePlayerPosition();
         this.updatePlayerRotation();
