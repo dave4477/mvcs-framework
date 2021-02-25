@@ -3,6 +3,7 @@ import ObjectLoaders from '../helpers/ObjectLoaders.js';
 import DebugSettings from './../../DebugSettings.js';
 import RayCast from './../helpers/RayCast.js';
 import Constants from './../../Constants.js';
+import { GLTFLoader } from './../../../app/libs/jsm/loaders/GLTFLoader.js';
 
 const FORCE_JUMP = 25;
 const FORCE_MOVE = 0.5;
@@ -11,6 +12,8 @@ const MASS = 1;
 
 const DEG2RAD = Math.PI / 180;
 const RAD2DEG = 180 / Math.PI;
+const states = [ 'Idle', 'Walking', 'Running', 'Dance', 'Death', 'Sitting', 'Standing' ];
+const emotes = [ 'Jump', 'Yes', 'No', 'Wave', 'Punch', 'ThumbsUp' ];
 
 export default class Character extends fw.core.viewCore {
     constructor(jumpForce = FORCE_JUMP, moveForce = FORCE_MOVE, damping = DAMPING, mass = MASS){
@@ -18,6 +21,14 @@ export default class Character extends fw.core.viewCore {
 
         this.character = {};
         this.objectLoader = new ObjectLoaders();
+
+        this._actions = {};
+        this.previousAction = null;
+        this.activeAction = null;
+
+        this.isWalking = false;
+        this.isIdle = true;
+
 
         this._jumpForce = jumpForce;
         this._moveForce = moveForce;
@@ -93,26 +104,27 @@ export default class Character extends fw.core.viewCore {
     set damping(value) {
         this._damping = value;
     }
-    
+
+
     create() {
-        this.objectLoader.loadFBX('./assets/monkey/Monkey_animated/monkey.FBX').then((object) => {
+        const gltfloader = new GLTFLoader();
 
-            object.rotation.y = 96.5;
-            object.scale.x = 0.01;
-            object.scale.y = 0.01;
-            object.scale.z = 0.01;
-            object.position.y = -0.28;
-            this.addShadows(object);
-
-            this._mixer = new THREE.AnimationMixer( object );
-            this._action = this._mixer.clipAction( object.animations[ 0 ] );
-            this.animatePlayer();
-
+        gltfloader.load("./assets/RobotExpressive.glb", (gltf) => {
+            const mesh = gltf.scene.children[0];
+            const clip = gltf.animations[0];
             const parent = new THREE.Mesh( new THREE.CubeGeometry( 1, 1.7, 1 ), new THREE.MeshBasicMaterial({transparent:true, color:0x00FF00, opacity:0}) );
-            parent.add(object);
+            mesh.rotation.y = 65 * DEG2RAD;
+            mesh.scale.x = 0.4;
+            mesh.scale.y = 0.4;
+            mesh.scale.z = 0.4;
+            mesh.position.y = -0.32;
+            this.addShadows(mesh);
+
+
+            parent.add(mesh);
 
             const opacity = DebugSettings.showRigidBody ? 0.2 : 0;
-            const mesh = new Physijs.BoxMesh(
+            const player = new Physijs.BoxMesh(
                 parent.geometry,
                 Physijs.createMaterial(
                     new THREE.MeshBasicMaterial({transparent:true, color:0xFF0000, opacity:opacity}),
@@ -121,23 +133,60 @@ export default class Character extends fw.core.viewCore {
                 ),
                 this._mass
             );
-            mesh.visible = DebugSettings.showRigidBody;
+            player.visible = DebugSettings.showRigidBody;
 
-            mesh.position.set(0,0,0);
-            mesh.collisions = 0;
-            mesh.name = "player";
-            // mesh.setCcdMotionThreshold( 1 );
-            // mesh.setCcdSweptSphereRadius( 0.5 );
+            player.position.set(0,0,0);
+            player.collisions = 0;
+            player.name = "player";
 
+            this._mixer = new THREE.AnimationMixer( mesh );
 
-            mesh.addEventListener('collision', this.handlePlayerCollision.bind(this));
-            mesh.setAngularFactor(new THREE.Vector3(0,0,0));
-            this.character = { model: parent, mesh: mesh };
-            this.createRayCasts(mesh);
+            const animations = gltf.animations;
 
+            for ( let i = 0; i < animations.length; i ++ ) {
+
+                const clip = animations[i];
+                const action = this._mixer.clipAction(clip);
+                this._actions[clip.name] = action;
+
+                if ( emotes.indexOf( clip.name ) >= 0 || states.indexOf( clip.name ) >= 4 ) {
+
+                    action.clampWhenFinished = true;
+                    action.loop = THREE.LoopOnce;
+
+                }
+            }
+            this.activeAction = this._actions[ 'Idle' ];
+            this.activeAction.play();
+
+            player.addEventListener('collision', this.handlePlayerCollision.bind(this));
+            player.setAngularFactor(new THREE.Vector3(0,0,0));
+            this.character = { model: parent, mesh: player };
+            this.createRayCasts(player);
             this.dispatchToView('ObjectLoaded', this.character);
+
         });
     }
+
+    fadeToAction( name, duration = 0.5 ) {
+
+        this.previousAction = this.activeAction;
+        this.activeAction = this._actions[ name ];
+
+        if ( this.previousAction !== this.activeAction ) {
+
+            this.previousAction.fadeOut( duration );
+
+        }
+
+        this.activeAction
+            .reset()
+            .setEffectiveTimeScale( 1 )
+            .setEffectiveWeight( 1 )
+            .fadeIn( duration )
+            .play();
+    }
+
 
     addShadows(object) {
         object.traverse( function ( child ) {
@@ -260,10 +309,6 @@ export default class Character extends fw.core.viewCore {
         this.updatePlayerAnimation();
     }
 
-    animatePlayer() {
-        this._action.play();
-    }
-
     updatePlayerPosition() {
         const linearDamping = this._damping;
         const player = this.character.mesh;
@@ -273,19 +318,46 @@ export default class Character extends fw.core.viewCore {
         player.setAngularVelocity(new THREE.Vector3(0, 0, 0));
         player.setAngularFactor(new THREE.Vector3(0, 0, 0));
 
-        if (this._keyPressed) {
+
+        if (this._keyPressed && this._isAlive) {
+            const anyKey = Object.values(this._keyPressed).indexOf(true) > -1;
+
+            if (!anyKey &&! this.isIdle) {
+                this.fadeToAction('Idle', 0.5);
+                this.isWalking = false;
+                this.isIdle = true;
+            }
+
+
             if (this._keyPressed["ArrowRight"]) {
+                if (!this.isWalking &&! this.isJumping) {
+                    this.fadeToAction('Running', 0.2);
+                    this._isJumping = false;
+                    this.isWalking = true;
+                    this.isIdle = false;
+                }
                 player.applyCentralImpulse(new THREE.Vector3(this._moveForce, 0, 0));
                 this._rotation.rotating = true;
                 this._rotation.direction = "right";
             } else if (this._keyPressed["ArrowLeft"]) { // == "ArrowLeft") {
+                if (!this.isWalking &&! this.isJumping) {
+                    this.fadeToAction('Running', 0.2);
+                    this._isJumping = false;
+                    this.isWalking = true;
+                    this.isIdle = false;
+                }
                 player.applyCentralImpulse(new THREE.Vector3(-this._moveForce, 0, 0));
                 this._rotation.rotating = true;
                 this._rotation.direction = "left";
 
             }
             if (this._keyPressed["Space"] && !this._isJumping) {
-                this._isJumping = true;
+                if (!this.isJumping) {
+                    this.fadeToAction('Jump', 0.1);
+                    this._isJumping = true;
+                    this.isWalking = false;
+                    this.isIdle = false;
+                }
                 player.applyCentralImpulse(new THREE.Vector3(0, this._jumpForce, 0));
             }
         }

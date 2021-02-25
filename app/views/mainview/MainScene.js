@@ -64,7 +64,7 @@ export default class MainScene extends fw.core.viewCore {
                         this.camera.position.copy(new THREE.Vector3(object.x, object.y, 0)).add(vec3);
                         this.camera.lookAt(new THREE.Vector3(object.x, object.y, 0));
 
-                        this.light.position.copy(new THREE.Vector3(object.x, object.y, 0)).add(new THREE.Vector3(0, 10, -10));
+                        this.light.position.copy(new THREE.Vector3(object.x, object.y, 0)).add(new THREE.Vector3(0, 10, 10));
                         this.light.target.position.copy(new THREE.Vector3(object.x, 0, 0)).add(new THREE.Vector3(0, 5, 0));
                     })
                     .onComplete(() => {
@@ -263,7 +263,7 @@ export default class MainScene extends fw.core.viewCore {
             this.camera.lookAt(player.position);
 
             // Make character have shadow.
-            this.light.position.copy(player.position).add(new THREE.Vector3(0, 10, -10));
+            this.light.position.copy(player.position).add(new THREE.Vector3(0, 10, 10));
             this.light.target.position.copy(new THREE.Vector3(player.position.x, 0, 0)).add(new THREE.Vector3(0, 5, 0));
         }
     }

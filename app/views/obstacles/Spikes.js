@@ -16,6 +16,7 @@ export default class Spikes {
 
         this.spike = new Physijs.ConeMesh(boxGeometry, material, 0);
         this.spike.collisions = 0;
+        this.spike.castShadow = true;
         this.spike.name = "spike";
         this.spike.position.x = x;
         this.spike.position.y = y;
