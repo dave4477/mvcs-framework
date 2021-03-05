@@ -76,7 +76,7 @@ export default class VenusFlyTrap extends fw.core.viewCore {
     }
 
     addShadows(object) {
-        object.traverse( function ( child ) {
+        object.traverse( ( child ) => {
             if ( child.isMesh ) {
                 child.castShadow = true;
                 child.receiveShadow = true;
@@ -93,26 +93,51 @@ export default class VenusFlyTrap extends fw.core.viewCore {
     }
 
 
+    disposeGeometry(geometry) {
+        if (geometry.dispose) {
+        } else if (geometry.length) {
+            for (let i = 0; i < geometry.length; i++) {
+                this.disposeGeometry(geometry[i]);
+            }
+        }
+
+    }
+
+    disposeMaps(material) {
+        if (material.map && material.dispose) {
+            material.map.dispose();
+        } else if (material.length) {
+            for (let i = 0; i < material.length; i++) {
+                this.disposeMaps(material[i]);
+            }
+        }
+    }
+
+    disposeMaterial(material) {
+        if (material && material.dispose) {
+            material.dispose();
+        } else if (material.length) {
+            for (let i = 0; i < material.length; i++) {
+                this.disposeMaterial(material[i]);
+            }
+        }
+    }
+
     destroy() {
         window.cancelAnimationFrame(this.animId);
 
         if (this.object && this.mesh) {
-            this.object.traverse(function (child) {
-                if (child.isMesh) {
-                    if (child.geometry && child.geometry.dispose) {
-                        child.geometry.dispose();
-                        console.log("disposing geometry");
+            this.object.traverse( ( child ) => {
+                if ( child.isMesh ) {
+                    if (child.geometry) {
+                        this.disposeGeometry(child.geometry);
                     }
-                    if (child.material && child.material.dispose) {
-                        if (child.material.map && child.material.map.dispose) {
-                            console.log("disposing maps");
-                            child.material.map.dispose();
-                        }
-                        console.log("disposing material");
-                        child.material.dispose();
+                    if (child.material) {
+                        this.disposeMaps(child.material);
+                        this.disposeMaterial(child.material);
                     }
                 }
-            });
+            } );
             this.mesh.geometry.dispose();
             this.mesh.material.dispose();
         }

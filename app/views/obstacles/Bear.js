@@ -52,6 +52,7 @@ export default class Bear extends fw.core.viewCore {
             mesh.position.z = 0;
             mesh.add(object);
             mesh.name = "bear";
+            mesh.userData = {owner:this};
             this.mesh = mesh;
 
             container.add(mesh);
@@ -131,4 +132,59 @@ export default class Bear extends fw.core.viewCore {
         TWEEN.update();
         this.rotateBear();
     }
+
+
+    disposeGeometry(geometry) {
+        if (geometry.dispose) {
+        } else if (geometry.length) {
+            for (let i = 0; i < geometry.length; i++) {
+                this.disposeGeometry(geometry[i]);
+            }
+        }
+
+    }
+
+    disposeMaps(material) {
+        if (material.map && material.dispose) {
+            material.map.dispose();
+        } else if (material.length) {
+            for (let i = 0; i < material.length; i++) {
+                this.disposeMaps(material[i]);
+            }
+        }
+    }
+
+    disposeMaterial(material) {
+        if (material && material.dispose) {
+            material.dispose();
+        } else if (material.length) {
+            for (let i = 0; i < material.length; i++) {
+                this.disposeMaterial(material[i]);
+            }
+        }
+    }
+
+    destroy() {
+        this.removeViewListener('frameUpdate', this.frameUpdate);
+        TWEEN.removeAll();
+
+        if (this.object && this.mesh) {
+            this.object.traverse((child) => {
+                if (child.isMesh) {
+                    if (child.geometry) {
+                        this.disposeGeometry(child.geometry);
+                    }
+                    if (child.material) {
+                        this.disposeMaps(child.material);
+                        this.disposeMaterial(child.material);
+                    }
+                }
+            });
+            this.mesh.geometry.dispose();
+            this.mesh.material.dispose();
+            this.object = null;
+            this.mesh = null;
+        }
+    }
+
 }

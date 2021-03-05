@@ -8,6 +8,8 @@ export default class LevelFinish extends fw.core.viewCore {
     constructor(x, y, z, scale, rotationY, model) {
         super(Constants.views.LEVEL_FINISH);
 
+        this.object = null;
+        this.mesh = null;
         this.x = x;
         this.y = y;
         this.z = z;
@@ -23,7 +25,7 @@ export default class LevelFinish extends fw.core.viewCore {
         gltfloader.load(this.model, (gltf) => {
             console.log("GLTF:", gltf);
             const mesh = gltf.scene.children[0];
-
+            this.object = mesh;
             mesh.position.y -= 3;
             mesh.position.x -= 0.5;
             mesh.rotation.y = this.rotationY * DEG2RAD; //Math.PI / 2;
@@ -45,8 +47,9 @@ export default class LevelFinish extends fw.core.viewCore {
 
             bMesh.position.set(this.x, this.y +3, this.z);
             bMesh.name = "finish";
+            bMesh.userData = {owner:this};
             bMesh.add(mesh);
-
+            this.mesh = bMesh;
             this.scene.add(bMesh);
         });
     }
@@ -60,4 +63,51 @@ export default class LevelFinish extends fw.core.viewCore {
         } );
     }
 
+    disposeGeometry(geometry) {
+        if (geometry.dispose) {
+        } else if (geometry.length) {
+            for (let i = 0; i < geometry.length; i++) {
+                this.disposeGeometry(geometry[i]);
+            }
+        }
+
+    }
+
+    disposeMaps(material) {
+        if (material.map && material.dispose) {
+            material.map.dispose();
+        } else if (material.length) {
+            for (let i = 0; i < material.length; i++) {
+                this.disposeMaps(material[i]);
+            }
+        }
+    }
+
+    disposeMaterial(material) {
+        if (material && material.dispose) {
+            material.dispose();
+        } else if (material.length) {
+            for (let i = 0; i < material.length; i++) {
+                this.disposeMaterial(material[i]);
+            }
+        }
+    }
+
+    destroy() {
+        if (this.object) {
+            this.object.traverse((child) => {
+                if (child.isMesh) {
+                    if (child.geometry) {
+                        this.disposeGeometry(child.geometry);
+                    }
+                    if (child.material) {
+                        this.disposeMaps(child.material);
+                        this.disposeMaterial(child.material);
+                    }
+                }
+            });
+            this.mesh.geometry.dispose();
+            this.mesh.material.dispose();
+        }
+    }
 }

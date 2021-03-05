@@ -44,8 +44,8 @@ export default class LevelParser extends fw.core.viewCore {
         LevelFeatures.features.destroyable = [];
 
         // Add skybox
-        const skyBox = SkyBox.create(level.skybox.path, level.skybox.filetype);
-        this._container.add( skyBox );
+        const skyBox = new SkyBox(level.skybox.path, level.skybox.filetype).create(this._container);
+        
 
         // Add platforms
         Platforms.create(this._container, level.platforms);

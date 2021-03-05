@@ -156,14 +156,11 @@ export default class Stork extends fw.core.viewCore {
             if ( child.isMesh ) {
                 if (child.geometry && child.geometry.dispose) {
                     child.geometry.dispose();
-                    console.log("disposing geometry");
                 }
                 if (child.material && child.material.dispose) {
                     if (child.material.map && child.material.map.dispose) {
-                        console.log("disposing maps");
                         child.material.map.dispose();
                     }
-                    console.log("disposing material");
                     child.material.dispose();
                 }
             }

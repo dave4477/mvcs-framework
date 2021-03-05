@@ -68,8 +68,7 @@ class EventBus {
 				if(Object.keys(viewSubscriptions[eventType]).length === 0) {
 					delete viewSubscriptions[eventType];
 				}
-			},
-			id: id
+			}
 		};
 	} 
 

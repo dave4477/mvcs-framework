@@ -48,6 +48,8 @@ export default class Crate extends fw.core.viewCore {
     }
 
     destroy() {
+        this.removeViewListener('frameUpdate', this.updateFrameHandler);
+        this.removeContextListener(Constants.events.PLAYER_MODEL_UPDATED, this.onPlayerUpdated);
         this.instance.userData = null;
         this.instance.geometry.dispose();
         this.instance.material.map.dispose();
