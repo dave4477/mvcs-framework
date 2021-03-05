@@ -1,15 +1,18 @@
 import * as THREE from './../../../app/libs/three.module.js';
 import { GLTFLoader } from './../../../app/libs/jsm/loaders/GLTFLoader.js';
 import Constants from './../../Constants.js';
+import ObjectsPreloader from './../helpers/ObjectsPreloader.js';
+import DebugSettings from './../../DebugSettings.js';
 
 const DEG2RAD = Math.PI / 180;
 
 export default class Parrot extends fw.core.viewCore {
-    constructor(x, y, endX, time = 2000) {
+    constructor(x, y, z, endX, time = 2000) {
         super(Constants.views.PARROT);
 
         this.x = x;
         this.y = y;
+        this.z = z;
         this.time = time;
         this.walkTo = endX;
         this.tweenForward = null;
@@ -50,10 +53,12 @@ export default class Parrot extends fw.core.viewCore {
             mesh.material.color.offsetHSL(0, Math.random() * 0.5 - 0.25, Math.random() * 0.5 - 0.25);
         }
 
+        const opacity = DebugSettings.showEnemies ? 0.5 : 0;
+
         const bMesh = new Physijs.BoxMesh(
             new THREE.CubeGeometry( 1.1, 0.7, 1 ),
             Physijs.createMaterial(
-                new THREE.MeshPhongMaterial({transparent:true, opacity:0, color:0xFF0000}),
+                new THREE.MeshPhongMaterial({transparent:true, opacity:opacity, color:0xFF0000}),
                 0,
                 0
             ),
@@ -65,7 +70,7 @@ export default class Parrot extends fw.core.viewCore {
             .startAt( - duration * Math.random() )
             .play();
 
-        bMesh.position.set(x, y, 0);
+        bMesh.position.set(x, y, z);
         bMesh.name = "parrot";
         bMesh.speed = speed;
 
@@ -75,6 +80,7 @@ export default class Parrot extends fw.core.viewCore {
         mesh.castShadow = true;
         mesh.receiveShadow = false;
 
+        bMesh.userData = {owner:this};
         bMesh.add(mesh);
         this.scene.add(bMesh);
         this.morphs.push(bMesh);
@@ -139,5 +145,39 @@ export default class Parrot extends fw.core.viewCore {
             TWEEN.update();
             this.changeDirection();
         }
+    }
+
+    destroy() {
+        this.removeViewListener('frameUpdate', this.updateFrame);
+        TWEEN.removeAll();
+
+        this.object.traverse( function ( child ) {
+            if ( child.isMesh ) {
+                if (child.geometry && child.geometry.dispose) {
+                    child.geometry.dispose();
+                    console.log("disposing geometry");
+                }
+                if (child.material && child.material.dispose) {
+                    if (child.material.map && child.material.map.dispose) {
+                        console.log("disposing maps");
+                        child.material.map.dispose();
+                    }
+                    console.log("disposing material");
+                    child.material.dispose();
+                }
+            }
+        } );
+        this.mesh.geometry.dispose();
+        this.mesh.material.dispose();
+        this.mesh.userData = null;
+        this.mesh = null;
+        this.object = null;
+        this.scene = null;
+        this.mixer = null;
+        this.morphs = [];
+        this.clock = null;
+        this.tweenBackward = null;
+        this.tweenForward = null;
+
     }
 }

@@ -1,29 +1,38 @@
 {
   "preload": [
-    {"type":"character", "asset":"./assets/monkey/Monkey_animated/monkey.FBX" },
+    {"type":"character", "asset":"./assets/RobotExpressive.glb" },
     {"type":"palm01", "asset":"./assets/palm01/Palm_01.fbx"},
     {"type":"palm02", "asset":"./assets/palm02/Palm2.fbx"},
     {"type":"palm03", "asset":"./assets/palm02/Palm1.fbx"},
     {"type":"parrot", "asset":"./assets/Parrot.glb"},
     {"type":"flamingo", "asset":"./assets/Flamingo.glb"},
     {"type":"stork", "asset":"./assets/Stork.glb"},
+    {"type":"bee", "asset":"./assets/Bee.glb"},
     {"type":"bear", "asset":"./assets/bear/Bear_Big.fbx"},
-    {"type":"banana", "asset":"./assets/banana/Banana.FBX"},
-    {"type":"teepee","asset":"assets/teepee.glb"}
+    {"type":"teepee","asset":"./assets/teepee.glb"},
+    {"type":"canoe","asset":"./assets/Canoe.glb"},
+    {"type":"fish","asset":"./assets/Fish.glb"},
+    {"type":"grass","asset":"assets/grass.glb"},
+    {"type":"venusFlyTrap", "asset":"./assets/VenusFlyTrap.glb"},
+    {"type":"Platform01", "asset":"./images/groundtexture01.jpg"},
+    {"type":"Rock", "asset":"./images/rock.jpg"},
+    {"type":"Crate", "asset":"./images/groundtexture03.png"}
+
   ],
 
   "levels": [
     {
       "playerPos": {"x":0, "y":5},
       "timeBonus":180,
-      "cameraPan": {"x":220, "y":14, "z":30, "time":6000},
+      "cameraPan": {"fromX":0, "fromY":5, "x":210, "y":14, "z":30, "time":6000},
       "skybox": {
-        "path":"images/skybox/stormydays/"
+        "path":"images/skybox/stormydays/",
+        "filetype":".png"
       },
       "platforms": [
         {"type":"ground", "x":12, "y":-8, "z":0, "width":32, "height":16, "depth":12},
         {"type":"ground", "x":48, "y":-8, "z":0, "width":34, "height":16, "depth":8},
-        {"type":"ground", "x":68, "y":2, "z":0, "width":6, "height":1, "depth":8},
+        {"type":"ground", "x":67, "y":-1, "z":0, "width":4, "height":8, "depth":2},
         {"type":"ground", "x":77, "y":5, "z":0, "width":8, "height":1, "depth":8},
         {"type":"ground-falling", "x":86, "y":2, "z":0, "width":4, "height":0.4, "depth":4},
         {"type":"ground", "x":155, "y":-8, "z":0, "width":128, "height":16, "depth":8},
@@ -43,55 +52,62 @@
       ],
 
       "decorations": [
-        {"x":37, "y":-2, "z":-6, "scale":0.5, "rotationY":0.6, "asset":"./assets/palm01/Palm_01.fbx"},
-        {"x":42, "y":-3, "z":-8, "scale":0.5, "rotationY":0.6, "asset":"./assets/palm01/Palm_01.fbx"},
-        {"x":47, "y":-1, "z":-4, "scale":0.5, "rotationY":0.6, "asset":"./assets/palm01/Palm_01.fbx"},
-        {"x":48, "y":-2, "z":-6, "scale":0.5, "rotationY":0.6, "asset":"./assets/palm01/Palm_01.fbx"},
-        {"x":53, "y":-3, "z":-8, "scale":0.5, "rotationY":0.6, "asset":"./assets/palm01/Palm_01.fbx"},
-        {"x":56, "y":-2, "z":-6, "scale":0.5, "rotationY":0.6, "asset":"./assets/palm01/Palm_01.fbx"},
-        {"x":60, "y":-3, "z":-8, "scale":0.5, "rotationY":0.6, "asset":"./assets/palm01/Palm_01.fbx"},
+        {"type":"grass", "x":27, "y":0, "z":5, "scale":0.3, "rotationY":0, "asset":"./assets/grass.glb"},
+        {"type":"grass", "x":27, "y":0, "z":-5, "scale":0.3, "rotationY":0, "asset":"./assets/grass.glb"},
 
-        {"x":100, "y":-1.5, "z":-8, "scale":0.5, "asset":"./assets/palm02/Palm2.fbx"},
-        {"x":104, "y":-2, "z":-8, "scale":0.5, "asset":"./assets/palm02/Palm2.fbx"},
-        {"x":105, "y":-2, "z":-7, "scale":0.5, "asset":"./assets/palm02/Palm2.fbx"},
-        {"x":110, "y":-3, "z":-10, "scale":0.5, "asset":"./assets/palm02/Palm2.fbx"},
-  
-        {"x":130, "y":-4, "z":-12, "scale":0.5, "asset":"./assets/palm02/Palm1.fbx"},
-        {"x":134, "y":-4, "z":-10, "scale":0.5, "asset":"./assets/palm02/Palm1.fbx"},
-        {"x":136, "y":-1.5, "z":-8, "scale":0.5, "asset":"./assets/palm02/Palm2.fbx"},
-        {"x":144, "y":-4, "z":-10, "scale":0.5, "asset":"./assets/palm02/Palm1.fbx"},
-        {"x":180, "y":-2, "z":-8, "scale":0.5, "asset":"./assets/palm02/Palm2.fbx"},
-        {"x":200, "y":-2, "z":-6, "scale":0.5, "asset":"./assets/palm02/Palm2.fbx"}
+        {"type":"grass", "x":32, "y":0, "z":3.2, "scale":0.11, "rotationY":0, "asset":"./assets/PurpleFlowerPatch.glb"},
+        {"type":"grass", "x":32.6, "y":0, "z":3.4, "scale":0.1, "rotationY":0, "asset":"./assets/PurpleFlowerPatch.glb"},
+        {"type":"grass", "x":33.2, "y":0, "z":3.2, "scale":0.09, "rotationY":0, "asset":"./assets/PurpleFlowerPatch.glb"},
+
+        {"type":"tree", "x":37, "y":-2, "z":-6, "scale":0.5, "rotationY":0.6, "asset":"./assets/palm01/Palm_01.fbx"},
+        {"type":"tree", "x":42, "y":-3, "z":-8, "scale":0.5, "rotationY":0.6, "asset":"./assets/palm01/Palm_01.fbx"},
+        {"type":"tree", "x":47, "y":-1, "z":-4, "scale":0.5, "rotationY":0.6, "asset":"./assets/palm01/Palm_01.fbx"},
+        {"type":"tree", "x":48, "y":-2, "z":-6, "scale":0.5, "rotationY":0.6, "asset":"./assets/palm01/Palm_01.fbx"},
+        {"type":"tree", "x":53, "y":-3, "z":-8, "scale":0.5, "rotationY":0.6, "asset":"./assets/palm01/Palm_01.fbx"},
+        {"type":"tree", "x":56, "y":-2, "z":-6, "scale":0.5, "rotationY":0.6, "asset":"./assets/palm01/Palm_01.fbx"},
+        {"type":"tree", "x":60, "y":-3, "z":-8, "scale":0.5, "rotationY":0.6, "asset":"./assets/palm01/Palm_01.fbx"},
+
+        {"type":"tree", "x":100, "y":-1.5, "z":-8, "scale":0.5, "asset":"./assets/palm02/Palm2.fbx"},
+        {"type":"tree", "x":104, "y":-2, "z":-8, "scale":0.5, "asset":"./assets/palm02/Palm2.fbx"},
+        {"type":"tree", "x":105, "y":-2, "z":-7, "scale":0.5, "asset":"./assets/palm02/Palm2.fbx"},
+        {"type":"tree", "x":110, "y":-3, "z":-10, "scale":0.5, "asset":"./assets/palm02/Palm2.fbx"},
+
+        {"type":"tree", "x":130, "y":-4, "z":-12, "scale":0.5, "asset":"./assets/palm02/Palm1.fbx"},
+        {"type":"tree", "x":134, "y":-4, "z":-10, "scale":0.5, "asset":"./assets/palm02/Palm1.fbx"},
+        {"type":"tree", "x":136, "y":-1.5, "z":-8, "scale":0.5, "asset":"./assets/palm02/Palm2.fbx"},
+        {"type":"tree", "x":144, "y":-4, "z":-10, "scale":0.5, "asset":"./assets/palm02/Palm1.fbx"},
+        {"type":"tree", "x":180, "y":-2, "z":-8, "scale":0.5, "asset":"./assets/palm02/Palm2.fbx"},
+        {"type":"tree", "x":200, "y":-2, "z":-6, "scale":0.5, "asset":"./assets/palm02/Palm2.fbx"}
       ],
       
       "collectibles": [
-        {"y":6.5, "x":74, "type": "banana"},
-        {"y":6.5, "x":75, "type": "banana"},
-        {"y":6.5, "x":76, "type": "banana"},
-        {"y":6.5, "x":77, "type": "banana"},
-        {"y":6.5, "x":78, "type": "banana"},
-        {"y":6.5, "x":79, "type": "banana"},
-        {"y":6.5, "x":80, "type": "banana"},
+        {"y":6.5, "x":74, "type": "cog"},
+        {"y":6.5, "x":75, "type": "cog"},
+        {"y":6.5, "x":76, "type": "cog"},
+        {"y":6.5, "x":77, "type": "cog"},
+        {"y":6.5, "x":78, "type": "cog"},
+        {"y":6.5, "x":79, "type": "cog"},
+        {"y":6.5, "x":80, "type": "cog"},
 
-        {"y":16, "x":168, "type": "banana"},
-        {"y":16, "x":169, "type": "banana"},
-        {"y":16, "x":170, "type": "banana"},
-        {"y":16, "x":171, "type": "banana"},
-        {"y":16, "x":172, "type": "banana"},
-        {"y":16, "x":173, "type": "banana"},
-        {"y":16, "x":174, "type": "banana"},
-        {"y":16, "x":175, "type": "banana"},
+        {"y":16, "x":168, "type": "cog"},
+        {"y":16, "x":169, "type": "cog"},
+        {"y":16, "x":170, "type": "cog"},
+        {"y":16, "x":171, "type": "cog"},
+        {"y":16, "x":172, "type": "cog"},
+        {"y":16, "x":173, "type": "cog"},
+        {"y":16, "x":174, "type": "cog"},
+        {"y":16, "x":175, "type": "cog"},
 
-        {"y":16, "x":116, "type": "banana"},
-        {"y":16, "x":117, "type": "banana"},
-        {"y":16, "x":118, "type": "banana"},
-        {"y":16, "x":119, "type": "banana"},
-        {"y":16, "x":120, "type": "banana"},
-        {"y":16, "x":121, "type": "banana"},
-        {"y":16, "x":122, "type": "banana"},
-        {"y":16, "x":123, "type": "banana"},
-        {"y":16, "x":124, "type": "banana"},
-        {"y":16, "x":125, "type": "banana"}
+        {"y":16, "x":116, "type": "cog"},
+        {"y":16, "x":117, "type": "cog"},
+        {"y":16, "x":118, "type": "cog"},
+        {"y":16, "x":119, "type": "cog"},
+        {"y":16, "x":120, "type": "cog"},
+        {"y":16, "x":121, "type": "cog"},
+        {"y":16, "x":122, "type": "cog"},
+        {"y":16, "x":123, "type": "cog"},
+        {"y":16, "x":124, "type": "cog"},
+        {"y":16, "x":125, "type": "cog"}
       ],
 
       "obstacles": [
@@ -99,6 +115,8 @@
         {"type": "spike", "x":46, "y": 0 },
         {"type": "spike", "x":47, "y": 0 },
         {"type": "spike", "x":48, "y": 0 },
+
+        {"type": "venusFlyTrap", "x":61, "y": 0, "asset":"./assets/VenusFlyTrap.glb" },
 
         {"type": "spike", "x":156, "y": 0 },
         {"type": "spike", "x":157, "y": 0 },
@@ -134,16 +152,17 @@
         {"type": "crusher", "x":122, "y":5, "z":0, "width":2, "height":2, "depth":8, "delay":0 },
         {"type": "bear", "x":200, "y":0, "endX":215, "duration":2000, "asset":"./assets/bear/Bear_Big.fbx" },
         {"type": "bear", "x":136, "y":15, "endX":146, "duration":1000, "asset":"./assets/bear/Bear_Big.fbx" },
-        {"type": "parrot", "x":180, "y":18, "endX":215, "duration":4000, "asset":"./assets/Parrot.glb" },
+        {"type": "parrot", "x":180, "y":18,"z":0, "endX":215, "duration":4000, "asset":"./assets/Parrot.glb" },
         {"type": "flamingo", "x":80, "y":18, "endX":115, "duration":4000, "asset":"./assets/Flamingo.glb" }
       ],
 
       "helpers": [
+        {"type":"launcher", "x":55, "y":0, "z":0, "width":2, "height":0.5, "depth":2, "launchForce":42},
         {"type":"launcher", "x":236, "y":4, "z":0, "width":2, "height":1, "depth":2, "launchForce":64}
       ],
 
       "finish": [
-        {"type":"finish", "x":67, "y":15, "z":0, "scale":0.25, "asset":"assets/teepee.glb"}
+        {"type":"finish", "x":67, "y":15, "z":0, "rotationY":90, "scale":0.25, "asset":"assets/teepee.glb"}
       ]
     },
 
@@ -153,80 +172,279 @@
     {
       "playerPos": {"x":0, "y":5},
       "timeBonus":180,
-      "cameraPan": {"x":200, "y":-15, "z":30, "time":3000},
+      "cameraPan": {"fromX":0, "fromY":0, "x":250, "y":-2, "z":30, "time":6000},
       "skybox": {
-        "path":"images/skybox/dawnmountain/"
+        "path":"images/skybox/jungle01/",
+        "filetype":".jpg"
       },
       "platforms": [
         {"type":"ground", "x":12, "y":-8, "z":0, "width":32, "height":16, "depth":12},
         {"type":"ground", "x":92, "y":-8, "z":0, "width":128, "height":16, "depth":8},
         {"type":"ground", "x":168, "y":-6, "z":0, "width":24, "height":4, "depth":8},
-        {"type":"ground", "x":168, "y":-14, "z":0, "width":24, "height":4, "depth":8},
-        {"type":"ground", "x":194, "y":-6, "z":0, "width":12, "height":4, "depth":8},
-        {"type":"ground", "x":219.5, "y":-6, "z":0, "width":24, "height":4, "depth":8}
+        {"type":"ground", "x":186, "y":-16, "z":0, "width":12, "height":16, "depth":8},
+        {"type":"ground", "x":204, "y":-6, "z":0, "width":24, "height":4, "depth":8},
+        {"type":"ground", "x":222, "y":-16, "z":0, "width":2.5, "height":24, "depth":2},
+        {"type":"ground", "x":230, "y":-16, "z":0, "width":2.5, "height":27, "depth":2},
+        {"type":"ground", "x":238, "y":-16, "z":0, "width":2.5, "height":30, "depth":2},
+        {"type":"ground-falling", "x":246, "y":0, "z":0, "width":2.5, "height":0.4, "depth":2},
+        {"type":"ground", "x":259, "y":-16, "z":0, "width":12, "height":30, "depth":21}
+
+
 
       ],
 
       "decorations": [
-        {"x":37, "y":-2, "z":-6, "scale":0.5, "rotationY":0.6, "asset":"./assets/palm01/Palm_01.fbx"},
-        {"x":42, "y":-3, "z":-8, "scale":0.5, "rotationY":0.6, "asset":"./assets/palm01/Palm_01.fbx"},
-        {"x":47, "y":-1, "z":-4, "scale":0.5, "rotationY":0.6, "asset":"./assets/palm01/Palm_01.fbx"},
-        {"x":48, "y":-2, "z":-6, "scale":0.5, "rotationY":0.6, "asset":"./assets/palm01/Palm_01.fbx"},
-        {"x":53, "y":-3, "z":-8, "scale":0.5, "rotationY":0.6, "asset":"./assets/palm01/Palm_01.fbx"},
-        {"x":56, "y":-2, "z":-6, "scale":0.5, "rotationY":0.6, "asset":"./assets/palm01/Palm_01.fbx"},
-        {"x":60, "y":-3, "z":-8, "scale":0.5, "rotationY":0.6, "asset":"./assets/palm01/Palm_01.fbx"},
+        {"type":"grass", "x":27, "y":0, "z":5, "scale":0.3, "rotationY":0, "asset":"./assets/grass.glb"},
+        {"type":"grass", "x":27, "y":0, "z":-5, "scale":0.3, "rotationY":0, "asset":"./assets/grass.glb"},
 
-        {"x":100, "y":-1.5, "z":-8, "scale":0.5, "asset":"./assets/palm02/Palm2.fbx"},
-        {"x":104, "y":-2, "z":-8, "scale":0.5, "asset":"./assets/palm02/Palm2.fbx"},
-        {"x":105, "y":-2, "z":-7, "scale":0.5, "asset":"./assets/palm02/Palm2.fbx"},
-        {"x":110, "y":-3, "z":-10, "scale":0.5, "asset":"./assets/palm02/Palm2.fbx"}
+        {"type":"grass", "x":32, "y":0, "z":3.2, "scale":0.11, "rotationY":0, "asset":"./assets/PurpleFlowerPatch.glb"},
+        {"type":"grass", "x":32.6, "y":0, "z":3.4, "scale":0.1, "rotationY":0, "asset":"./assets/PurpleFlowerPatch.glb"},
+        {"type":"grass", "x":33.2, "y":0, "z":3.2, "scale":0.09, "rotationY":0, "asset":"./assets/PurpleFlowerPatch.glb"},
+
+        {"type":"tree", "x":37, "y":-2, "z":-6, "scale":0.5, "rotationY":0.6, "asset":"./assets/palm01/Palm_01.fbx"},
+        {"type":"tree", "x":42, "y":-3, "z":-8, "scale":0.5, "rotationY":0.6, "asset":"./assets/palm01/Palm_01.fbx"},
+        {"type":"tree", "x":47, "y":-1, "z":-5, "scale":0.5, "rotationY":0.6, "asset":"./assets/palm01/Palm_01.fbx"},
+        {"type":"tree", "x":48, "y":-2, "z":-6, "scale":0.5, "rotationY":0.6, "asset":"./assets/palm01/Palm_01.fbx"},
+        {"type":"tree", "x":53, "y":-3, "z":-8, "scale":0.5, "rotationY":0.6, "asset":"./assets/palm01/Palm_01.fbx"},
+        {"type":"tree", "x":56, "y":-2, "z":-6, "scale":0.5, "rotationY":0.6, "asset":"./assets/palm01/Palm_01.fbx"},
+        {"type":"tree", "x":60, "y":-3, "z":-8, "scale":0.5, "rotationY":0.6, "asset":"./assets/palm01/Palm_01.fbx"},
+
+        {"type":"grass", "x":254, "y":-1, "z":6, "scale":0.3, "rotationY":0, "asset":"./assets/grass.glb"},
+        {"type":"grass", "x":256, "y":-1, "z":8, "scale":0.3, "rotationY":0, "asset":"./assets/grass.glb"},
+        {"type":"grass", "x":254, "y":-1, "z":-6, "scale":0.3, "rotationY":0, "asset":"./assets/grass.glb"},
+        {"type":"grass", "x":255.5, "y":-1, "z":-4, "scale":0.11, "rotationY":0, "asset":"./assets/PurpleFlowerPatch.glb"},
+        {"type":"grass", "x":262.1, "y":-1, "z":2.1, "scale":0.11, "rotationY":0, "asset":"./assets/PurpleFlowerPatch.glb"}
+
       ],
 
       "collectibles": [
-        {"y":8, "x":80, "type": "banana"},
-        {"y":8.1, "x":81, "type": "banana"},
-        {"y":8.2, "x":82, "type": "banana"},
-        {"y":8.3, "x":83, "type": "banana"},
-        {"y":8.2, "x":84, "type": "banana"},
-        {"y":8.1, "x":85, "type": "banana"},
-        {"y":8, "x":86, "type": "banana"},
 
-        {"y":-11, "x":163, "type": "banana"},
-        {"y":-11, "x":164, "type": "banana"},
-        {"y":-11, "x":165, "type": "banana"},
-        {"y":-11, "x":166, "type": "banana"},
-        {"y":-11, "x":167, "type": "banana"},
-        {"y":-11, "x":168, "type": "banana"},
-        {"y":-11, "x":169, "type": "banana"},
-        {"y":-11, "x":170, "type": "banana"},
-        {"y":-11, "x":171, "type": "banana"},
-        {"y":-11, "x":172, "type": "banana"},
-        {"y":-11, "x":173, "type": "banana"}
+        {"y":1, "x":11, "type": "cog"},
+        {"y":1, "x":12, "type": "cog"},
+        {"y":1, "x":13, "type": "cog"},
+        {"y":1, "x":14, "type": "cog"},
+        {"y":1, "x":15, "type": "cog"},
+
+        {"y":1, "x":49.6, "type": "cog"},
+        {"y":1, "x":54, "type": "cog"},
+        {"y":1, "x":55, "type": "cog"},
+        {"y":1, "x":56, "type": "cog"},
+        {"y":1, "x":57, "type": "cog"},
+
+        {"y":7.3, "x":82, "type": "cog"},
+        {"y":7.6, "x":83, "type": "cog"},
+        {"y":8, "x":84, "type": "cog"},
+        {"y":7.6, "x":85, "type": "cog"},
+        {"y":7.3, "x":86, "type": "cog"},
+
+        {"y":7, "x":96, "type": "cog"},
+        {"y":7.5, "x":97, "type": "cog"},
+        {"y":8, "x":98, "type": "cog"},
+        {"y":7.6, "x":99, "type": "cog"},
+        {"y":7, "x":100, "type": "cog"},
+
+        {"y":3, "x":130, "type": "cog"},
+        {"y":4, "x":132, "type": "cog"},
+        {"y":3, "x":134, "type": "cog"},
+        {"y":4, "x":136, "type": "cog"},
+        {"y":3, "x":138, "type": "cog"},
+        {"y":4, "x":140, "type": "cog"},
+        {"y":3, "x":142, "type": "cog"},
+
+        {"y":2, "x":224, "type": "cog"},
+        {"y":2.5, "x":226, "type": "cog"},
+        {"y":3, "x":228, "type": "cog"},
+
+        {"y":3, "x":232, "type": "cog"},
+        {"y":3.5, "x":234, "type": "cog"},
+        {"y":4, "x":236, "type": "cog"},
+
+        {"y":5, "x":240, "type": "cog"},
+        {"y":5.5, "x":242, "type": "cog"},
+        {"y":5.8, "x":244, "type": "cog"}
+
+
+
 
       ],
 
       "obstacles": [
+
         {"type": "spike", "x":45, "y": 0 },
         {"type": "spike", "x":46, "y": 0 },
         {"type": "spike", "x":47, "y": 0 },
         {"type": "spike", "x":48, "y": 0 },
-        {"type": "parrot", "x":80, "y":1, "endX":100, "duration":2000 },
-        {"type": "stork", "x":160, "y":-3, "endX":190, "duration":2500 }
+        {"type": "spike", "x":52, "y": 0 },
 
+
+        {"type": "venusFlyTrap", "x":84, "y": 0, "asset":"./assets/VenusFlyTrap.glb" },
+        {"type": "venusFlyTrap", "x":98, "y": 0, "asset":"./assets/VenusFlyTrap.glb" },
+
+        {"type": "parrot", "x":120, "y":3.5, "z":0, "endX":152, "duration":2000 },
+        {"type": "stork", "x":120, "y":1.5, "z":0, "endX":152, "duration":5000 },
+
+        {"type": "spike", "x":161, "y": -4 },
+        {"type": "spike", "x":165, "y": -4 },
+        {"type": "spike", "x":166, "y": -4 },
+        {"type": "spike", "x":167, "y": -4 },
+        {"type": "spike", "x":168, "y": -4 },
+
+        {"type": "spike", "x":192, "y": -5.5, "rotation":90 },
+        {"type": "spike", "x":192, "y": -6.5, "rotation":90 },
+        {"type": "spike", "x":192, "y": -7.5, "rotation":90 }
 
       ],
 
       "helpers": [
         {"type":"launcher", "x":77, "y":-0.3, "z":0, "width":2, "height":1, "depth":2, "launchForce":42},
-        {"type":"launcher", "x":158, "y":-4.3, "z":0, "width":2, "height":1, "depth":2, "launchForce":32},
-        {"type":"launcher", "x":184, "y":-12.2, "z":0, "width":2, "height":0.4, "depth":2, "launchForce":64},
+        {"type":"launcher", "x":91, "y":-0.3, "z":0, "width":2, "height":1, "depth":2, "launchForce":42},
+        {"type":"launcher", "x":105, "y":-0.3, "z":0, "width":2, "height":1, "depth":2, "launchForce":42},
 
-        {"type":"bridge", "x":204, "y":-4.25, "z":0 }
+        {"type":"launcher", "x":158, "y":-4.3, "z":0, "width":2, "height":1, "depth":2, "launchForce":32},
+        {"type":"crate", "x":179.2, "y": -3}
       ],
 
       "finish": [
-        {"type":"finish", "x":220, "y":-4, "z":0, "scale":0.25, "asset":"assets/teepee.glb"}
+        {"type":"finish", "x":261, "y":-1, "z":0, "scale":0.25, "rotationY":-90, "asset":"assets/teepee.glb"}
+      ]
+    },
+
+
+
+
+
+
+
+
+
+
+    {
+      "playerPos": {"x":0, "y":5},
+      "timeBonus":180,
+      "cameraPan": {"fromX":0, "fromY":0, "x":200, "y":-2, "z":30, "time":6000},
+      "skybox": {
+        "path":"images/skybox/jungle01/",
+        "filetype":".jpg"
+      },
+      "platforms": [
+        {"type":"ground", "x":12, "y":-8, "z":0, "width":32, "height":16, "depth":12},
+        {"type":"ground", "x":60, "y":-8, "z":0, "width":64, "height":16, "depth":8},
+        {"type":"ground", "x":100, "y":-14, "z":0, "width":16, "height":16, "depth":8},
+        {"type":"ground", "x":120, "y":-20, "z":0, "width":24, "height":16, "depth":8},
+        {"type":"ground", "x":200, "y":-20, "z":0, "width":24, "height":16, "depth":8}
+
+      ],
+
+      "decorations": [
+        {"type":"water", "y":-13 },
+        {"type":"grass", "x":27, "y":0, "z":5, "scale":0.3, "rotationY":0, "asset":"./assets/grass.glb"},
+        {"type":"grass", "x":27, "y":0, "z":-5, "scale":0.3, "rotationY":0, "asset":"./assets/grass.glb"},
+
+        {"type":"grass", "x":32, "y":0, "z":-3.2, "scale":0.11, "rotationY":0, "asset":"./assets/PurpleFlowerPatch.glb"},
+        {"type":"grass", "x":32.6, "y":0, "z":-3.4, "scale":0.1, "rotationY":0, "asset":"./assets/PurpleFlowerPatch.glb"},
+        {"type":"grass", "x":33.2, "y":0, "z":-3.2, "scale":0.09, "rotationY":0, "asset":"./assets/PurpleFlowerPatch.glb"},
+        {"type":"grass", "x":33.8, "y":0, "z":-3.2, "scale":0.1, "rotationY":0, "asset":"./assets/PurpleFlowerPatch.glb"},
+        {"type":"grass", "x":35, "y":0, "z":-3.2, "scale":0.11, "rotationY":0, "asset":"./assets/PurpleFlowerPatch.glb"},
+        {"type":"grass", "x":36, "y":0, "z":-3.4, "scale":0.1, "rotationY":0, "asset":"./assets/PurpleFlowerPatch.glb"},
+        {"type":"grass", "x":36.6, "y":0, "z":-3.2, "scale":0.09, "rotationY":0, "asset":"./assets/PurpleFlowerPatch.glb"},
+
+
+        {"type":"tree", "x":10, "y":-3, "z":-10, "scale":0.5, "rotationY":0.6, "asset":"./assets/palm01/Palm_01.fbx"},
+        {"type":"tree", "x":14, "y":-1, "z":-6, "scale":0.5, "rotationY":0.6, "asset":"./assets/palm01/Palm_01.fbx"},
+        {"type":"tree", "x":19, "y":-2, "z":-8, "scale":0.5, "rotationY":0.6, "asset":"./assets/palm01/Palm_01.fbx"},
+        {"type":"tree", "x":23, "y":-3, "z":-10, "scale":0.5, "rotationY":0.6, "asset":"./assets/palm01/Palm_01.fbx"},
+        {"type":"tree", "x":28, "y":-2, "z":-8, "scale":0.5, "rotationY":0.6, "asset":"./assets/palm01/Palm_01.fbx"},
+        {"type":"tree", "x":32, "y":-3, "z":-10, "scale":0.5, "rotationY":0.6, "asset":"./assets/palm01/Palm_01.fbx"},
+
+
+        {"type":"tree", "x":37, "y":-2, "z":-6, "scale":0.5, "rotationY":0.6, "asset":"./assets/palm01/Palm_01.fbx"},
+        {"type":"tree", "x":42, "y":-3, "z":-8, "scale":0.5, "rotationY":0.6, "asset":"./assets/palm01/Palm_01.fbx"},
+        {"type":"tree", "x":47, "y":-1, "z":-4, "scale":0.5, "rotationY":0.6, "asset":"./assets/palm01/Palm_01.fbx"},
+        {"type":"tree", "x":48, "y":-2, "z":-6, "scale":0.5, "rotationY":0.6, "asset":"./assets/palm01/Palm_01.fbx"},
+        {"type":"tree", "x":53, "y":-3, "z":-8, "scale":0.5, "rotationY":0.6, "asset":"./assets/palm01/Palm_01.fbx"},
+        {"type":"tree", "x":56, "y":-2, "z":-6, "scale":0.5, "rotationY":0.6, "asset":"./assets/palm01/Palm_01.fbx"},
+        {"type":"tree", "x":60, "y":-3, "z":-8, "scale":0.5, "rotationY":0.6, "asset":"./assets/palm01/Palm_01.fbx"},
+
+        {"type":"grass", "x":189, "y":-12, "z":3, "scale":0.3, "rotationY":0, "asset":"./assets/grass.glb"},
+        {"type":"grass", "x":189, "y":-12, "z":-3, "scale":0.3, "rotationY":0, "asset":"./assets/grass.glb"}
+
+      ],
+
+      "collectibles": [
+
+        {"y":1, "x":10, "type": "cog"},
+        {"y":1, "x":11, "type": "cog"},
+        {"y":1, "x":12, "type": "cog"},
+        {"y":1, "x":13, "type": "cog"},
+        {"y":1, "x":14, "type": "cog"},
+
+        {"y":1, "x":58, "type": "cog"},
+        {"y":1, "x":59, "type": "cog"},
+        {"y":1, "x":60, "type": "cog"},
+        {"y":1, "x":61, "type": "cog"},
+        {"y":1, "x":62, "type": "cog"},
+
+
+        {"y":-11.5, "x":163, "type": "cog"},
+        {"y":-11.5, "x":164, "type": "cog"},
+        {"y":-11.5, "x":165, "type": "cog"},
+        {"y":-11.5, "x":166, "type": "cog"},
+        {"y":-11.5, "x":167, "type": "cog"},
+        {"y":-11.5, "x":168, "type": "cog"},
+        {"y":-11.5, "x":169, "type": "cog"},
+        {"y":-11.5, "x":170, "type": "cog"},
+        {"y":-11.5, "x":171, "type": "cog"},
+        {"y":-11.5, "x":172, "type": "cog"},
+        {"y":-11.5, "x":173, "type": "cog"},
+
+        {"y":-11, "x":204, "type": "cog"},
+        {"y":-11, "x":205, "type": "cog"},
+        {"y":-11, "x":206, "type": "cog"},
+        {"y":-11, "x":207, "type": "cog"},
+        {"y":-11, "x":208, "type": "cog"},
+        {"y":-11, "x":209, "type": "cog"},
+        {"y":-11, "x":210, "type": "cog"},
+        {"y":-11, "x":211, "type": "cog"}
+      ],
+
+      "obstacles": [
+
+        {"type": "bees", "bees":[
+          {"type": "bee", "x":44.2, "y":1.2, "z":0, "endX":54.2, "duration":1500 },
+          {"type": "bee", "x":44.4, "y":1.9, "z":0, "endX":54.4, "duration":1500 }
+        ]},
+
+        {"type": "flamingo", "x":68, "y":1.5, "endX":98, "duration":2800 },
+
+
+        {"type": "spike", "x":95, "y": -6 },
+        {"type": "spike", "x":96, "y": -6 },
+        {"type": "spike", "x":97, "y": -6 },
+        {"type": "spike", "x":98, "y": -6 },
+        {"type": "spike", "x":99, "y": -6 },
+        {"type": "spike", "x":100, "y": -6 },
+
+        {"type": "venusFlyTrap", "x":114, "y": -12, "asset":"./assets/VenusFlyTrap.glb" },
+
+        {"type": "bees", "bees":[
+          {"type": "bee", "x":192.4, "y":-10, "z":0, "endX":202.4, "duration":1500 },
+          {"type": "bee", "x":192.2, "y":-10.45, "z":0, "endX":202.2, "duration":1500 },
+          {"type": "bee", "x":192.4, "y":-10.9, "z":0, "endX":202.4, "duration":1500 }
+        ]}
+
+      ],
+
+      "helpers": [
+        {"type":"launcher", "x":110, "y":-12, "z":0, "width":2, "height":0.5, "depth":2, "launchForce":42},
+        {"type":"launcher", "x":118, "y":-12, "z":0, "width":2, "height":0.5, "depth":2, "launchForce":42},
+        {"type":"canoe", "x":138, "y":-13.4, "z":0 }
+      ],
+
+      "finish": [
+        {"type":"finish", "x":250, "y":-11, "z":0, "scale":0.25, "rotationY":-90, "asset":"assets/teepee.glb"}
       ]
     }
+
+
   ]
 }

@@ -16,4 +16,8 @@ export default class MainView extends fw.core.viewCore {
 	initScene(levelData, playerData) {
 		this.mainScene.initScene(levelData, playerData);
 	}
+	
+	nextLevel() {
+		this.mainScene.onNextLevel();
+	}
 }

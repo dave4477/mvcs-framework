@@ -43,6 +43,7 @@ export default class UIView extends fw.core.viewCore {
         jumpArrow.addEventListener('mousedown', this.onSpaceHandlerDown, false);
         jumpArrow.addEventListener('touchend', this.onSpaceHandlerUp, false);
         jumpArrow.addEventListener('mouseup', this.onSpaceHandlerUp, false);
+        
     }
 
     onLeftTouchStart(e) {

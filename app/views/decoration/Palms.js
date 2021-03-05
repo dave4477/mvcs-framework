@@ -1,4 +1,3 @@
-import * as THREE from './../../../app/libs/three.module.js';
 import ObjectLoaders from '../helpers/ObjectLoaders.js';
 
 const DEG2RAD = Math.PI / 180;

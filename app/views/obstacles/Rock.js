@@ -1,11 +1,12 @@
 import * as THREE from './../../../app/libs/three.module.js';
 import Constants from './../../Constants.js';
-
+import ObjectsPreloader from './../helpers/ObjectsPreloader.js';
 export default class Rock extends fw.core.viewCore {
-    constructor(loader) {
+    constructor() {
         super(Constants.views.ROCK);
         
-        this.loader = loader || new THREE.TextureLoader();
+        this.texture = ObjectsPreloader.getCache()["Rock"].clone();
+        this.texture.needsUpdate = true;
         this.onCollisionHandler = this.onBoxCollision.bind(this);
         this.updateFrameHandler = this.onUpdateFrame.bind(this);
         this.instance = null;
@@ -16,7 +17,8 @@ export default class Rock extends fw.core.viewCore {
         const boxGeometry =new THREE.SphereGeometry(1, 8, 8, 0);
         //const boxGeometry = new THREE.BoxGeometry(1, 1, 1);
         let material;
-        material = Physijs.createMaterial(new THREE.MeshLambertMaterial({ map: this.loader.load( 'images/rock.jpg' ) }), .9, .4 );
+        let textureMap;
+        material = Physijs.createMaterial(new THREE.MeshLambertMaterial({ map: this.texture }), .9, .4 );
         material.map.wrapS = material.map.wrapT = THREE.RepeatWrapping;
         material.map.repeat.set( .5, .5 );
 
@@ -52,6 +54,11 @@ export default class Rock extends fw.core.viewCore {
         this.instance.removeEventListener('collision', this.onCollisionHandler);
         this.updateFrameHandler = null;
         this.onCollisionHandler = null;
+        this.instance.geometry.dispose();
+        this.instance.material.map.dispose();
+        this.instance.material.dispose();
+        this.texture.dispose();
+        this.texture = null;
         this.instance = null;
 
     }

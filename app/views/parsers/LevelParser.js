@@ -4,18 +4,26 @@ import Constants from './../../Constants.js';
 import SkyBox from './../mainview/SkyBox.js';
 import Platforms from './../mainview/Platforms.js';
 import Banana from './../collectibles/Banana.js';
+import Cog from './../collectibles/Cog.js';
 import FallingRocks from './../obstacles/FallingRocks.js';
 import Palms from './../decoration/Palms.js';
+import Grass from './../decoration/Grass.js';
 import Spikes from './../obstacles/Spikes.js';
 import Crusher from './../obstacles/Crusher.js';
 import Launcher from './../interaction/Launcher.js';
 import Bear from './../obstacles/Bear.js';
+import VenusFlyTrap from './../obstacles/VenusFlyTrap.js';
 import Parrot from './../obstacles/Parrot.js';
 import Flamingo from './../obstacles/Flamingo.js';
 import Stork from './../obstacles/Stork.js';
+import Bees from './../obstacles/Bees.js';
+import Bee from './../obstacles/Bee.js';
 import LevelFinish from './../finish/LevelFinish.js';
 import Bridge from './../interaction/Bridge.js';
+import Canoe from './../helpers/Canoe.js';
+import Crate from './../helpers/Crate.js';
 import LevelFeatures from './LevelFeatures.js';
+import WaterPlane from './../decoration/WaterPlane.js';
 
 export default class LevelParser extends fw.core.viewCore {
     constructor(container) {
@@ -36,7 +44,7 @@ export default class LevelParser extends fw.core.viewCore {
         LevelFeatures.features.destroyable = [];
 
         // Add skybox
-        const skyBox = SkyBox.create(level.skybox.path);
+        const skyBox = SkyBox.create(level.skybox.path, level.skybox.filetype);
         this._container.add( skyBox );
 
         // Add platforms
@@ -45,27 +53,51 @@ export default class LevelParser extends fw.core.viewCore {
 
         // Add decorations
         const palms = new Palms();
-        palms.create(this._container, level.decorations);
+        const palmArr = [];
+
+        const grass = new Grass();
+        const grassArr = [];
+
+        for (let i = 0; i < level.decorations.length; i++) {
+            const decoration = level.decorations[i];
+            if (decoration.type == "tree") {
+                palmArr.push(decoration);
+            } else if (decoration.type == "grass") {
+                grassArr.push(decoration);
+            } else if (decoration.type == "water") {
+                new WaterPlane(this._container, decoration.y).create(10000, 10000);
+            }
+        }
+        palms.create(this._container, palmArr);
+        grass.create(this._container, grassArr);
 
         // Add obstacles
         for (let spike = 0; spike < level.obstacles.length; spike++) {
             const obstacle = level.obstacles[spike];
             if (obstacle.type == "spike") {
-                this._container.add(new Spikes().create(obstacle.x, obstacle.y));
+                let rotation = obstacle.rotation || 0;
+                let z = obstacle.z || 0;
+                this._container.add(new Spikes().create(obstacle.x, obstacle.y, z, rotation));
 
             } else if (obstacle.type == "crusher") {
                 this._container.add(new Crusher(new THREE.Vector3(obstacle.x, obstacle.y, obstacle.z), new THREE.Vector3(obstacle.width, obstacle.height, obstacle.depth), obstacle.delay).create());
             } else if (obstacle.type == "bear") {
                 new Bear(obstacle.x, obstacle.y, obstacle.endX, obstacle.duration).create(this._container);
             } else if (obstacle.type == "parrot") {
-                new Parrot(obstacle.x, obstacle.y, obstacle.endX, obstacle.duration).create(this._container);
+                new Parrot(obstacle.x, obstacle.y, obstacle.z, obstacle.endX, obstacle.duration).create(this._container);
             } else if (obstacle.type == "flamingo") {
                 new Flamingo(obstacle.x, obstacle.y, obstacle.endX, obstacle.duration).create(this._container);
             } else if (obstacle.type == "stork") {
                 new Stork(obstacle.x, obstacle.y, obstacle.endX, obstacle.duration).create(this._container);
             } else if (obstacle.type == "fallingRocks") {
                 LevelFeatures.features.destroyable.push(new FallingRocks(obstacle.x, obstacle.y, this._container));
-            } 
+            } else if (obstacle.type == "venusFlyTrap") {
+                new VenusFlyTrap(obstacle.x, obstacle.y).create(this._container);
+            } else if (obstacle.type == "bee") {
+                new Bee(obstacle.x, obstacle.y, obstacle.z, obstacle.endX, obstacle.duration).create(this._container);
+            } else if (obstacle.type == "bees") {
+                new Bees(obstacle.bees).create(this._container);
+            }
         }
 
         // Add collectables
@@ -74,7 +106,8 @@ export default class LevelParser extends fw.core.viewCore {
             const collectible = collectibles[i];
             if (collectible.type == "banana") {
                 new Banana(collectible.x, collectible.y).create(this._container);
-
+            } else if (collectible.type == "cog") {
+                new Cog(collectible.x, collectible.y).create(this._container);
             }
         }
 
@@ -86,6 +119,10 @@ export default class LevelParser extends fw.core.viewCore {
                 this._container.add(new Launcher().create(new THREE.Vector3(helper.x, helper.y, helper.z), new THREE.Vector3(helper.width, helper.height, helper.depth), helper.launchForce));
             } else if (helper.type == "bridge") {
                 new Bridge(helper.x, helper.y, helper.z).create(this._container);
+            } else if (helper.type == "canoe") {
+                new Canoe(helper.x, helper.y, helper.z).create(this._container);
+            } else if (helper.type == "crate") {
+                new Crate(helper.x, helper.y, helper.z).create(this._container);
             }
         }
         
@@ -93,7 +130,7 @@ export default class LevelParser extends fw.core.viewCore {
         const finish = level.finish;
         for (let i = 0; i < finish.length; i++) {
             const levelFinish = finish[i];
-            new LevelFinish(levelFinish.x, levelFinish.y, levelFinish.z, levelFinish.scale, levelFinish.asset).create(this._container);
+            new LevelFinish(levelFinish.x, levelFinish.y, levelFinish.z, levelFinish.scale, levelFinish.rotationY, levelFinish.asset).create(this._container);
 
         }
     }

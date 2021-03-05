@@ -36,7 +36,7 @@ export default class Platforms {
             0 // mass
         );
         ground.visible = false;
-        ground.position.set(0, -30, 0);
+        ground.position.set(0, -36, 0);
         ground.name = "bottomCatcher";
         scene.add(ground);
     }

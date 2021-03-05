@@ -5,13 +5,14 @@ import Constants from './../../Constants.js';
 const DEG2RAD = Math.PI / 180;
 
 export default class LevelFinish extends fw.core.viewCore {
-    constructor(x, y, z, scale, model) {
+    constructor(x, y, z, scale, rotationY, model) {
         super(Constants.views.LEVEL_FINISH);
 
         this.x = x;
         this.y = y;
         this.z = z;
         this.scale = scale;
+        this.rotationY = rotationY;
         this.model = model;
     }
 
@@ -25,12 +26,13 @@ export default class LevelFinish extends fw.core.viewCore {
 
             mesh.position.y -= 3;
             mesh.position.x -= 0.5;
-            mesh.rotation.y = Math.PI / 2;
+            mesh.rotation.y = this.rotationY * DEG2RAD; //Math.PI / 2;
             mesh.castShadow = true;
             mesh.receiveShadow = true;
 
             mesh.scale.set(this.scale, this.scale, this.scale);
 
+            this.addShadows(mesh);
             const bMesh = new Physijs.BoxMesh(
                 new THREE.CubeGeometry(1, 5, 1),
                 Physijs.createMaterial(
@@ -48,4 +50,14 @@ export default class LevelFinish extends fw.core.viewCore {
             this.scene.add(bMesh);
         });
     }
+
+    addShadows(object) {
+        object.traverse( function ( child ) {
+            if ( child.isMesh ) {
+                child.castShadow = true;
+                child.receiveShadow = true;
+            }
+        } );
+    }
+
 }

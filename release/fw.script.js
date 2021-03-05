@@ -131,7 +131,8 @@ var fw = function () {
           if (Object.keys(viewSubscriptions[eventType]).length === 0) {
             delete viewSubscriptions[eventType];
           }
-        }
+        },
+        id: id
       };
     }
 
@@ -166,6 +167,7 @@ var fw = function () {
   }
 
   var MVCSCore = {
+    id: 0,
     modelMap: {},
     controllerMap: {},
     viewMap: {},
@@ -372,28 +374,23 @@ var fw = function () {
     }
 
     addContextListener(type, fn) {
+      const unsubscriber = EventBus.subscribe(type, fn.bind(this));
+
       this._contextListeners.push({
         type: type,
-        fn: fn
+        fn: fn,
+        unsubscriber: unsubscriber
       });
-
-      MVCSCore.eventMap[type] = MVCSCore.eventMap[type] || {};
-      MVCSCore.eventMap[type][fn] = EventBus.subscribe(type, fn.bind(this));
     }
 
     removeContextListener(type, fn) {
-      if (!MVCSCore.eventMap[type][fn]) {
-        console.warn(`${this.constructor.name} Could not unsubsribe  from ${type}`);
-        return;
+      for (let i = 0; i < this._contextListeners.length; i++) {
+        const listener = this._contextListeners[i];
+
+        if (listener.type == type && listener.fn == fn) {
+          listener.unsubscriber.unsubscribe();
+        }
       }
-
-      this._removeEvent(this._contextListeners, {
-        type: type,
-        fn: fn
-      });
-
-      MVCSCore.eventMap[type][fn].unsubscribe();
-      delete MVCSCore.eventMap[type][fn];
     }
 
     dispatchToView(e, args) {
@@ -401,28 +398,25 @@ var fw = function () {
     }
 
     addViewListener(type, fn) {
+      const unsubscriber = EventBus.subscribeToView(type, fn.bind(this));
+
       this._viewListeners.push({
         type: type,
-        fn: fn
+        fn: fn,
+        unsubscriber: unsubscriber
       });
-
-      MVCSCore.eventMap[type] = MVCSCore.eventMap[type] || {};
-      MVCSCore.eventMap[type][fn] = EventBus.subscribeToView(type, fn.bind(this));
     }
 
     removeViewListener(type, fn) {
-      if (!MVCSCore.eventMap[type][fn]) {
-        console.warn(`${this.constructor.name} Could not unsubsribe view listener for ${type}`);
-        return;
+      for (let i = 0; i < this._viewListeners.length; i++) {
+        const listener = this._viewListeners[i];
+
+        if (listener.type == type && listener.fn == fn) {
+          listener.unsubscriber.unsubscribe();
+
+          this._viewListeners.splice(i, 1);
+        }
       }
-
-      this._removeEvent(this._viewListeners, {
-        type: type,
-        fn: fn
-      });
-
-      MVCSCore.eventMap[type][fn].unsubscribe();
-      delete MVCSCore.eventMap[type][fn];
     }
 
     removeAllContextListeners() {
@@ -1185,6 +1179,13 @@ var fw = function () {
     }
 
   }
+
+  class DeviceInfo {
+    static isMobile() {
+      return /Android|webOS|iPhone|iPad|Mac|Macintosh|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    }
+
+  }
   /**
    * Very simple lightweight "MVCS" framework, including
    * an optional state machine and utils.
@@ -1214,7 +1215,8 @@ var fw = function () {
       viewCore: ViewCore
     },
     utils: {
-      audioManager: new AudioManager()
+      audioManager: new AudioManager(),
+      deviceInfo: DeviceInfo
     }
   };
   return fw$1;

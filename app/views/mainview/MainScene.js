@@ -5,7 +5,7 @@ import Character from './Character.js';
 import PlayerInput from './PlayerInput.js';
 import DebugSettings from './../../DebugSettings.js';
 import LevelParser from './../parsers/LevelParser.js';
-
+import WaterPlane from './../decoration/WaterPlane.js';
 export default class MainScene extends fw.core.viewCore {
     constructor() {
         super(Constants.views.MAIN_SCENE);
@@ -25,6 +25,7 @@ export default class MainScene extends fw.core.viewCore {
 
         this._cameraY = 1.5;
         this._cameraTween = null;
+        this._canInteract = false;
         this._angle = 0;
         this._radius = 14;
         this._isPaused = false;
@@ -32,6 +33,8 @@ export default class MainScene extends fw.core.viewCore {
         this._startX = 0;
         this._startY = 0;
         this._panTo = {x:0, y:0, z:0};
+
+        this.water = null;
 
         this._secondsLeft = 0;
         this._addViewListeners();
@@ -46,6 +49,9 @@ export default class MainScene extends fw.core.viewCore {
     _addContextListeners() {
         this.addContextListener(Constants.events.PLAYER_MODEL_UPDATED, this.onPlayerUpdated);
         this.addContextListener(Constants.events.LEVEL_FINISHED, this.onLevelFinished);
+        this.addContextListener(Constants.events.NEXT_LEVEL, this.onNextLevel);
+        this.addContextListener(Constants.events.VISIBILITY_SHOWN, this.resume);
+
     }
 
     onPlayerUpdated(e) {
@@ -57,7 +63,7 @@ export default class MainScene extends fw.core.viewCore {
                 // Create a tween for position first
                 var tweenObj = {x:this.camera.position.x, y:this.camera.position.y};
                 this._cameraTween = new TWEEN.Tween(tweenObj)
-                    .to({x: this._playerData.posX, y:this._playerData.posY}, 2000)
+                    .to({x: this._startX, y:this._startY}, 2000)
                     .easing(TWEEN.Easing.Quadratic.Out)
                     .delay(2000)
                     .onUpdate((object) => {
@@ -68,7 +74,7 @@ export default class MainScene extends fw.core.viewCore {
                         this.light.target.position.copy(new THREE.Vector3(object.x, 0, 0)).add(new THREE.Vector3(0, 5, 0));
                     })
                     .onComplete(() => {
-                        this.player.respawn(this._playerData.posX, this._playerData.posY);
+                        this.player.respawn(this._startX, this._startY);
                         this.dispatchToContext(Constants.events.PLAYER_RESPAWNED);
                     })
                     .start();
@@ -77,19 +83,28 @@ export default class MainScene extends fw.core.viewCore {
     }
 
     onLevelFinished() {
-        // this.pause();
-        const timeLeft = this.getTimeLeft();
+        let timeLeft = this.getTimeLeft();
+        if (timeLeft < 0) {
+            timeLeft = 0;
+        }
+        this.dispatchToContext(Constants.events.TIME_BONUS_COLLECTED, {points: timeLeft});
         this.dispatchToContext(Constants.events.UPDATE_PLAYER_SCORE, {points: timeLeft});
         this.pause();
+        this.dispatchToContext(Constants.events.SWITCH_STATE, "levelComplete");
+        //this.onNextLevel();
+    }
+
+    onNextLevel() {
         this.clearScene();
+
         this.buildScene();
         this.resume();
         setTimeout(()=>{
             this.pause();
             setTimeout(()=>{
                 this.resume();
-            }, 100);
-        }, 100);
+            }, 120);
+        }, 120);
     }
 
     panCamera(to, duration = 2000) {
@@ -107,13 +122,22 @@ export default class MainScene extends fw.core.viewCore {
                 this.camera.position.copy(updatedVec).add(vec3);
                 this.camera.lookAt(updatedVec);
             }).onComplete(() => {
-                this.addPlayer();
-                const creatables = this.levelParser.getCreatables();
-                for (let i = 0; i < creatables.length; i++) {
-                    creatables[i].create();
-                }
+                this.cameraPanComplete();
             })
             .start();
+    }
+
+    cameraPanComplete() {
+        this._canInteract = true;
+        this.addPlayer();
+        this.character.mesh.visible = true;
+        this.character.model.visible = true;
+        const creatables = this.levelParser.getCreatables();
+        for (let i = 0; i < creatables.length; i++) {
+            if (creatables[i] && creatables[i].create) {
+                creatables[i].create();
+            }
+        }
     }
 
     createRenderer() {
@@ -135,35 +159,42 @@ export default class MainScene extends fw.core.viewCore {
 
         this.scene = new Physijs.Scene;
         this.scene.setGravity(new THREE.Vector3(0, -50, 0));
+        // this.scene.fog = new THREE.Fog(0x776666, -750, 1500);
+        // this.scene.fog = new THREE.Fog( 0x59472b, -1000, 1500 );
+        // this.scene.fog = new THREE.FogExp2(0x776666, 0.001);
+
 
         const camera1 = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 1000);
-        const camera2 = new THREE.OrthographicCamera(-25, 25, 25, -25, 0.1, 1500);
+        const camera2 = new THREE.OrthographicCamera(-25, 25, 50, -50, 0.1, 1500);
 
         this.camera = camera1;
 
-        this.camera.position.set(this._playerData.posX, this._playerData.posY, 14);
 
-        const playerPos = this._levelData.levels[this._playerData.level].playerPos;
-        this._startX = playerPos.x;
-        this._startY = playerPos.y;
-
-        const panTo = this._levelData.levels[this._playerData.level].cameraPan;
-        this._panTo = { x: panTo.x, y: panTo.y, z: panTo.z, time: panTo.time };
         this.buildScene();
     }
 
     buildScene() {
+
+        const playerPos = this._levelData.levels[this._playerData.level].playerPos;
+        this.camera.position.set(playerPos.x, playerPos.y, 14);
+        this._startX = playerPos.x;
+        this._startY = playerPos.y;
+
+
+        const panTo = this._levelData.levels[this._playerData.level].cameraPan;
+        this._panTo = { x: panTo.x, y: panTo.y, z: panTo.z, time: panTo.time };
+
         this.scene.add( this.camera );
 
         // Light
-        const ambient = new THREE.AmbientLight( 0x686868 ); // soft white light
+        const ambient = new THREE.AmbientLight( 0x463629 ); // soft white light
         this.scene.add( ambient );
 
         this.light = new THREE.DirectionalLight(0xEEEEEE);
         this.light.position.set(0, 5, 10);
         this.light.target.position.copy(this.scene.position);
         this.light.castShadow = true;
-        this.light.shadow.camera = new THREE.OrthographicCamera( -15, 15, 10, -10, 0.5, 1000 );
+        this.light.shadow.camera = new THREE.OrthographicCamera( -15, 15, 25, -25, 0.5, 1000 );
 
         this.scene.add(this.light);
         this.scene.add(this.light.target);
@@ -187,23 +218,17 @@ export default class MainScene extends fw.core.viewCore {
 
     handleVisibilityChange(e) {
         if (document.visibilityState == "hidden") {
+            this.dispatchToContext(Constants.events.VISIBILITY_HIDDEN);
             this.pause();
-        } else {
-            this.resume();
-            setTimeout(()=>{
-                this.pause();
-                setTimeout(()=>{
-                    this.resume();
-                }, 100);
-            }, 100);
         }
     }
 
     addCharacter() {
         if (!this.player) {
             this.player = new Character();
-            this.player.create();
+            this.player.create(this.scene);
         } else {
+            this.character.mesh.__dirtyPosition = true;
             this.character.mesh.position.x = this._startX;
             this.character.mesh.position.y = this._startY;
         }
@@ -220,25 +245,43 @@ export default class MainScene extends fw.core.viewCore {
     startGame() {
         window.requestAnimationFrame(() => this.render() );
         window.addEventListener('resize', this.handleResize.bind(this));
+        window.addEventListener('blur', this.handleVisibilityChange.bind(this), false);
         document.addEventListener("visibilitychange", this.handleVisibilityChange.bind(this), false);
 
         this.scene.simulate();
-        this.panCamera({x:this._panTo.x, y:this._panTo.y, z:this._panTo.z}, this._panTo.time);
-        setTimeout(()=>{
+        if (!DebugSettings.skipPanning) {
+            this.panCamera({x:this._panTo.x, y:this._panTo.y, z:this._panTo.z}, this._panTo.time);
+            setTimeout(()=>{
+                this.dispatchToView(Constants.events.TIMER_STARTED);
+                this._clock = new THREE.Clock(true);
+            }, 14500);
+
+        } else {
+            this.cameraPanComplete();
+            this.dispatchToView(Constants.events.TIMER_STARTED);
             this._clock = new THREE.Clock(true);
-        }, 14500);
+
+        }
     }
 
     addPlayer() {
+        this.character.mesh.__dirtyPosition = true;
+        this.character.mesh.position.x = this._startX;
+        this.character.mesh.position.y = this._startY;
+
         this.scene.add( this.character.mesh);
         this.scene.add( this.character.model);
     }
 
     updateCamera() {
-        if (this.camera && this._playerData.alive && this.character.mesh.parent) {
+        if (this.camera && this._playerData.alive && this.character.mesh.parent && this._canInteract) {
             const player = this.character.mesh;
             const vec3 = new THREE.Vector3(0, this._cameraY, 14);
 
+            if (player.position.y < -14) {
+                console.log("Don't follow!");
+                return;
+            }
             if (this.playerInput) {
                 if (this.playerInput.pressedKeys['KeyA']) {
                     vec3.x = this._radius * Math.cos(this._angle);
@@ -300,9 +343,11 @@ export default class MainScene extends fw.core.viewCore {
 
             this.dispatchToView('frameUpdate', dt);
 
-            if (this.character && this.character.model && this._playerData.alive) {
+            if (this.character && this.character.model) {
                 this.player.updatePlayer();
-                this.updateCamera();
+                if (this._playerData.alive) {
+                    this.updateCamera();
+                }
             }
             if (this._cameraTween) {
                 TWEEN.update(dt);
@@ -329,8 +374,23 @@ export default class MainScene extends fw.core.viewCore {
     }
 
     clearScene() {
+        console.log("Clearing scene");
         while(this.scene.children.length){
-            this.scene.remove(this.scene.children[0]);
+            const child = this.scene.children[0];
+            if (child.material && child.material.dispose) {
+                child.material.dispose();
+            }
+            if (child.geometry && child.geometry.dispose) {
+                child.geometry.dispose();
+            }
+            if (child.userData && child.userData.owner && child.userData.owner.destroy) {
+                child.userData.owner.destroy();
+            }
+            this.scene.remove(child);
         }
+        this.addPlayer();
+        this.character.mesh.visible = false;
+        this.character.model.visible = false;
+        this._canInteract = false;
     }
 }

@@ -40,8 +40,8 @@ export default class LoadingView extends fw.core.viewCore {
             const el = document.getElementById(letter);
             var tweenObj = {y: el.offsetTop, el:el };
             new TWEEN.Tween(tweenObj)
-                .to({y:70}, 1000)
-                .repeat(100)
+                .to({y:40}, 1000)
+                .repeat(50)
                 .yoyo(true)
                 .delay(i * 150)
                 .onUpdate((object) => {
@@ -51,8 +51,6 @@ export default class LoadingView extends fw.core.viewCore {
         }
         this.interval = setInterval(this.updateText.bind(this), 200);
         this.intervalSub = setInterval(this.updateSub.bind(this), 333);
-
-        console.log("starting tween");
     }
 
     updateText() {

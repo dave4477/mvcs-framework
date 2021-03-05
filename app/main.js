@@ -3,6 +3,7 @@ import SimulationModel from './models/SimulationModel.js';
 import ViewLoaderService from './services/ViewLoaderService.js';
 import GameService from './services/GameService.js';
 import InitAppController from './controllers/InitAppController.js';
+import MainScreenController from './controllers/MainScreenController.js';
 import PlayerController from './controllers/PlayerController.js';
 import GameController from './controllers/GameController.js';
 import LoadingViewController from './controllers/LoadingViewController.js';
@@ -27,10 +28,11 @@ export default class Main {
 
 		// init controllers
 		new InitAppController();
+		new MainScreenController();
 		new PlayerController();
 		new GameController();
 		new LoadingViewController();
-		
+
 		// init stateMachine's config
 		fw.core.createStateMachine(result[url]);
 	}

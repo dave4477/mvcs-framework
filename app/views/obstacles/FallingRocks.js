@@ -16,12 +16,20 @@ export default class FallingRocks extends fw.core.viewCore {
         this._interval = interval;
         this._active = true;
         this._justStarted = true;
+        this._texture = null;
+        this.loader = new THREE.TextureLoader();
+        this.loader.load( 'images/rock.jpg', (texture) =>{
+           this.texture = texture;
+        });
 
         this.addContextListener(Constants.events.SIMULATION_PAUSED, this.pause);
         this.addContextListener(Constants.events.SIMULATION_RESUMED, this.resume);
     }
     
     create() {
+        if (!this.scene) {
+            return;
+        }
         if (!this._active) {
             clearTimeout(timer);
             return;
@@ -45,7 +53,7 @@ export default class FallingRocks extends fw.core.viewCore {
             if (rockToRecycle) {
                 this.recycleRock(rockToRecycle);
             } else {
-                const rockFactory = new Rock(this.loader);
+                const rockFactory = new Rock();
                 const rock = rockFactory.create();
                 rock.instance.position.set( this._x, this._y, 0);
                 this.scene.add(rock.instance);
@@ -71,6 +79,9 @@ export default class FallingRocks extends fw.core.viewCore {
             this._rocks[i].destroy();
         }
         this._rocks = [];
+        this.removeContextListener(Constants.events.SIMULATION_PAUSED, this.pause);
+        this.removeContextListener(Constants.events.SIMULATION_RESUMED, this.resume);
+
     }
     
     pause() {

@@ -4,6 +4,8 @@ import Constants from './../../Constants.js';
 export default class Crusher extends fw.core.viewCore {
     constructor(posVec3, geomVec3, timeOffset = 0) {
         super(Constants.views.CRUSHER);
+        this.handleFrameUpdate = this.moveBlock.bind(this);
+
         this.direction = 1;
         this.ground = null;
         this.posVec3 = posVec3;
@@ -24,14 +26,10 @@ export default class Crusher extends fw.core.viewCore {
         this.ground.receiveShadow = false;
         this.ground.castShadow = true;
         this.ground.name = "crusher";
-
+        this.ground.userData = {owner:this};
         setTimeout(() => {
-            this.addViewListener('frameUpdate', this.moveBlock.bind(this));
+            this.addViewListener('frameUpdate', this.handleFrameUpdate);
         }, this.timeOffset);
-
-        this.ground.addEventListener('collision', (targetObject) => {
-            console.log("Crusher hit ", targetObject.name);
-        });
         return this.ground;
     }
 
@@ -48,4 +46,12 @@ export default class Crusher extends fw.core.viewCore {
         }
     }
 
+    destroy() {
+        this.removeViewListener('frameUpdate', this.handleFrameUpdate);
+        this.ground.geometry.dispose();
+        this.ground.material.map.dispose();
+        this.ground.material.dispose();
+        this.ground.userData = null;
+        this.ground = null;
+    }
 }

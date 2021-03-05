@@ -10,6 +10,7 @@ import Queue from './data/queue/Queue.js';
 import ViewParser from './parsers/ViewParser.js';
 import Backoff from './Backoff.js';
 import AudioManager from './utils/AudioManager.js';
+import DeviceInfo from './utils/DeviceInfo.js';
 /**
  * Very simple lightweight "MVCS" framework, including
  * an optional state machine and utils.
@@ -37,6 +38,7 @@ export default {
 		viewCore: ViewCore
 	},
 	utils: {
-		audioManager: new AudioManager()
+		audioManager: new AudioManager(),
+		deviceInfo: DeviceInfo
 	}
 };

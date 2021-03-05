@@ -1,7 +1,7 @@
 import * as THREE from './../../../app/libs/three.module.js';
 import { GLTFLoader } from './../../../app/libs/jsm/loaders/GLTFLoader.js';
 import Constants from './../../Constants.js';
-
+import DebugSettings from './../../DebugSettings.js';
 const DEG2RAD = Math.PI / 180;
 
 export default class Flamingo extends fw.core.viewCore {
@@ -50,10 +50,12 @@ export default class Flamingo extends fw.core.viewCore {
             mesh.material.color.offsetHSL(0, Math.random() * 0.5 - 0.25, Math.random() * 0.5 - 0.25);
         }
 
+        const opacity = DebugSettings.showEnemies ? 0.5 : 0;
+        
         const bMesh = new Physijs.BoxMesh(
             new THREE.CubeGeometry( 3.4, 0.6, 1 ),
             Physijs.createMaterial(
-                new THREE.MeshPhongMaterial({transparent:true, opacity:0, color:0xFF0000}),
+                new THREE.MeshPhongMaterial({transparent:true, opacity:opacity, color:0xFF0000}),
                 0,
                 0
             ),
@@ -68,7 +70,7 @@ export default class Flamingo extends fw.core.viewCore {
         bMesh.position.set(x, y, 0);
         bMesh.name = "flamingo";
         bMesh.speed = speed;
-
+        bMesh.userData = {owner:this};
         mesh.rotation.y = Math.PI / 2;
         mesh.scale.set(0.02, 0.02, 0.02);
 
@@ -144,17 +146,38 @@ export default class Flamingo extends fw.core.viewCore {
             TWEEN.update();
             this.changeDirection();
         }
-        /*
-        for (let i = 0; i < this.morphs.length; i++) {
-            const morph = this.morphs[i];
+    }
 
-            morph.__dirtyPosition = true;
-            morph.position.x += morph.speed;// * delta;
+    destroy() {
+        this.removeViewListener('frameUpdate', this.updateFrame);
+        TWEEN.removeAll();
 
-            if (morph.position.x > 250) {
-                morph.position.x =  0;
+        this.object.traverse( function ( child ) {
+            if ( child.isMesh ) {
+                if (child.geometry && child.geometry.dispose) {
+                    child.geometry.dispose();
+                    console.log("disposing geometry");
+                }
+                if (child.material && child.material.dispose) {
+                    if (child.material.map && child.material.map.dispose) {
+                        console.log("disposing maps");
+                        child.material.map.dispose();
+                    }
+                    console.log("disposing material");
+                    child.material.dispose();
+                }
             }
-        }
-        */
+        } );
+        this.mesh.geometry.dispose();
+        this.mesh.material.dispose();
+        this.mesh.userData = null;
+        this.mesh = null;
+        this.object = null;
+        this.scene = null;
+        this.mixer = null;
+        this.morphs = [];
+        this.clock = null;
+        this.tweenBackward = null;
+        this.tweenForward = null;
     }
 }

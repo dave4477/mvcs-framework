@@ -1,6 +1,7 @@
 import * as THREE from './../../../app/libs/three.module.js';
 import ObjectLoaders from '../helpers/ObjectLoaders.js';
 import Constants from './../../Constants.js';
+import DebugSettings from './../../DebugSettings.js';
 const DEG2RAD = Math.PI / 180;
 
 
@@ -35,10 +36,12 @@ export default class Bear extends fw.core.viewCore {
 
             this.addShadows(object);
 
+            const opacity = DebugSettings.showEnemies ? 0.5 : 0;
+
             const mesh = new Physijs.BoxMesh(
                 new THREE.CubeGeometry( 1, 2.7, 1 ),
                 Physijs.createMaterial(
-                    new THREE.MeshPhongMaterial({transparent:true, opacity:0.0, color:0xFF0000}),
+                    new THREE.MeshPhongMaterial({transparent:true, opacity:opacity, color:0xFF0000}),
                     1,
                     0.5
                 ),

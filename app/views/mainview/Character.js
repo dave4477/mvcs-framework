@@ -5,16 +5,30 @@ import RayCast from './../helpers/RayCast.js';
 import Constants from './../../Constants.js';
 import { GLTFLoader } from './../../../app/libs/jsm/loaders/GLTFLoader.js';
 
+/**
+ * Physics
+ */
 const FORCE_JUMP = 25;
 const FORCE_MOVE = 0.5;
 const DAMPING = 0.92;
 const MASS = 1;
 
+
 const DEG2RAD = Math.PI / 180;
-const RAD2DEG = 180 / Math.PI;
+
+/**
+ * Animations
+ */
+const IDLE_ACTION_TIME = 8000;
 const states = [ 'Idle', 'Walking', 'Running', 'Dance', 'Death', 'Sitting', 'Standing' ];
 const emotes = [ 'Jump', 'Yes', 'No', 'Wave', 'Punch', 'ThumbsUp' ];
+const idleActions = ['Wave','ThumbsUp','Dance'];
 
+/**
+ * This is the character/player class representing the player.
+ * This file contains defaults for physics, and collision detection for the player,
+ * and handles animations. It is big and messy.
+ */
 export default class Character extends fw.core.viewCore {
     constructor(jumpForce = FORCE_JUMP, moveForce = FORCE_MOVE, damping = DAMPING, mass = MASS){
         super(Constants.views.CHARACTER);
@@ -26,23 +40,27 @@ export default class Character extends fw.core.viewCore {
         this.previousAction = null;
         this.activeAction = null;
 
-        this.isWalking = false;
-        this.isIdle = true;
+        this._mixer = null;
+        this._keyPressed = null;
+        this._rotationY = 0;
+        this._rotation = { rotating: false, direction:"right"};
+        this._isWalking = false;
+        this._isIdle = true;
+        this._isJumping = false;
 
+        this._idleTimer = null;
 
         this._jumpForce = jumpForce;
         this._moveForce = moveForce;
         this._damping = damping;
         this._mass = mass;
-        this._keyPressed = null;
-        this._isJumping = false;
-        this._rotationY = 0;
-        this._rotation = { rotating: false, direction:"right"};
-        this._mixer = null;
+
+        this.attachedObjects = {};
+
         this._clock = new THREE.Clock();
-        this._action = null;
         this._isPaused = false;
         this._isAlive = true;
+
         this.addContextListeners();
         this.addViewListeners();
     }
@@ -55,6 +73,9 @@ export default class Character extends fw.core.viewCore {
 
     playerUpdated(data) {
         this._isAlive = data.alive;
+        if (!data.alive) {
+            this.fadeToAction('Death', 0.5);
+        }
     }
 
     addViewListeners() {
@@ -62,6 +83,11 @@ export default class Character extends fw.core.viewCore {
             this._keyPressed = data;
         });
         this.addViewListener('KeyPressed', this.setKeyPressed);
+        this.addViewListener('DetachPlayerObjects', (object) => {
+            this.character.mesh.applyCentralImpulse(new THREE.Vector3(0, this._jumpForce/2, 0));
+            this.attachedObjects[object] = null;
+            delete this.attachedObjects[object];
+        })
     }
 
     pause() {
@@ -106,7 +132,9 @@ export default class Character extends fw.core.viewCore {
     }
 
 
-    create() {
+    create(scene) {
+        this.scene = scene;
+
         const gltfloader = new GLTFLoader();
 
         gltfloader.load("./assets/RobotExpressive.glb", (gltf) => {
@@ -120,14 +148,14 @@ export default class Character extends fw.core.viewCore {
             mesh.position.y = -0.32;
             this.addShadows(mesh);
 
-
+            parent.name = "playerModel";
             parent.add(mesh);
 
             const opacity = DebugSettings.showRigidBody ? 0.2 : 0;
             const player = new Physijs.BoxMesh(
                 parent.geometry,
                 Physijs.createMaterial(
-                    new THREE.MeshBasicMaterial({transparent:true, color:0xFF0000, opacity:opacity}),
+                    new THREE.MeshBasicMaterial({transparent:true, color:0xFFFFFF, opacity:opacity}),
                     0.2,
                     0
                 ),
@@ -162,9 +190,8 @@ export default class Character extends fw.core.viewCore {
             player.addEventListener('collision', this.handlePlayerCollision.bind(this));
             player.setAngularFactor(new THREE.Vector3(0,0,0));
             this.character = { model: parent, mesh: player };
-            this.createRayCasts(player);
             this.dispatchToView('ObjectLoaded', this.character);
-
+            this.createRayCasts(player);
         });
     }
 
@@ -174,9 +201,7 @@ export default class Character extends fw.core.viewCore {
         this.activeAction = this._actions[ name ];
 
         if ( this.previousAction !== this.activeAction ) {
-
             this.previousAction.fadeOut( duration );
-
         }
 
         this.activeAction
@@ -188,21 +213,31 @@ export default class Character extends fw.core.viewCore {
     }
 
 
+    randomIdleAction() {
+        let rnd = Math.floor(Math.random() * idleActions.length);
+        if (rnd == idleActions.length) {
+            rnd -= 1;
+        }
+        const action = idleActions[rnd];
+        this.fadeToAction(action, 0.5);
+        setTimeout(()=>{
+            this.fadeToAction('Idle', 0.5);
+        },3000);
+        this._idleTimer = setTimeout(this.randomIdleAction.bind(this), IDLE_ACTION_TIME);
+
+    }
+
     addShadows(object) {
         object.traverse( function ( child ) {
-
             if ( child.isMesh ) {
-
                 child.castShadow = true;
                 child.receiveShadow = true;
-
             }
-
         } );
     }
 
     createRayCasts(mesh) {
-        this.rayCastR = new RayCast(mesh.position, new THREE.Vector3(1, 0, 0));
+        this.rayCastR = new RayCast(mesh.position, new THREE.Vector3(1, 0, 0), mesh);
         this.rayCastRT = new RayCast(mesh.position, new THREE.Vector3(1, 1, 0));
         this.rayCastRB = new RayCast(mesh.position, new THREE.Vector3(1, -1, 0));
         this.rayCastL = new RayCast(mesh.position, new THREE.Vector3(-1, 0, 0));
@@ -213,7 +248,6 @@ export default class Character extends fw.core.viewCore {
     }
 
     handlePlayerCollision(targetObject, linearVelocity, angularVelocity) {
-        //console.log(`collided with:`, targetObject, ` linearV: ${linearVelocity} angularV: ${angularVelocity}`);
         if (!this._isAlive) {
             return;
         }
@@ -221,6 +255,7 @@ export default class Character extends fw.core.viewCore {
         switch (targetObject.name) {
             case "ground":
             case "box":
+            case "bridge":
                 this._isJumping = false;
                 break;
 
@@ -242,23 +277,31 @@ export default class Character extends fw.core.viewCore {
 
                 break;
 
+            case "boat":
+                this.attachedObjects["boat"] = targetObject;
+                break;
+
             case "launcher":
                 this._isJumping = true;
                 this.character.mesh.applyCentralImpulse(new THREE.Vector3(0, targetObject.userData.launchPower, 0));
                 break;
 
             case "spike":
-                if (targetObject.userData.isDeadly) {
-                    this.dispatchToContext(Constants.events.PLAYER_DIED);
-                }
-                break;
             case "crusher":
             case "bear":
             case "parrot":
             case "flamingo":
             case "stork":
+            case "bee":
+            case "venusFlyTrap":
+                if (!DebugSettings.godMode) {
+                    this._isAlive = false;
+                    this.dispatchToContext(Constants.events.PLAYER_DIED);
+                }
+                break;
             case "bottomCatcher":
-                this.dispatchToContext(Constants.events.PLAYER_DIED);
+                    this._isAlive = false;
+                    this.dispatchToContext(Constants.events.PLAYER_DIED);
                 break;
             
             case "finish":
@@ -272,10 +315,13 @@ export default class Character extends fw.core.viewCore {
             const intersects = rc.intersectObjects(scene.children);
 
             for (let i = 0; i < intersects.length; i++) {
-                if (intersects[i].object.name == "Collectible") {
-                    if (intersects[i].distance < distance) {
-                        this.dispatchToContext(Constants.events.UPDATE_PLAYER_SCORE, {points: intersects[i].object.userData.points});
-                        intersects[i].object.parent.remove(intersects[i].object);
+                const intersect = intersects[i];
+                if (intersect.object.name == "Collectible") {
+                    if (intersect.distance < distance) {
+                        if (intersect.object.parent) {
+                            this.dispatchToContext(Constants.events.UPDATE_PLAYER_SCORE, {points: intersect.object.userData.points});
+                            intersect.object.parent.remove(intersect.object);
+                        }
                     }
                 }
             }
@@ -288,18 +334,19 @@ export default class Character extends fw.core.viewCore {
         this.character.mesh.position.x = x;
         this.character.mesh.position.y = y;
         this.character.mesh.position.z = 0;
+        this.fadeToAction('Idle', 0.25);
     }
 
     updatePlayer() {
-        this.checkRay(this.rayCastR, 1.2);
+        this.checkRay(this.rayCastR, 1);
 
-        this.checkRay(this.rayCastRT, 1.2);
-        this.checkRay(this.rayCastRB, 1.2);
+        this.checkRay(this.rayCastRT, 1.5);
+        this.checkRay(this.rayCastRB, 1.5);
 
-        this.checkRay(this.rayCastL, 1.2);
+        this.checkRay(this.rayCastL, 1);
 
-        this.checkRay(this.rayCastLT, 1.2);
-        this.checkRay(this.rayCastLB, 1.2);
+        this.checkRay(this.rayCastLT, 1.5);
+        this.checkRay(this.rayCastLB, 1.5);
 
         this.checkRay(this.rayCastU, 1.5);
         this.checkRay(this.rayCastD, 1.5);
@@ -318,33 +365,40 @@ export default class Character extends fw.core.viewCore {
         player.setAngularVelocity(new THREE.Vector3(0, 0, 0));
         player.setAngularFactor(new THREE.Vector3(0, 0, 0));
 
-
+        if (!this.isJumping) {
+            this._mixer.timeScale = 1;
+        }
         if (this._keyPressed && this._isAlive) {
             const anyKey = Object.values(this._keyPressed).indexOf(true) > -1;
 
-            if (!anyKey &&! this.isIdle) {
+            if (!anyKey &&! this._isIdle) {
                 this.fadeToAction('Idle', 0.5);
-                this.isWalking = false;
-                this.isIdle = true;
+                this._isWalking = false;
+                this._isIdle = true;
+                this._idleTimer = setTimeout(this.randomIdleAction.bind(this), IDLE_ACTION_TIME)
             }
 
 
             if (this._keyPressed["ArrowRight"]) {
-                if (!this.isWalking &&! this.isJumping) {
+                clearTimeout(this._idleTimer);
+
+                if (!this._isWalking &&! this.isJumping) {
                     this.fadeToAction('Running', 0.2);
                     this._isJumping = false;
-                    this.isWalking = true;
-                    this.isIdle = false;
+                    this._isWalking = true;
+                    this._isIdle = false;
                 }
                 player.applyCentralImpulse(new THREE.Vector3(this._moveForce, 0, 0));
                 this._rotation.rotating = true;
                 this._rotation.direction = "right";
-            } else if (this._keyPressed["ArrowLeft"]) { // == "ArrowLeft") {
-                if (!this.isWalking &&! this.isJumping) {
+            } else if (this._keyPressed["ArrowLeft"]) {
+                clearTimeout(this._idleTimer);
+
+                if (!this._isWalking &&! this.isJumping) {
                     this.fadeToAction('Running', 0.2);
                     this._isJumping = false;
-                    this.isWalking = true;
-                    this.isIdle = false;
+                    this._isWalking = true;
+                    this._isIdle = false;
                 }
                 player.applyCentralImpulse(new THREE.Vector3(-this._moveForce, 0, 0));
                 this._rotation.rotating = true;
@@ -352,11 +406,14 @@ export default class Character extends fw.core.viewCore {
 
             }
             if (this._keyPressed["Space"] && !this._isJumping) {
+                clearTimeout(this._idleTimer);
+
                 if (!this.isJumping) {
-                    this.fadeToAction('Jump', 0.1);
+                    this._mixer.timeScale = 0.6;
+                    this.fadeToAction('Jump', 0);
                     this._isJumping = true;
-                    this.isWalking = false;
-                    this.isIdle = false;
+                    this._isWalking = false;
+                    this._isIdle = false;
                 }
                 player.applyCentralImpulse(new THREE.Vector3(0, this._jumpForce, 0));
             }
@@ -364,6 +421,11 @@ export default class Character extends fw.core.viewCore {
         model.position.x = player.position.x;
         model.position.y = player.position.y - 0.55;
         player.position.z = 0;
+
+        const keys = Object.keys(this.attachedObjects);
+        for (let i = 0; i < keys.length; i++) {
+            this.attachedObjects[keys].position.set(model.position.x, model.position.y, model.position.z);
+        }
     }
 
     updatePlayerRotation() {
@@ -393,5 +455,10 @@ export default class Character extends fw.core.viewCore {
         const delta = this._clock.getDelta();
 
         if ( this._mixer ) this._mixer.update( delta );
+    }
+
+    drawRay(scene) {
+        this.rayCastR.drawRay(scene);
+        this.rayCastL.drawRay(scene);
     }
 }

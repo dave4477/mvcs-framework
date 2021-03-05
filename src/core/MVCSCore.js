@@ -1,6 +1,7 @@
 
 
 export default {
+	id:0,
 	modelMap: {},
 	controllerMap: {},
 	viewMap: {},
@@ -21,4 +22,5 @@ export default {
 	addService: function(name, service) {
 		this.serviceMap[name] = service;
 	}
+
 };

@@ -4,11 +4,11 @@ export default class SkyBox {
     constructor() {
     }
 
-    static create(path) {
+    static create(path, filetype) {
         const loader = new THREE.TextureLoader();
         const imagePrefix = path;
         const directions  = ["xpos", "xneg", "ypos", "yneg", "zpos", "zneg"];
-        const imageSuffix = ".png";
+        const imageSuffix = filetype;
         const skyGeometry = new THREE.CubeGeometry( 1250, 1250, 1250 );
 
         var materialArray = [];

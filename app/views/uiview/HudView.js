@@ -8,6 +8,13 @@ export default class HudView extends fw.core.viewCore {
     }
 
     init() {
+        this.addViewListener(Constants.events.TIMER_STARTED, () => {
+            document.querySelector('#timeBonus').style.display = "";
+        });
+        this.addContextListener(Constants.events.LEVEL_FINISHED, ()=> {
+            document.querySelector('#timeBonus').style.display = "none";
+        });
+
         this.addViewListener(Constants.events.TIMEBONUS_UPDATED, (time) => {
             if (!this._timeBonus) {
                 this._timeBonus = document.getElementById('timeBonus');

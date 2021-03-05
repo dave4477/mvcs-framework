@@ -8,6 +8,19 @@
 		],
 		"postProcess":[
 		],
+		"outbound":["mainScreen"],
+		"events":[
+			"LoadView"
+		]
+	},
+
+	{
+		"stateName": "mainScreen",
+		"preProcess":[
+			"MainScreenController:checkRotation"
+		],
+		"postProcess":[
+		],
 		"outbound":["loading"],
 		"events":[
 			"LoadView"
@@ -37,27 +50,41 @@
 		],
 		"postProcess":[
 		],
-		"outbound":["popup"],
+		"outbound":["popup", "levelComplete"],
 		"events":[
 			"PauseSimulation",
 			"ResumeSimulation",
 			"SimulationPaused",
 			"SimulationResumed",
+			"VisibilityHidden",
+			"VisibilityShown",
 			"UpdatePlayerScore",
 			"PlayerDied",
 			"PlayerRespawned",
 			"PlayerModelUpdated",
 			"LevelDataReceived",
 			"LoadView",
+			"TimeBonusCollected",
 			"LevelFinished"
 		]
 	},
+
+	{
+		"stateName": "levelComplete",
+		"preProcess":[],
+		"postProcess":[],
+		"outbound":["game"],
+		"events":[
+		]
+	},
+
 	{
 		"stateName": "popup",
 		"preProcess":[],
 		"postProcess":[],
-		"outbound":["intro"],
+		"outbound":["game"],
 		"events":[
+			"NextLevel"
 		]
 	}]
 }

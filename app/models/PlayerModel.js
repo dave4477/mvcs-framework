@@ -7,8 +7,6 @@ export default class PlayerModel extends fw.core.modelCore {
 		this._isAlive = true;
 		this._score = 0;
 		this._level = 0;
-		this._posX = 0;
-		this._posY = 5;
 	}
 	
 	get isAlive() {
@@ -34,6 +32,10 @@ export default class PlayerModel extends fw.core.modelCore {
 		this._level += value;
 		this.dispatchPlayerData();
 
+	}
+	
+	get level() {
+		return this._level;
 	}
 
 	getPlayerData() {

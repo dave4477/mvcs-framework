@@ -15,6 +15,7 @@ export default class Jumper {
         const ground = new Physijs.BoxMesh( new THREE.BoxGeometry(geomVec3.x, geomVec3.y, geomVec3.z), ground_material, 0 );
         ground.position.set(posVec3.x, posVec3.y, posVec3.z);
         ground.receiveShadow = true;
+        // ground.castShadow = true;
         ground.userData.launchPower = launchPower;
         ground.name = "launcher";
 

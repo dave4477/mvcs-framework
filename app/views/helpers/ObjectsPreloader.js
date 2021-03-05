@@ -1,6 +1,7 @@
 import ObjectLoaders from './ObjectLoaders.js';
 import { GLTFLoader } from './../../../app/libs/jsm/loaders/GLTFLoader.js';
 import Constants from './../../Constants.js';
+import * as THREE from './../../libs/three.module.js';
 
 let objects = {};
 let objectsToLoad = [];
@@ -12,6 +13,7 @@ export default class ObjectsPreloader extends fw.core.viewCore {
         this.level = level;
         this.numToLoad = 0;
         this.loaded = 0;
+        this.textureLoader = new THREE.TextureLoader();
     }
 
     preload(data) {
@@ -40,16 +42,25 @@ export default class ObjectsPreloader extends fw.core.viewCore {
             const assetStr = asset.toLowerCase();
             if (assetStr.indexOf(".fbx") > -1) {
                 if (!objects[name]) {
-                    objects[name] = "loading";
+                    objects[name] = null;
                     this.preloadFBX(name, entity.asset);
                 }
             } else if (assetStr.indexOf(".glb") > -1) {
                 if (!objects[name]) {
-                    objects[name] = "loading";
+                    objects[name] = null;
                     this.preloadGLTF(name, entity.asset);
+                }
+            } else if (assetStr.indexOf(".jpg") > -1 || assetStr.indexOf(".png") >-1) {
+                if (!objects[name]) {
+                    objects[name] = null;
+                    this.preloadImage(name, entity.asset);
                 }
             }
         }
+    }
+
+    static getCache() {
+        return objects;
     }
 
     checkComplete() {
@@ -72,5 +83,12 @@ export default class ObjectsPreloader extends fw.core.viewCore {
             objects[name] = loaded;
             this.checkComplete();
         });
+    }
+
+    preloadImage(name, url) {
+        this.textureLoader.load(url, (loaded) => {
+            objects[name] = loaded;
+            this.checkComplete();
+        })
     }
 }

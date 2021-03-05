@@ -43,19 +43,19 @@ export default class ViewCore {
 	}
 
 	addContextListener(type, fn) {
-		this._contextListeners.push({ type:type, fn:fn });
-		MVCSCore.eventMap[type] = MVCSCore.eventMap[type] || {};
-		MVCSCore.eventMap[type][fn] = EventBus.subscribe(type, fn.bind(this));
+		const unsubscriber = EventBus.subscribe(type, fn.bind(this));
+		this._contextListeners.push({type:type, fn:fn, unsubscriber:unsubscriber});
 	}
 
 	removeContextListener(type, fn) {
-		if (!MVCSCore.eventMap[type][fn]) {
-			console.warn(`${this.constructor.name} Could not unsubsribe  from ${type}`);
-			return;
+		for (let i = 0; i < this._contextListeners.length; i++) {
+			const listener = this._contextListeners[i];
+			if (listener.type == type && listener.fn == fn) {
+				listener.unsubscriber.unsubscribe();
+				this._contextListeners.splice(i,1);
+
+			}
 		}
-		this._removeEvent(this._contextListeners, {type:type, fn:fn});
-		MVCSCore.eventMap[type][fn].unsubscribe();
-		delete MVCSCore.eventMap[type][fn];
 	}
 
 	dispatchToView(e, args) {
@@ -63,19 +63,18 @@ export default class ViewCore {
 	}
 
 	addViewListener(type, fn) {
-		this._viewListeners.push({type:type, fn:fn});
-		MVCSCore.eventMap[type] = MVCSCore.eventMap[type] || {};
-		MVCSCore.eventMap[type][fn] = EventBus.subscribeToView(type, fn.bind(this));
+		const unsubscriber = EventBus.subscribeToView(type, fn.bind(this));
+		this._viewListeners.push({type:type, fn:fn, unsubscriber:unsubscriber});
 	}
 
 	removeViewListener(type, fn) {
-		if (!MVCSCore.eventMap[type][fn]) {
-			console.warn(`${this.constructor.name} Could not unsubsribe view listener for ${type}`);
-			return;
+		for (let i = 0; i < this._viewListeners.length; i++) {
+			const listener = this._viewListeners[i];
+			if (listener.type == type && listener.fn == fn) {
+				listener.unsubscriber.unsubscribe();
+				this._viewListeners.splice(i,1);
+			}
 		}
-		this._removeEvent(this._viewListeners, {type:type, fn:fn});
-		MVCSCore.eventMap[type][fn].unsubscribe();
-		delete MVCSCore.eventMap[type][fn];
 	}
 
 	removeAllContextListeners() {
