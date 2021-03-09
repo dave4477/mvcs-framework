@@ -23,7 +23,7 @@
     {
       "playerPos": {"x":0, "y":5},
       "timeBonus":180,
-      "cameraPan": {"fromX":0, "fromY":5, "x":210, "y":14, "z":30, "time":6000},
+      "cameraPan": {"fromX":0, "fromY":5, "x":210, "y":14, "z":30, "time":6000, "delay":2000, "repeatDelay":500},
       "skybox": {
         "path":"images/skybox/stormydays/",
         "filetype":".png"
@@ -196,7 +196,7 @@
     {
       "playerPos": {"x":0, "y":5},
       "timeBonus":180,
-      "cameraPan": {"fromX":0, "fromY":0, "x":250, "y":-2, "z":30, "time":6000},
+      "cameraPan": {"fromX":0, "fromY":0, "x":250, "y":-2, "z":30, "time":6000, "delay":2000, "repeatDelay":500},
       "skybox": {
         "path":"images/skybox/jungle01/",
         "filetype":".jpg"
@@ -368,20 +368,16 @@
 
 
 
-
-
-
-
-
     {
       "playerPos": {"x":0, "y":5},
       "timeBonus":180,
-      "cameraPan": {"fromX":0, "fromY":0, "x":-100, "y":2, "z":100, "time":6000},
+      "cameraPan": {"fromX":0, "fromY":0, "x":0, "y":2, "z":80, "time":6000, "delay":5000, "repeatDelay":500},
       "skybox": {
         "path":"images/skybox/jungle01/",
         "filetype":".jpg"
       },
       "platforms": [
+        {"type":"ground", "x":-250, "y":-20, "z":0, "width":32, "height":16, "depth":12},
 
 
         {"type":"ground", "x":-120, "y":-20, "z":0, "width":32, "height":16, "depth":12},
@@ -544,10 +540,8 @@
       ],
 
       "finish": [
-        {"type":"finish", "x":250, "y":-11, "z":0, "scale":0.25, "rotationY":-90, "asset":"assets/teepee.glb"}
+        {"type":"finish", "x":-250, "y":-12, "z":0, "scale":0.25, "rotationY":90, "asset":"assets/teepee.glb"}
       ]
     }
-
-
   ]
 }

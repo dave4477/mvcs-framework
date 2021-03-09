@@ -73,7 +73,7 @@
 		"stateName": "levelComplete",
 		"preProcess":[],
 		"postProcess":[],
-		"outbound":["game"],
+		"outbound":["game", "mainScreen"],
 		"events":[
 		]
 	},

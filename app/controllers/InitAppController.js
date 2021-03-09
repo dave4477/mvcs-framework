@@ -18,7 +18,8 @@ export default class InitAppController extends fw.core.controllerCore {
 			'./views/uiview/ui.html',
 			'./views/uiview/hudView.html',
 			'./views/popups/levelCompletePopup.html',
-			'./views/popups/pausePopup.html'
+			'./views/popups/pausePopup.html',
+			'./views/popups/GameCompletedPopup.html'
 		);
 
 		this.addListener(Constants.events.PAUSE_SIMULATION, ()=> {
@@ -34,7 +35,16 @@ export default class InitAppController extends fw.core.controllerCore {
 	/**
 	 * Dynamically loads and attach view.
  	 */
-	async loadView(layoutUrl, mainScreenUrl, loadingViewUrl, mainViewUrl, uiViewUrl, hudViewUrl, levelCompletePopupUrl, pausePopupUrl) {
+	async loadView(layoutUrl,
+				   mainScreenUrl,
+				   loadingViewUrl,
+				   mainViewUrl,
+				   uiViewUrl,
+				   hudViewUrl,
+				   levelCompletePopupUrl,
+				   pausePopupUrl,
+				   gameCompletePopupUrl) {
+
 		const viewLoaderService = this.getServiceByName(Constants.services.VIEW_LOADER_SERVICE);
 
 		const layoutView = await viewLoaderService.loadView(layoutUrl);
@@ -77,10 +87,17 @@ export default class InitAppController extends fw.core.controllerCore {
 		view.addView(levelCompletePopup.html, popupView);
 		view.init();
 
+
 		const PausePopup = await viewLoaderService.loadView(pausePopupUrl);
 		view = new PausePopup.script();
 		view.addView(PausePopup.html, popupView);
 		view.init();
+
+		const gameCompletePopup = await viewLoaderService.loadView(gameCompletePopupUrl);
+		view = new gameCompletePopup.script();
+		view.addView(gameCompletePopup.html, popupView);
+		view.init();
+
 
 		this.dispatch(Constants.events.SWITCH_STATE, "mainScreen");
 

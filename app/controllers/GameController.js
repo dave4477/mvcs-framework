@@ -12,7 +12,12 @@ export default class GameController extends fw.core.controllerCore {
 		this.objectPreloader = new ObjectsPreloader();
 
 		this.addListener(Constants.events.LEVEL_FINISHED, ()=> {
-			this.showLevelComplete();
+			if (this.playerModel.level < this.simulationModel.levelData.levels.length-1) {
+				this.showLevelComplete();
+			} else {
+				this.playerModel.resetLevel();
+				this.showGameComplete();
+			}
 		});
 		this.json = null;
 	}
@@ -34,6 +39,10 @@ export default class GameController extends fw.core.controllerCore {
 
 	showLevelComplete() {
 		this.getViewByName(Constants.views.POPUP_LEVEL_COMPLETE).show(this.playerModel.score);
+	}
+
+	showGameComplete() {
+		this.getViewByName(Constants.views.POPUP_GAME_COMPLETE).show(this.playerModel.score);
 	}
 
 	hideLevelComplete() {
