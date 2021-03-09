@@ -1,0 +1,90 @@
+{
+	"initialState": "init",
+	"states": [
+	{
+		"stateName": "init",
+		"preProcess":[
+			"InitAppController:startApp"		
+		],
+		"postProcess":[
+		],
+		"outbound":["mainScreen"],
+		"events":[
+			"LoadView"
+		]
+	},
+
+	{
+		"stateName": "mainScreen",
+		"preProcess":[
+			"MainScreenController:checkRotation"
+		],
+		"postProcess":[
+		],
+		"outbound":["loading"],
+		"events":[
+			"LoadView"
+		]
+	},
+
+	{
+		"stateName": "loading",
+		"preProcess":[
+			"GameController:loadLevelData"
+		],
+		"postProcess":[
+		],
+		"outbound":["game"],
+		"events":[
+			"LoadView",
+			"AssetsLoaded"
+		]
+	},
+
+
+	{
+		"stateName": "game",
+		"preProcess":[
+			"LoadingViewController:hide",
+			"GameController:startGame"
+		],
+		"postProcess":[
+		],
+		"outbound":["popup", "levelComplete"],
+		"events":[
+			"PauseSimulation",
+			"ResumeSimulation",
+			"SimulationPaused",
+			"SimulationResumed",
+			"VisibilityHidden",
+			"VisibilityShown",
+			"UpdatePlayerScore",
+			"PlayerDied",
+			"PlayerRespawned",
+			"PlayerModelUpdated",
+			"LevelDataReceived",
+			"LoadView",
+			"TimeBonusCollected",
+			"LevelFinished"
+		]
+	},
+
+	{
+		"stateName": "levelComplete",
+		"preProcess":[],
+		"postProcess":[],
+		"outbound":["game"],
+		"events":[
+		]
+	},
+
+	{
+		"stateName": "popup",
+		"preProcess":[],
+		"postProcess":[],
+		"outbound":["game"],
+		"events":[
+			"NextLevel"
+		]
+	}]
+}
