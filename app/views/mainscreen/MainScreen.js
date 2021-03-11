@@ -42,12 +42,23 @@ export default class MainScreen extends fw.core.viewCore {
         }
     }
 
+    show() {
+        document.getElementById('mainScreen').style.display = "";
+    }
+
+    hide() {
+        document.getElementById('mainScreen').style.display = "none";
+
+    }
 
     startGame() {
         window.removeEventListener('resize', this.checkRotation);
-        document.getElementById('mainScreen').style.display = "none";
-        this.toggleFullScreen();
-
+        this.hide();
+        if (fw.utils.deviceInfo.isMobile()) {
+            this.toggleFullScreen();
+        } else {
+            this.dispatchToContext('switchState', 'loading');
+        }
 
 
     }

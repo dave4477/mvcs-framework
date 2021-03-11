@@ -25,8 +25,9 @@
       "timeBonus":180,
       "cameraPan": {"fromX":0, "fromY":5, "x":210, "y":14, "z":30, "time":6000, "delay":2000, "repeatDelay":500},
       "skybox": {
-        "path":"images/skybox/stormydays/",
-        "filetype":".png"
+        "path":"images/skybox/jungle01/",
+        "filetype":".jpg",
+        "rotation": 90
       },
       "platforms": [
         {"type":"ground", "x":12, "y":-8, "z":0, "width":32, "height":16, "depth":12},
@@ -181,8 +182,8 @@
       ],
 
       "helpers": [
-        {"type":"launcher", "x":55, "y":0, "z":0, "width":2, "height":0.5, "depth":2, "launchForce":42},
-        {"type":"launcher", "x":236, "y":4, "z":0, "width":2, "height":1, "depth":2, "launchForce":64}
+        {"type":"launcher", "x":55, "y":0, "z":0, "width":2, "height":0.4, "depth":2, "launchForce":42},
+        {"type":"launcher", "x":236, "y":4, "z":0, "width":2, "height":0.4, "depth":2, "launchForce":64}
       ],
 
       "finish": [
@@ -199,7 +200,8 @@
       "cameraPan": {"fromX":0, "fromY":0, "x":250, "y":-2, "z":30, "time":6000, "delay":2000, "repeatDelay":500},
       "skybox": {
         "path":"images/skybox/jungle01/",
-        "filetype":".jpg"
+        "filetype":".jpg",
+        "rotation":0
       },
       "platforms": [
         {"type":"ground", "x":-26, "y":-8, "z":0, "width":2, "height":32, "depth":2},
@@ -371,10 +373,11 @@
     {
       "playerPos": {"x":0, "y":5},
       "timeBonus":180,
-      "cameraPan": {"fromX":0, "fromY":0, "x":0, "y":2, "z":80, "time":6000, "delay":5000, "repeatDelay":500},
+      "cameraPan": {"fromX":0, "fromY":0, "x":0, "y":2, "z":50, "time":6000, "delay":2000, "repeatDelay":1000},
       "skybox": {
         "path":"images/skybox/jungle01/",
-        "filetype":".jpg"
+        "filetype":".jpg",
+        "rotation":-90
       },
       "platforms": [
         {"type":"ground", "x":-250, "y":-20, "z":0, "width":32, "height":16, "depth":12},
@@ -382,11 +385,11 @@
 
         {"type":"ground", "x":-120, "y":-20, "z":0, "width":32, "height":16, "depth":12},
 
-        {"type":"ground", "x":-97, "y":-18, "z":0, "width":2, "height":16, "depth":2},
+        {"type":"ground", "x":-97, "y":-18, "z":0, "width":2.2, "height":16, "depth":2.2},
 
         {"type":"ground", "x":-74, "y":-16, "z":0, "width":32, "height":16, "depth":12},
 
-        {"type":"ground", "x":-51, "y":-14, "z":0, "width":2, "height":16, "depth":2},
+        {"type":"ground", "x":-51, "y":-14, "z":0, "width":2.2, "height":16, "depth":2.2},
 
         {"type":"ground", "x":-28, "y":-12, "z":0, "width":32, "height":16, "depth":12},
 
@@ -413,7 +416,6 @@
 
 
 
-        {"type":"tree", "x":10, "y":-3, "z":-10, "scale":0.5, "rotationY":0.6, "asset":"./assets/palm01/Palm_01.fbx"},
         {"type":"tree", "x":14, "y":-1, "z":-6, "scale":0.5, "rotationY":0.6, "asset":"./assets/palm01/Palm_01.fbx"},
         {"type":"tree", "x":19, "y":-2, "z":-8, "scale":0.5, "rotationY":0.6, "asset":"./assets/palm01/Palm_01.fbx"},
         {"type":"tree", "x":23, "y":-3, "z":-10, "scale":0.5, "rotationY":0.6, "asset":"./assets/palm01/Palm_01.fbx"},
@@ -423,7 +425,6 @@
 
         {"type":"tree", "x":37, "y":-2, "z":-6, "scale":0.5, "rotationY":0.6, "asset":"./assets/palm01/Palm_01.fbx"},
         {"type":"tree", "x":42, "y":-3, "z":-8, "scale":0.5, "rotationY":0.6, "asset":"./assets/palm01/Palm_01.fbx"},
-        {"type":"tree", "x":47, "y":-1, "z":-4, "scale":0.5, "rotationY":0.6, "asset":"./assets/palm01/Palm_01.fbx"},
         {"type":"tree", "x":48, "y":-2, "z":-6, "scale":0.5, "rotationY":0.6, "asset":"./assets/palm01/Palm_01.fbx"},
         {"type":"tree", "x":53, "y":-3, "z":-8, "scale":0.5, "rotationY":0.6, "asset":"./assets/palm01/Palm_01.fbx"},
         {"type":"tree", "x":56, "y":-2, "z":-6, "scale":0.5, "rotationY":0.6, "asset":"./assets/palm01/Palm_01.fbx"},
@@ -435,13 +436,31 @@
       ],
 
       "collectibles": [
+        {"y":-4, "x":-84, "type": "cog"},
+        {"y":-3.5, "x":-83, "type": "cog"},
+        {"y":-3, "x":-82, "type": "cog"},
+        {"y":-3.5, "x":-81, "type": "cog"},
+        {"y":-4, "x":-80, "type": "cog"},
+
+
+        {"y":-4, "x":-77, "type": "cog"},
+        {"y":-3.5, "x":-76, "type": "cog"},
+        {"y":-3, "x":-75, "type": "cog"},
+        {"y":-3.5, "x":-74, "type": "cog"},
+        {"y":-4, "x":-73, "type": "cog"},
+
+        {"y":-4, "x":-70, "type": "cog"},
+        {"y":-3.5, "x":-69, "type": "cog"},
+        {"y":-3, "x":-68, "type": "cog"},
+        {"y":-3.5, "x":-67, "type": "cog"},
+        {"y":-4, "x":-66, "type": "cog"},
+
+
         {"y":0.8, "x":-38, "type": "cog"},
         {"y":1, "x":-37, "type": "cog"},
         {"y":1, "x":-36, "type": "cog"},
         {"y":1, "x":-35, "type": "cog"},
         {"y":0.8, "x":-34, "type": "cog"},
-
-
 
         {"y":1, "x":10, "type": "cog"},
         {"y":1, "x":11, "type": "cog"},
@@ -480,19 +499,43 @@
 
       "obstacles": [
 
+
+        {"type": "fish", "x":-165, "y":-2, "z":0, "delay":1750, "duration":3500, "force":42},
+        {"type": "fish", "x":-162.5, "y":-2, "z":0, "delay":1500, "duration":3500, "force":42},
+        {"type": "fish", "x":-161, "y":-2, "z":0, "delay":1000, "duration":3500, "force":42},
+
+
         {"type": "bees", "bees":[
-          {"type": "bee", "x":-125.2, "y":-10.2, "z":0, "endX":-115.2, "duration":1500 },
-          {"type": "bee", "x":-125.4, "y":-10.9, "z":0, "endX":-115.4, "duration":1500 }
+          {"type": "bee", "x":-125.2, "y":-10.7, "z":0, "endX":-115.2, "duration":1500 }
         ]},
 
 
+        {"type": "fish", "x":-101.5, "y":-2, "z":0, "delay":1000, "duration":3500, "force":46},
+        {"type": "fish", "x":-93.5, "y":-2, "z":0, "delay":1500, "duration":3500, "force":48},
 
-        {"type": "fish", "x":-101.5, "y":2, "z":0, "delay":0, "duration":3500, "force":46},
-        {"type": "fish", "x":-93.5, "y":2, "z":0, "delay":500, "duration":3500, "force":48},
 
 
-        {"type": "fish", "x":-54, "y":2, "z":0, "delay":0, "duration":3500, "force":50},
-        {"type": "fish", "x":-48, "y":2, "z":0, "delay":500, "duration":3500, "force":52},
+        {"type": "spike", "x":-84, "y": -8 },
+        {"type": "spike", "x":-83, "y": -8 },
+        {"type": "spike", "x":-82, "y": -8 },
+        {"type": "spike", "x":-81, "y": -8 },
+
+
+        {"type": "spike", "x":-77, "y": -8 },
+        {"type": "spike", "x":-76, "y": -8 },
+        {"type": "spike", "x":-75, "y": -8 },
+        {"type": "spike", "x":-74, "y": -8 },
+
+
+        {"type": "spike", "x":-70, "y": -8 },
+        {"type": "spike", "x":-69, "y": -8 },
+        {"type": "spike", "x":-68, "y": -8 },
+        {"type": "spike", "x":-67, "y": -8 },
+
+
+
+        {"type": "fish", "x":-54, "y":-2, "z":0, "delay":1000, "duration":3500, "force":50},
+        {"type": "fish", "x":-47, "y":-2, "z":0, "delay":1000, "duration":3500, "force":55},
 
         {"type": "spike", "x":-38, "y": -4 },
         {"type": "spike", "x":-37, "y": -4 },
@@ -500,16 +543,14 @@
         {"type": "spike", "x":-35, "y": -4 },
 
 
-        {"type": "stork", "x":-44, "y":-2.2, "endX":-16, "duration":2500 },
+        {"type": "stork", "x":-42, "y":-2.2, "endX":-16, "duration":2500 },
 
-
-        {"type": "fish", "x":161, "y":2, "z":0, "delay":0, "duration":3500, "force":42},
-        {"type": "fish", "x":163, "y":2, "z":0, "delay":500, "duration":3500, "force":42},
-        {"type": "fish", "x":165, "y":2, "z":0, "delay":1000, "duration":3500, "force":42},
+        {"type": "fish", "x":161, "y":-2, "z":0, "delay":1000, "duration":3500, "force":42},
+        {"type": "fish", "x":162.5, "y":-2, "z":0, "delay":1500, "duration":3500, "force":42},
+        {"type": "fish", "x":165, "y":-2, "z":0, "delay":1750, "duration":3500, "force":42},
 
         {"type": "bees", "bees":[
-          {"type": "bee", "x":44.2, "y":1.2, "z":0, "endX":54.2, "duration":1500 },
-          {"type": "bee", "x":44.4, "y":1.9, "z":0, "endX":54.4, "duration":1500 }
+          {"type": "bee", "x":44.4, "y":1.4, "z":0, "endX":54.4, "duration":1500 }
         ]},
 
         {"type": "flamingo", "x":68, "y":1.5, "endX":98, "duration":2800 },
@@ -525,9 +566,7 @@
         {"type": "venusFlyTrap", "x":118, "y": -12, "asset":"./assets/VenusFlyTrap.glb" },
 
         {"type": "bees", "bees":[
-          {"type": "bee", "x":192.4, "y":-10, "z":0, "endX":202.4, "duration":1500 },
-          {"type": "bee", "x":192.2, "y":-10.45, "z":0, "endX":202.2, "duration":1500 },
-          {"type": "bee", "x":192.4, "y":-10.9, "z":0, "endX":202.4, "duration":1500 }
+          {"type": "bee", "x":192.4, "y":-10.6, "z":0, "endX":202.4, "duration":1500 }
         ]}
 
       ],
@@ -541,6 +580,143 @@
 
       "finish": [
         {"type":"finish", "x":-250, "y":-12, "z":0, "scale":0.25, "rotationY":90, "asset":"assets/teepee.glb"}
+      ]
+    },
+
+
+
+    {
+      "playerPos": {"x":100, "y":5},
+      "timeBonus":180,
+      "cameraPan": {"fromX":0, "fromY":0, "x":100, "y":10, "z":25, "time":6000, "delay":2000, "repeatDelay":500},
+      "skybox": {
+        "path":"images/skybox/jungle01/",
+        "filetype":".jpg",
+        "rotation":180
+      },
+      "platforms": [
+        {"type":"ground", "x":-124, "y":6.5, "z":0, "width":16, "height":1, "depth":1},
+
+        {"type":"ground-falling", "x":-136, "y":4, "z":0, "width":2, "height":0.4, "depth":2},
+
+        {"type":"ground-falling", "x":-133, "y":2, "z":0, "width":2, "height":0.4, "depth":2},
+
+        {"type":"ground", "x":-127, "y":-12, "z":0, "width":2, "height":24, "depth":2},
+
+        {"type":"ground", "x":-120, "y":-12, "z":0, "width":2, "height":24, "depth":2},
+
+        {"type":"ground", "x":0, "y":-12, "z":0, "width":225, "height":24, "depth":16}
+
+      ],
+
+      "decorations": [
+      ],
+
+      "collectibles": [
+        {"y":7.5, "x":-130, "type": "cog"},
+        {"y":7.5, "x":-129, "type": "cog"},
+        {"y":7.5, "x":-128, "type": "cog"},
+        {"y":7.5, "x":-127, "type": "cog"},
+        {"y":7.5, "x":-126, "type": "cog"},
+        {"y":7.5, "x":-125, "type": "cog"},
+        {"y":7.5, "x":-124, "type": "cog"},
+        {"y":7.5, "x":-123, "type": "cog"},
+        {"y":7.5, "x":-122, "type": "cog"},
+        {"y":7.5, "x":-121, "type": "cog"},
+
+        {"y":1, "x":-101, "type": "cog"},
+        {"y":1, "x":-100, "type": "cog"},
+        {"y":1, "x":-99, "type": "cog"},
+        {"y":1, "x":-98, "type": "cog"},
+        {"y":1, "x":-97, "type": "cog"},
+
+
+        {"y":1, "x":-72, "type": "cog"},
+        {"y":1, "x":-71, "type": "cog"},
+        {"y":1, "x":-70, "type": "cog"},
+        {"y":1, "x":-69, "type": "cog"},
+        {"y":1, "x":-68, "type": "cog"},
+
+
+        {"y":1, "x":-60, "type": "cog"},
+        {"y":1, "x":-59, "type": "cog"},
+        {"y":1, "x":-58, "type": "cog"},
+        {"y":1, "x":-57, "type": "cog"},
+        {"y":1, "x":-56, "type": "cog"},
+
+
+        {"y":1, "x":-48, "type": "cog"},
+        {"y":1, "x":-47, "type": "cog"},
+        {"y":1, "x":-46, "type": "cog"},
+        {"y":1, "x":-45, "type": "cog"},
+        {"y":1, "x":-44, "type": "cog"}
+
+      ],
+
+      "obstacles": [
+        {"type": "spike", "x":-95, "y": 0 },
+
+        {"type": "crusher", "x":-91, "y":5, "z":0, "width":2, "height":2, "depth":8, "toY":1, "delay":0 },
+        {"type": "crusher", "x":-86, "y":5, "z":0, "width":2, "height":2, "depth":8, "toY":1, "delay":200 },
+        {"type": "crusher", "x":-81, "y":5, "z":0, "width":2, "height":2, "depth":8, "toY":1, "delay":400 },
+        {"type": "crusher", "x":-76, "y":5, "z":0, "width":2, "height":2, "depth":8, "toY":1, "delay":650 },
+
+        {"type": "crusher", "x":-64, "y":5, "z":0, "width":2, "height":2, "depth":8, "toY":1, "delay":0 },
+
+        {"type": "crusher", "x":-52, "y":5, "z":0, "width":2, "height":2, "depth":8, "toY":1, "delay":500 },
+
+        {"type": "crusher", "x":-40, "y":5, "z":0, "width":2, "height":2, "depth":8, "toY":1, "delay":0 },
+
+        {"type": "spike", "x":-32, "y": 0 },
+        {"type": "spike", "x":-31, "y": 0 },
+        {"type": "spike", "x":-30, "y": 0 },
+
+        {"type": "spike", "x":-26, "y": 0 },
+
+        {"type": "spike", "x":-22, "y": 0 },
+        {"type": "spike", "x":-21, "y": 0 },
+        {"type": "spike", "x":-20, "y": 0 },
+        {"type": "spike", "x":-19, "y": 0 },
+
+        {"type": "spike", "x":-15, "y": 0 },
+        {"type": "spike", "x":-14, "y": 0 },
+        {"type": "spike", "x":-13, "y": 0 },
+        {"type": "spike", "x":-12, "y": 0 },
+
+        {"type": "spike", "x":12, "y": 0 },
+        {"type": "spike", "x":13, "y": 0 },
+        {"type": "spike", "x":14, "y": 0 },
+
+        {"type": "spike", "x":18, "y": 0 },
+        {"type": "spike", "x":19, "y": 0 },
+        {"type": "spike", "x":20, "y": 0 },
+
+        {"type": "spike", "x":24, "y": 0 },
+
+        {"type": "spike", "x":28, "y": 0 },
+        {"type": "spike", "x":29, "y": 0 },
+        {"type": "spike", "x":30, "y": 0 },
+        {"type": "spike", "x":36, "y": 0 },
+        {"type": "spike", "x":42, "y": 0 },
+
+        {"type": "parrot", "x":30, "y":3.5, "z":0, "endX":46, "duration":2000 },
+
+        {"type": "bees", "bees":[
+          {"type": "bee", "x":50, "y":0.6, "z":0, "endX":60, "duration":1500 },
+          {"type": "bee", "x":58, "y":1, "z":0, "endX":68, "duration":1500 },
+          {"type": "bee", "x":66, "y":1.4, "z":0, "endX":76, "duration":1500 },
+          {"type": "bee", "x":74, "y":1, "z":0, "endX":84, "duration":1500 },
+          {"type": "bee", "x":82, "y":0.6, "z":0, "endX":92, "duration":1500 }
+        ]}
+
+
+      ],
+
+      "helpers": [
+        {"type":"UFO", "x":110, "y":2, "z":0, "asset":"assets/UFO.glb"}
+      ],
+
+      "finish": [
       ]
     }
   ]

@@ -23,9 +23,12 @@ import Fish from './../obstacles/Fish.js';
 import LevelFinish from './../finish/LevelFinish.js';
 import Bridge from './../interaction/Bridge.js';
 import Canoe from './../helpers/Canoe.js';
+import UFO from './../helpers/UFO.js';
 import Crate from './../helpers/Crate.js';
 import LevelFeatures from './LevelFeatures.js';
 import WaterPlane from './../decoration/WaterPlane.js';
+
+const DEG2RAD = Math.PI / 180;
 
 export default class LevelParser extends fw.core.viewCore {
     constructor(container) {
@@ -46,7 +49,7 @@ export default class LevelParser extends fw.core.viewCore {
         LevelFeatures.features.destroyable = [];
 
         // Add skybox
-        const skyBox = new SkyBox(level.skybox.path, level.skybox.filetype).create(this._container);
+        const skyBox = new SkyBox(level.skybox.path, level.skybox.filetype, level.skybox.rotation).create(this._container);
         
 
         // Add platforms
@@ -127,6 +130,8 @@ export default class LevelParser extends fw.core.viewCore {
                 new Canoe(helper.x, helper.y, helper.z).create(this._container);
             } else if (helper.type == "crate") {
                 new Crate(helper.x, helper.y, helper.z).create(this._container);
+            } else if (helper.type == "UFO") {
+                new UFO(helper.x, helper.y, helper.z).create(this._container);
             }
         }
         

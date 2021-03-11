@@ -299,11 +299,14 @@ export default class Character extends fw.core.viewCore {
                 if (!DebugSettings.godMode) {
                     this._isAlive = false;
                     this.dispatchToContext(Constants.events.PLAYER_DIED);
+                    fw.utils.audioManager.playSound("./assets/die.mp3");
+
                 }
                 break;
             case "bottomCatcher":
                     this._isAlive = false;
                     this.dispatchToContext(Constants.events.PLAYER_DIED);
+                    fw.utils.audioManager.playSound("./assets/die.mp3");
                 break;
             
             case "finish":
@@ -324,6 +327,7 @@ export default class Character extends fw.core.viewCore {
                             this.dispatchToContext(Constants.events.UPDATE_PLAYER_SCORE, {points: intersect.object.userData.points});
                             intersect.object.userData.owner.destroy();
                             intersect.object.parent.remove(intersect.object);
+                            fw.utils.audioManager.playSound("./assets/collect.mp3");
                         }
                     }
                 }

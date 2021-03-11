@@ -9,10 +9,11 @@ export default class GameController extends fw.core.controllerCore {
 		this.playerModel = this.getModelByName(Constants.models.PLAYER_MODEL);
 		this.simulationModel = this.getModelByName(Constants.models.SIMULATION_MODEL);
 		this.gameService = this.getServiceByName(Constants.services.GAME_SERVICE);
+		this.storageService = this.getServiceByName(Constants.services.LOCAL_STORAGE_SERVICE);
 		this.objectPreloader = new ObjectsPreloader();
 
 		this.addListener(Constants.events.LEVEL_FINISHED, ()=> {
-			if (this.playerModel.level < this.simulationModel.levelData.levels.length-1) {
+			if (this.playerModel.level < this.simulationModel.levelData.levels.length) {
 				this.showLevelComplete();
 			} else {
 				this.playerModel.resetLevel();
@@ -49,6 +50,14 @@ export default class GameController extends fw.core.controllerCore {
 
 	}
 
+	gameOver() {
+		this.sceneHasInitialized = false;
+		this.playerModel.level = 0;
+		this.playerModel.lifes = 10;
+		this.playerModel.score = 0;
+		this.dispatch(Constants.events.SWITCH_STATE, 'mainScreen');
+	}
+	
 	startGame() {
 		console.log(`PlayerController::startGame`);
 

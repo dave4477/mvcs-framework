@@ -17,7 +17,7 @@
 	{
 		"stateName": "mainScreen",
 		"preProcess":[
-			"MainScreenController:checkRotation"
+			"MainScreenController:show"
 		],
 		"postProcess":[
 		],
@@ -50,7 +50,7 @@
 		],
 		"postProcess":[
 		],
-		"outbound":["popup", "levelComplete"],
+		"outbound":["popup", "levelComplete", "gameOver"],
 		"events":[
 			"PauseSimulation",
 			"ResumeSimulation",
@@ -74,6 +74,15 @@
 		"preProcess":[],
 		"postProcess":[],
 		"outbound":["game", "mainScreen"],
+		"events":[
+		]
+	},
+
+	{
+		"stateName": "gameOver",
+		"preProcess":["GameController:gameOver"],
+		"postProcess":[],
+		"outbound":["mainScreen"],
 		"events":[
 		]
 	},

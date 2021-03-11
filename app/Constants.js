@@ -31,7 +31,8 @@ export default {
 	},
 	services: {
 		VIEW_LOADER_SERVICE: "ViewLoaderService",
-		GAME_SERVICE: "GameService"
+		GAME_SERVICE: "GameService",
+		LOCAL_STORAGE_SERVICE: "LocalStorageService"
 	},
 	views: {
 		LOADING_VIEW: "LoadingView",

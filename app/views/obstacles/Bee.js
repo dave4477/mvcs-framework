@@ -77,12 +77,13 @@ export default class Bee extends fw.core.viewCore {
         this.addShadows(this.object);
 
         bMesh.add(this.object);
-        bMesh.addEventListener('ready', () => {
-           this.dispatchToView('BeeObjectLoaded');
-        });
         this.scene.add(bMesh);
         this.morphs.push(bMesh);
         this.mesh = bMesh;
+        bMesh.addEventListener('ready', () => {
+            this.dispatchToView('BeeObjectLoaded');
+        });
+
     }
 
     addShadows(object) {
@@ -101,7 +102,9 @@ export default class Bee extends fw.core.viewCore {
             .repeat(999)
             .yoyo(true)
             .onUpdate((object) =>{
-                this.mesh.position.y = object.y;
+                if (this.mesh) {
+                    this.mesh.position.y = object.y;
+                }
             })
             .start();
 

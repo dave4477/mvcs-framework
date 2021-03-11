@@ -13,6 +13,8 @@ export default class MainScene extends fw.core.viewCore {
         Physijs.scripts.worker = './libs/physijs_worker.js';
         Physijs.scripts.ammo = './ammo.js';
 
+        this._animationFrame = null;
+
         this.levelParser = null;
         this.renderer = null;
         this.scene = null;
@@ -59,7 +61,7 @@ export default class MainScene extends fw.core.viewCore {
         if (e) {
             this._playerData = e;
             // Player died, tween the camera back to spawning point.
-            if (!e.alive) {
+            if (!e.alive && e.lifes) {
                 const vec3 = new THREE.Vector3(0, this._cameraY, 14);
                 // Create a tween for position first
                 var tweenObj = {x:this.camera.position.x, y:this.camera.position.y};
@@ -79,6 +81,8 @@ export default class MainScene extends fw.core.viewCore {
                         this.dispatchToContext(Constants.events.PLAYER_RESPAWNED);
                     })
                     .start();
+            } else if (!e.lifes) {
+                this.onGameOver();
             }
         }
     }
@@ -98,6 +102,11 @@ export default class MainScene extends fw.core.viewCore {
     onNextLevel() {
         this.clearScene();
 
+        this.addPlayer();
+        this.character.mesh.visible = false;
+        this.character.model.visible = false;
+        this._canInteract = false;
+
         this.buildScene();
         this.resume();
         setTimeout(()=>{
@@ -106,6 +115,14 @@ export default class MainScene extends fw.core.viewCore {
                 this.resume();
             }, 120);
         }, 120);
+    }
+
+    onGameOver() {
+        window.cancelAnimationFrame(this._animationFrame);
+        this.clearScene();
+        this.renderer.dispose();
+        document.getElementById('viewport').innerHTML = "";
+        this.dispatchToContext(Constants.events.SWITCH_STATE, 'gameOver');
     }
 
     panCamera(to) {
@@ -169,12 +186,9 @@ export default class MainScene extends fw.core.viewCore {
         // this.scene.fog = new THREE.Fog( 0x59472b, -1000, 1500 );
         // this.scene.fog = new THREE.FogExp2(0x776666, 0.002);
 
-
         const camera1 = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 1000);
         const camera2 = new THREE.OrthographicCamera(-25, 25, 50, -50, 0.1, 1500);
-
         this.camera = camera1;
-
 
         this.buildScene();
     }
@@ -186,9 +200,7 @@ export default class MainScene extends fw.core.viewCore {
         this._startX = playerPos.x;
         this._startY = playerPos.y;
 
-
-        const panTo = this._levelData.levels[this._playerData.level].cameraPan;
-        this._panTo = { x: panTo.x, y: panTo.y, z: panTo.z, time: panTo.time, delay: panTo.delay, repeatDelay: panTo.repeatDelay };
+        this._panTo = this._levelData.levels[this._playerData.level].cameraPan;
 
         this.scene.add( this.camera );
 
@@ -234,10 +246,6 @@ export default class MainScene extends fw.core.viewCore {
         if (!this.player) {
             this.player = new Character();
             this.player.create(this.scene);
-        } else {
-            this.character.mesh.__dirtyPosition = true;
-            this.character.mesh.position.x = this._startX;
-            this.character.mesh.position.y = this._startY;
         }
     }
 
@@ -250,7 +258,7 @@ export default class MainScene extends fw.core.viewCore {
     }
 
     startGame() {
-        window.requestAnimationFrame(() => this.render() );
+        this._animationFrame = window.requestAnimationFrame(() => this.render() );
         window.addEventListener('resize', this.handleResize.bind(this));
         window.addEventListener('blur', this.handleVisibilityChange.bind(this), false);
         document.addEventListener("visibilitychange", this.handleVisibilityChange.bind(this), false);
@@ -330,7 +338,7 @@ export default class MainScene extends fw.core.viewCore {
     pause() {
         this._isPaused = true;
         this._timePaused = this._clock.getElapsedTime();
-        window.cancelAnimationFrame(this.render);
+        window.cancelAnimationFrame(this._animationFrame);
         this.dispatchToContext(Constants.events.PAUSE_SIMULATION);
     }
 
@@ -358,7 +366,7 @@ export default class MainScene extends fw.core.viewCore {
             if (this._cameraTween) {
                 TWEEN.update(dt);
             }
-            window.requestAnimationFrame(() => this.render());
+            this._animationFrame = window.requestAnimationFrame(() => this.render());
             this.renderer.render(this.scene, this.camera);
 
             if (this._clock) {
@@ -381,6 +389,8 @@ export default class MainScene extends fw.core.viewCore {
 
     clearScene() {
         console.log("Clearing scene");
+        TWEEN.removeAll();
+
         while(this.scene.children.length){
             const child = this.scene.children[0];
             if (child.material && child.material.dispose) {
@@ -394,9 +404,5 @@ export default class MainScene extends fw.core.viewCore {
             }
             this.scene.remove(child);
         }
-        this.addPlayer();
-        this.character.mesh.visible = false;
-        this.character.model.visible = false;
-        this._canInteract = false;
     }
 }

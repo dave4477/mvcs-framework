@@ -5,7 +5,12 @@ export default class MainScreenController extends fw.core.controllerCore {
         super();
     }
 
-    checkRotation() {
+    show() {
+        this.getViewByName("MainScreen").show();
         this.getViewByName("MainScreen").checkRotation();
+    }
+
+    hide() {
+        this.getViewByName("MainScreen").show();
     }
 }

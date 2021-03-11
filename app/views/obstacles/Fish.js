@@ -1,7 +1,7 @@
 import * as THREE from './../../libs/three.module.js';
 import { GLTFLoader } from './../../libs/jsm/loaders/GLTFLoader.js';
 import Constants from './../../Constants.js';
-import ObjectsPreloader from './../helpers/ObjectsPreloader.js';
+import ViewUtils from './../viewutils/ViewUtils.js';
 import DebugSettings from './../../DebugSettings.js';
 const DEG2RAD = Math.PI / 180;
 
@@ -15,13 +15,13 @@ export default class Fish extends fw.core.viewCore {
         this.delay = delay;
         this.duration = time;
         this.force = force;
-        this._rotationY = 0;
-        this._rotation = { rotating: false, direction:"right"};
-
+        this._rotationX = 0;
+        this._rotationY = -90;
+        this._rotation = { rotating: false, direction:"up"};
+        this._interval = null;
+        this._timeout = null;
         this.mesh = null;
         this.object = null;
-
-        this.clock = new THREE.Clock();
 
         this.addViewListener('frameUpdate', this.updateFrame);
     }
@@ -31,14 +31,14 @@ export default class Fish extends fw.core.viewCore {
         const gltfloader = new GLTFLoader();
 
         gltfloader.load("./assets/Fish.glb", (gltf) => {
-            const mesh = gltf.scene.children[0];
+            const mesh = gltf.scene;
 
             this.object = mesh;
 
             const opacity = DebugSettings.showEnemies ? 0.5 : 0;
 
             const bMesh = new Physijs.BoxMesh(
-                new THREE.CubeGeometry(1, 0.5, 1),
+                new THREE.CubeGeometry(0.5, 1.2, 0.5),
                 Physijs.createMaterial(
                     new THREE.MeshBasicMaterial({transparent: true, opacity: opacity, color: 0xFF0000}),
                     1,
@@ -47,14 +47,12 @@ export default class Fish extends fw.core.viewCore {
                 1
             );
 
-
             bMesh.position.set(this.x, this.y, this.z);
             bMesh.name = "fish";
-
-            mesh.rotation.set(0, 90 * DEG2RAD, 0);
-            mesh.scale.set(0.1, 0.1, 0.1);
-            mesh.position.y = -0.4;
-            mesh.castShadow = true;
+            bMesh.userData = {owner:this};
+            mesh.rotation.set(-90 * DEG2RAD, 0, -90 * DEG2RAD);
+            mesh.scale.set(0.04, 0.04, 0.04);
+            mesh.castShadow = false;
             mesh.receiveShadow = false;
             bMesh.addEventListener('ready', this.objectReady.bind(this));
             bMesh.add(mesh);
@@ -64,45 +62,54 @@ export default class Fish extends fw.core.viewCore {
     }
 
     objectReady() {
-        setTimeout(() =>{
-            setInterval(()=>{
+        this._timeout = setTimeout(() =>{
+            this._interval = setInterval(()=>{
+                this._rotationX = -90;
+                this.object.rotation.set(this._rotationX * DEG2RAD, 0, this._rotationX * DEG2RAD);
+                this._rotation.direction = "up";
                 this.mesh.applyCentralImpulse(new THREE.Vector3(0, this.force, 0));
             }, this.duration)
         }, this.delay);
     }
 
-    addTweens() {
-    }
 
     changeDirection() {
         if (this._rotation.rotating) {
-            if (this._rotation.direction == "left") {
-                if (this._rotationY > -90) {
-                    this._rotationY -= 10;
+            if (this._rotation.direction == "down") {
+                if (this._rotationX < 90) {
+                    this._rotationX += 10;
                 }
-                if (this._rotationY <= -90) {
-                    this._rotationY = -90;
+                if (this._rotationX >= 90) {
+                    this._rotationX = 90;
                     this._rotation.rotating = false;
                 }
-                this.object.rotation.y = this._rotationY * (DEG2RAD);
-            } else if (this._rotation.direction == "right") {
-                this._rotationY += 10;
-                if (this._rotationY > 90) {
-                    this._rotationY = 90;
-                    this._rotation.rotating = false;
-                }
-                this.object.rotation.y = this._rotationY * DEG2RAD;
+                this.object.rotation.set(this._rotationX * DEG2RAD, 0, this._rotationX * DEG2RAD);
             }
         }
     }
 
     updateFrame(delta = 0) {
-        delta = this.clock.getDelta();
-
         if (this.mesh) {
             this.mesh.setAngularFactor(new THREE.Vector3(0,0,0));
             this.mesh.position.x = this.x;
-            this.object.rotation.y += 0.1;
+            if (this.mesh.getLinearVelocity().y < 0) {
+                this._rotation.direction = "down";
+                this._rotation.rotating = true;
+                this.changeDirection();
+            }
         }
+    }
+
+    destroy() {
+        this.removeViewListener('frameUpdate', this.updateFrame);
+        
+        clearTimeout(this._timeout);
+        clearInterval(this._interval);
+        this.mesh.userData.owner = null;
+        this.mesh.userData = null;
+        ViewUtils.destroy(this.object);
+        ViewUtils.destroy(this.mesh);
+        this.mesh = null;
+        this.object = null;
     }
 }

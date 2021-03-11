@@ -2,6 +2,7 @@ import PlayerModel from './models/PlayerModel.js';
 import SimulationModel from './models/SimulationModel.js';
 import ViewLoaderService from './services/ViewLoaderService.js';
 import GameService from './services/GameService.js';
+import LocalStorageService from './services/LocalStorageService.js';
 import InitAppController from './controllers/InitAppController.js';
 import MainScreenController from './controllers/MainScreenController.js';
 import PlayerController from './controllers/PlayerController.js';
@@ -25,6 +26,7 @@ export default class Main {
 		// init services
 		new ViewLoaderService();
 		new GameService();
+		new LocalStorageService();
 
 		// init controllers
 		new InitAppController();

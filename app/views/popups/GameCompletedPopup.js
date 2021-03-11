@@ -12,9 +12,14 @@ export default class GameCompletedPopup extends fw.core.viewCore {
 
     init() {
         this.addContextListener(Constants.events.TIME_BONUS_COLLECTED, (timeBonus)=>{
-            document.querySelector('#timeBonusText').innerHTML = timeBonus.points;
+            document.querySelector('#finalTimeBonusText').innerHTML = timeBonus.points;
             this.timeBonus = timeBonus.points;
             this.checkTotal();
+        });
+
+        this.addContextListener(Constants.events.PLAYER_MODEL_UPDATED, (data) => {
+           console.log("data:", data);
+            this.score = data.score;
         });
     }
 
@@ -35,7 +40,7 @@ export default class GameCompletedPopup extends fw.core.viewCore {
 
     checkTotal() {
         if (!isNaN(this.timeBonus) && !isNaN(this.score)) {
-            document.querySelector('#totalScoreText').innerHTML = (this.timeBonus + this.score);
+            document.querySelector('#finalTotalScoreText').innerHTML = (this.timeBonus + this.score);
         }
     }
     restart() {

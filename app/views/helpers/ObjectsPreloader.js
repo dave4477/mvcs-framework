@@ -30,8 +30,12 @@ export default class ObjectsPreloader extends fw.core.viewCore {
             }
         }
         this.numToLoad = objectsToLoad.length;
-        this.preloadFileType(objectsToLoad);
 
+        if (this.loaded == this.numToLoad) {
+            this.dispatchToContext(Constants.events.SWITCH_STATE, "game");
+        } else {
+            this.preloadFileType(objectsToLoad);
+        }
     }
 
     preloadFileType(list) {
@@ -66,6 +70,8 @@ export default class ObjectsPreloader extends fw.core.viewCore {
     checkComplete() {
         this.loaded ++;
         if (this.loaded == this.numToLoad) {
+            this.numToLoad = 0;
+            objectsToLoad = [];
             this.dispatchToContext(Constants.events.SWITCH_STATE, "game");
         }
     };

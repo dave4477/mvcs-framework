@@ -1,10 +1,12 @@
 import * as THREE from './../../libs/three.module.js';
+const DEG2RAD = Math.PI / 180;
 
 export default class SkyBox {
-    constructor(path, filetype) {
+    constructor(path, filetype, rotation = 0) {
         this.path = path;
         this.filetype = filetype;
         this.skyBox = null;
+        this.rotation = rotation * DEG2RAD;
     }
 
     create(container) {
@@ -24,7 +26,7 @@ export default class SkyBox {
         this.skyBox = new THREE.Mesh( skyGeometry, skyMaterial );
 
         this.skyBox.userData = {owner:this};
-
+        this.skyBox.rotation.y = this.rotation;
         container.add(this.skyBox);
     }
 

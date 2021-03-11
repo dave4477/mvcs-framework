@@ -130,7 +130,7 @@ body {
 
 .layout .mainScreen .startGame {
     position: absolute;
-    top: 150px;
+    top: 75px;
     width: 120px;
     left: 0;
     right: 0;
@@ -200,7 +200,7 @@ body {
 
 .copyRight {
     position: absolute;
-    bottom: 65px;
+    bottom: 30px;
     color: #eee;
     font-size: 11px;
     left: 0;
@@ -222,6 +222,16 @@ body {
 
 }
 
+.quote {
+    position: absolute;
+    width:250px;
+    height:20px;
+    color:#fff;
+    top:200px;
+    left:0;
+    right:0;
+    margin:auto;
+}
 .popupView {
     position: absolute;
     top: 0;
