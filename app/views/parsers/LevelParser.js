@@ -142,6 +142,12 @@ export default class LevelParser extends fw.core.viewCore {
             new LevelFinish(levelFinish.x, levelFinish.y, levelFinish.z, levelFinish.scale, levelFinish.rotationY, levelFinish.asset).create(this._container);
 
         }
+
+        if (level.scene) {
+            if (level.scene.gravity) {
+                this._container.setGravity(new THREE.Vector3(level.scene.gravity.x, level.scene.gravity.y, level.scene.gravity.z));;
+            }
+        }
     }
 
     getCreatables() {

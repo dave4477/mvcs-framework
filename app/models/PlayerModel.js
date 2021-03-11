@@ -6,7 +6,7 @@ export default class PlayerModel extends fw.core.modelCore {
 
 		this._isAlive = true;
 		this._score = 0;
-		this._level = 0;
+		this._level = 4;
 		this._lifes = Infinity;
 	}
 	
