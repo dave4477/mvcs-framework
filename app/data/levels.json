@@ -718,60 +718,6 @@
 
       "finish": [
       ]
-    },
-
-
-
-    {
-      "scene": {
-      "gravity": {
-        "x":0,
-        "y":-1,
-        "z":0
-      }
-      },
-      "playerPos": {"x":0, "y":5},
-      "timeBonus":180,
-      "cameraPan": {"fromX":0, "fromY":0, "x":100, "y":10, "z":25, "time":6000, "delay":2000, "repeatDelay":500},
-      "skybox": {
-        "path":"images/skybox/space/",
-        "filetype":".png",
-        "rotation":180
-      },
-      "platforms": [
-        {"type":"ground", "x":0, "y":-12, "z":0, "width":225, "height":24, "depth":16}
-
-      ],
-
-      "decorations": [
-      ],
-
-      "collectibles": [
-      ],
-
-      "obstacles": [
-      ],
-
-      "helpers": [
-        {"type":"UFO", "x":110, "y":2, "z":0, "asset":"assets/UFO.glb"}
-      ],
-
-      "finish": [
-      ]
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   ]
 }
