@@ -337,15 +337,19 @@ export default class MainScene extends fw.core.viewCore {
 
     pause() {
         this._isPaused = true;
-        this._timePaused = this._clock.getElapsedTime();
+        if (this._clock) {
+            this._timePaused = this._clock.getElapsedTime();
+        }
         window.cancelAnimationFrame(this._animationFrame);
         this.dispatchToContext(Constants.events.PAUSE_SIMULATION);
     }
 
     resume() {
         this._isPaused = false;
-        const pausedTime = this._clock.getElapsedTime() - this._timePaused;
-        this._secondsLeft += Math.round(pausedTime);
+        if (this._clock) {
+            const pausedTime = this._clock.getElapsedTime() - this._timePaused;
+            this._secondsLeft += Math.round(pausedTime);
+        }
         this.render();
 
         this.dispatchToContext(Constants.events.RESUME_SIMULATION);
