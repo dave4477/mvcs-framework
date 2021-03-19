@@ -49,6 +49,7 @@ export default {
 		ROCK: "Rock",
 		PARROT: "Parrot",
 		FISH: "Fish",
+		ROTATING_PLATFORM: "RotatingPlatform",
 		FLAMINGO: "Flamingo",
 		STORK: "Stork",
 		VENUS_FLY_TRAP: "VenusFlyTrap",

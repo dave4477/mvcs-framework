@@ -595,17 +595,10 @@
         "rotation":180
       },
       "platforms": [
-        {"type":"ground", "x":-124, "y":6.5, "z":0, "width":16, "height":1, "depth":1},
+        {"type":"ground", "x":-127, "y":5, "z":0, "width":16, "height":1, "depth":1},
 
-        {"type":"ground-falling", "x":-136, "y":4, "z":0, "width":2, "height":0.4, "depth":2},
 
-        {"type":"ground-falling", "x":-133, "y":2, "z":0, "width":2, "height":0.4, "depth":2},
-
-        {"type":"ground", "x":-127, "y":-12, "z":0, "width":2, "height":24, "depth":2},
-
-        {"type":"ground", "x":-120, "y":-12, "z":0, "width":2, "height":24, "depth":2},
-
-        {"type":"ground", "x":0, "y":-12, "z":0, "width":225, "height":24, "depth":16}
+        {"type":"ground", "x":25, "y":-12, "z":0, "width":200, "height":24, "depth":16}
 
       ],
 
@@ -613,6 +606,11 @@
       ],
 
       "collectibles": [
+        {"y":7.5, "x":-135, "type": "cog"},
+        {"y":7.5, "x":-134, "type": "cog"},
+        {"y":7.5, "x":-133, "type": "cog"},
+        {"y":7.5, "x":-132, "type": "cog"},
+        {"y":7.5, "x":-131, "type": "cog"},
         {"y":7.5, "x":-130, "type": "cog"},
         {"y":7.5, "x":-129, "type": "cog"},
         {"y":7.5, "x":-128, "type": "cog"},
@@ -623,12 +621,23 @@
         {"y":7.5, "x":-123, "type": "cog"},
         {"y":7.5, "x":-122, "type": "cog"},
         {"y":7.5, "x":-121, "type": "cog"},
+        {"y":7.5, "x":-120, "type": "cog"},
+        {"y":7.5, "x":-119, "type": "cog"},
+        {"y":7.5, "x":-118, "type": "cog"},
+        {"y":7.5, "x":-117, "type": "cog"},
+        {"y":7.5, "x":-116, "type": "cog"},
+        {"y":7.5, "x":-115, "type": "cog"},
+        {"y":7.5, "x":-114, "type": "cog"},
+        {"y":7.5, "x":-113, "type": "cog"},
+        {"y":7.5, "x":-112, "type": "cog"},
 
-        {"y":1, "x":-101, "type": "cog"},
-        {"y":1, "x":-100, "type": "cog"},
-        {"y":1, "x":-99, "type": "cog"},
-        {"y":1, "x":-98, "type": "cog"},
-        {"y":1, "x":-97, "type": "cog"},
+        {"y":4, "x":-103, "type": "cog"},
+        {"y":4, "x":-102, "type": "cog"},
+        {"y":4, "x":-101, "type": "cog"},
+        {"y":4, "x":-100, "type": "cog"},
+        {"y":4, "x":-99, "type": "cog"},
+        {"y":4, "x":-98, "type": "cog"},
+        {"y":4, "x":-97, "type": "cog"},
 
 
         {"y":1, "x":-72, "type": "cog"},
@@ -653,13 +662,59 @@
 
       ],
 
-      "obstacles": [
-        {"type": "spike", "x":-95, "y": 0 },
 
-        {"type": "crusher", "x":-91, "y":5, "z":0, "width":2, "height":2, "depth":8, "toY":1, "delay":0 },
-        {"type": "crusher", "x":-86, "y":5, "z":0, "width":2, "height":2, "depth":8, "toY":1, "delay":200 },
-        {"type": "crusher", "x":-81, "y":5, "z":0, "width":2, "height":2, "depth":8, "toY":1, "delay":400 },
-        {"type": "crusher", "x":-76, "y":5, "z":0, "width":2, "height":2, "depth":8, "toY":1, "delay":650 },
+      "obstacles": [
+
+        {"type": "rotatingSpikes", "x":-112, "y":3, "z":0, "width":8, "height":1, "depth":1, "idleTimeMs":2000, "spikes":[
+          {"x":0, "y":0, "z":0, "rotation":0 },
+          {"x":1, "y":0, "z":0, "rotation":0 },
+          {"x":2, "y":0, "z":0, "rotation":0 },
+
+          {"x":0, "y":0, "z":0, "rotation":180 },
+          {"x":1, "y":0, "z":0, "rotation":180 },
+          {"x":2, "y":0, "z":0, "rotation":180 }
+
+        ]},
+
+
+        {"type": "rotatingSpikes", "x":-100, "y":2, "z":0, "width":8, "height":1, "depth":1, "idleTimeMs":1000, "spikes":[
+          {"x":0, "y":0, "z":0, "rotation":0 },
+          {"x":1, "y":0, "z":0, "rotation":0 },
+          {"x":2, "y":0, "z":0, "rotation":0 },
+
+          {"x":0, "y":0, "z":0, "rotation":180 },
+          {"x":1, "y":0, "z":0, "rotation":180 },
+          {"x":2, "y":0, "z":0, "rotation":180 }
+
+        ]},
+
+        {"type": "rotatingSpikes", "x":-90, "y":1, "z":0, "width":8, "height":1, "depth":1, "idleTimeMs":1500, "spikes":[
+          {"x":-2, "y":0, "z":0, "rotation":0 },
+          {"x":-1, "y":0, "z":0, "rotation":0 },
+          {"x":0, "y":0, "z":0, "rotation":0 },
+          {"x":1, "y":0, "z":0, "rotation":0 },
+          {"x":2, "y":0, "z":0, "rotation":0 },
+          {"x":3, "y":0, "z":0, "rotation":0 },
+
+          {"x":-2, "y":0, "z":0, "rotation":180 },
+          {"x":-1, "y":0, "z":0, "rotation":180 },
+          {"x":0, "y":0, "z":0, "rotation":180 },
+          {"x":1, "y":0, "z":0, "rotation":180 },
+          {"x":2, "y":0, "z":0, "rotation":180 },
+          {"x":3, "y":0, "z":0, "rotation":180 }
+        ]},
+
+        {"type": "rotatingSpikes", "x":-80, "y":0, "z":0, "width":8, "height":1, "depth":1, "idleTimeMs":1000, "spikes":[
+          {"x":0, "y":0, "z":0, "rotation":0 },
+          {"x":1, "y":0, "z":0, "rotation":0 },
+          {"x":2, "y":0, "z":0, "rotation":0 },
+          {"x":3, "y":0, "z":0, "rotation":0 },
+
+          {"x":0, "y":0, "z":0, "rotation":180 },
+          {"x":1, "y":0, "z":0, "rotation":180 },
+          {"x":2, "y":0, "z":0, "rotation":180 },
+          {"x":3, "y":0, "z":0, "rotation":180 }
+        ]},
 
         {"type": "crusher", "x":-64, "y":5, "z":0, "width":2, "height":2, "depth":8, "toY":1, "delay":0 },
 
@@ -682,13 +737,6 @@
         {"type": "spike", "x":-14, "y": 0 },
         {"type": "spike", "x":-13, "y": 0 },
         {"type": "spike", "x":-12, "y": 0 },
-
-        {"type": "rotatingSpikes", "x":8, "y":2, "z":0, "width":8, "height":1, "depth":1, "spikes":[
-          {"x":1, "y":0, "z":0, "rotation":0 },
-          {"x":2, "y":0, "z":0, "rotation":0 },
-          {"x":3, "y":0, "z":0, "rotation":0 }
-
-        ]},
 
         {"type": "spike", "x":12, "y": 0 },
         {"type": "spike", "x":13, "y": 0 },
@@ -714,13 +762,16 @@
           {"type": "bee", "x":66, "y":1.4, "z":0, "endX":76, "duration":1500 },
           {"type": "bee", "x":74, "y":1, "z":0, "endX":84, "duration":1500 },
           {"type": "bee", "x":82, "y":0.6, "z":0, "endX":92, "duration":1500 }
-        ]}
+        ]},
 
+        {"type": "spike", "x":104, "y": 0 },
+        {"type": "spike", "x":108, "y": 0 },
+        {"type": "spike", "x":109, "y": 0 }
 
       ],
 
       "helpers": [
-        {"type":"UFO", "x":110, "y":2, "z":0, "asset":"assets/UFO.glb"}
+        {"type":"UFO", "x":118, "y":2, "z":0, "asset":"assets/UFO.glb"}
       ],
 
       "finish": [

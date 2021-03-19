@@ -107,13 +107,14 @@ export default class LevelParser extends fw.core.viewCore {
                 new Fish(obstacle.x, obstacle.y, obstacle.z, obstacle.delay, obstacle.duration, obstacle.force).create(this._container);
             }
 
-            // else if (obstacle.type == "rotatingSpikes") {
-            //     new RotatingSpikes(
-            //         new THREE.Vector3(obstacle.x, obstacle.y, obstacle.z),
-            //         new THREE.Vector3(obstacle.width, obstacle.height, obstacle.depth),
-            //         obstacle.spikes
-            //     ).create(this._container);
-            // }
+            else if (obstacle.type == "rotatingSpikes") {
+                new RotatingSpikes(
+                    new THREE.Vector3(obstacle.x, obstacle.y, obstacle.z),
+                    new THREE.Vector3(obstacle.width, obstacle.height, obstacle.depth),
+                    obstacle.spikes,
+                    obstacle.idleTimeMs
+                ).create(this._container);
+            }
         }
 
         // Add collectables

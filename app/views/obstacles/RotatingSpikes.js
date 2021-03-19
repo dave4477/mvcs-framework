@@ -7,8 +7,8 @@ import Spikes from './Spikes.js';
 const DEG2RAD = Math.PI / 180;
 
 export default class RotatingSpikes extends fw.core.viewCore {
-    constructor(posVec3, geomVec3, spikes, time = 3000) {
-        super(Constants.views.FISH);
+    constructor(posVec3, geomVec3, spikes, idleTimeMs = 1000) {
+        super(Constants.views.ROTATING_PLATFORM);
 
         this.posVec3 = posVec3;
         this.geomVec3 = geomVec3;
@@ -17,8 +17,7 @@ export default class RotatingSpikes extends fw.core.viewCore {
 
         this.scene = null;
         this.mesh = null;
-
-        this.duration = time;
+        this.idleTimeMs = idleTimeMs;
 
         this._rotationX = 0;
 
@@ -36,33 +35,51 @@ export default class RotatingSpikes extends fw.core.viewCore {
         this.mesh = new Physijs.BoxMesh( new THREE.BoxGeometry(this.geomVec3.x, this.geomVec3.y, this.geomVec3.z), ground_material, 0 );
         this.mesh.position.set(this.posVec3.x, this.posVec3.y, this.posVec3.z);
         this.mesh.receiveShadow = true;
+        this.mesh.castShadow = true;
         this.mesh.name = "ground";
         this.mesh.userData = {
             owner: this
         };
 
+        const containerMaterial = Physijs.createMaterial( new THREE.MeshLambertMaterial({transparent:true, color:0xFF0000, opacity:0.5}), 0, 0 );
+        this.containerMesh = new Physijs.BoxMesh( new THREE.BoxGeometry(this.geomVec3.x-0.2, 0.1, 0.1), containerMaterial, 0 );
+        this.containerMesh.position.set(this.posVec3.x, this.posVec3.y, this.posVec3.z);
+        this.containerMesh.name = "spike";
 
         for (let i = 0; i < this.spikes.length; i++) {
-            const spikeX = this.spikes[i].x - (this.geomVec3.x / 2);
-            const spikeY = this.spikes[i].y + (this.geomVec3.y / 2);
+            let spikeX = this.spikes[i].x;
+            let spikeY = this.spikes[i].y;
+            let spikeZ = this.spikes[i].z;
 
-            const spikeObj = new Spikes().create(spikeX, spikeY, 0, this.spikes[i].rotation, 0.25);
-            spikeObj.addEventListener('collision', (targetObj) => {
-                alert(targetObj.name);
-            });
-            this.mesh.add(spikeObj);
+            if (this.spikes[i].rotation === 0) {
+                spikeY += (this.mesh.geometry.boundingBox.max.y + 0.2);
+            } else if (Math.abs(this.spikes[i].rotation) === 180) {
+                spikeY -= (this.mesh.geometry.boundingBox.max.y + 0.2);
+            } else if (this.spikes[i].rotation === 90) {
+                spikeZ += (this.mesh.geometry.boundingBox.max.z + 0.2);
+            } else if (this.spikes[i].rotation === -90) {
+                spikeZ -= (this.mesh.geometry.boundingBox.max.z + 0.2);
+            }
+
+            const spikeObj = new Spikes().create(spikeX, spikeY, spikeZ, this.spikes[i].rotation, 0.25);
+            this.spikeObjects.push(spikeObj);
+            this.containerMesh.add(spikeObj);
         }
         this.scene.add(this.mesh);
+        this.scene.add(this.containerMesh);
         this.addTween();
     }
 
     addTween() {
         new TWEEN.Tween({x:this._rotationX})
-            .to({x: this._rotationX +90}, 1000)
-            .delay(2000)
+            .to({x: this._rotationX +90}, 400)
+            .delay(this.idleTimeMs)
             .onUpdate((object) => {
                 this.mesh.__dirtyRotation = true;
                 this.mesh.rotation.x = object.x * DEG2RAD;
+
+                this.containerMesh.__dirtyRotation = true;
+                this.containerMesh.rotation.x = object.x * DEG2RAD;
 
             })
             .onComplete((object) => {
