@@ -8,6 +8,7 @@ export default class HudView extends fw.core.viewCore {
     }
 
     init() {
+
         this.addViewListener(Constants.events.TIMER_STARTED, () => {
             document.querySelector('#timeBonus').style.display = "";
         });
@@ -31,6 +32,14 @@ export default class HudView extends fw.core.viewCore {
             if (data.score && this._score) {
                 this._score.innerHTML = "Score: " +data.score;
             }
+
+            if (data.lifes) {
+                this.updateLifes(data.lifes);
+            }
         });
+    }
+
+    updateLifes(lifes) {
+        document.querySelector('#lifesLeftText').innerHTML = lifes;
     }
 }

@@ -20,6 +20,9 @@ export default class GameController extends fw.core.controllerCore {
 				this.showGameComplete();
 			}
 		});
+
+		this.addListener('submitScore', this.submitScore);
+		this.addListener('restartGame', this.restartGame);
 		this.json = null;
 	}
 
@@ -46,18 +49,36 @@ export default class GameController extends fw.core.controllerCore {
 		this.getViewByName(Constants.views.POPUP_GAME_COMPLETE).show(this.playerModel.score);
 	}
 
-	hideLevelComplete() {
+	submitScore(data) {
+		console.log("data received:", data);
 
+		this.gameService.loadLevelData('./../app/highscores.php?name=' +data.name+'&score=' +data.score).then((response) => {
+		});
+
+		this.restartGame();
 	}
+
 
 	gameOver() {
-		this.sceneHasInitialized = false;
-		this.playerModel.level = 0;
-		this.playerModel.lifes = 10;
-		this.playerModel.score = 0;
-		this.dispatch(Constants.events.SWITCH_STATE, 'mainScreen');
+		this.getViewByName(Constants.views.POPUP_GAME_OVER).show(this.playerModel.score);
+
+		// this.dispatch(Constants.events.SWITCH_STATE, 'mainScreen');
 	}
-	
+
+	restartGame() {
+
+		this.sceneHasInitialized = false;
+		this.playerModel.resetLevel();
+		this.playerModel.resetLifes();
+		this.playerModel.resetScore();
+		this.playerModel.isAlive = true;
+
+		this.getViewByName(Constants.views.MAIN_SCENE).dispose();
+
+		window.location.reload();
+		//this.dispatch(Constants.events.SWITCH_STATE, 'mainScreen');
+	}
+
 	startGame() {
 		console.log(`PlayerController::startGame`);
 

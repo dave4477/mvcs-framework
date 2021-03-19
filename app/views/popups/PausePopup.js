@@ -7,12 +7,7 @@ export default class PausePopup extends fw.core.viewCore {
 
     init() {
         this.addContextListener(Constants.events.VISIBILITY_HIDDEN, this.show);
-
         this.resumeHandler = this.resume.bind(this);
-        // popupView.addEventListener('touchend', this.onLeftHandlerUp, false);
-        // popupView.addEventListener('mouseup', this.onLeftHandlerUp, false);
-
-
     }
 
     resume() {
@@ -24,7 +19,9 @@ export default class PausePopup extends fw.core.viewCore {
         const popupView = document.querySelector('#popupView');
 
         popupView.style.display = "";
-        document.querySelector('#pausePopup').style.display = "";
+
+        this.addView(this.html, popupView);
+
         popupView.addEventListener('touchstart', this.resumeHandler, false);
         popupView.addEventListener('mousedown', this.resumeHandler, false);
 
@@ -33,8 +30,8 @@ export default class PausePopup extends fw.core.viewCore {
     hide() {
         const popupView = document.querySelector('#popupView');
 
+        popupView.innerHTML = "";
         popupView.style.display = "none";
-        document.querySelector('#pausePopup').style.display = "none";
 
         popupView.removeEventListener('touchstart', this.resumeHandler, false);
         popupView.removeEventListener('mousedown', this.resumeHandler, false);

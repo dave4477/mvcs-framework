@@ -125,8 +125,7 @@ var fw = (function () {
 					if(Object.keys(viewSubscriptions[eventType]).length === 0) {
 						delete viewSubscriptions[eventType];
 					}
-				},
-				id: id
+				}
 			};
 		} 
 
@@ -331,6 +330,7 @@ var fw = (function () {
 			this._name = name;
 			this._contextListeners = [];
 			this._viewListeners = [];
+			this._parent = document.body;
 		}
 
 		/**
@@ -343,12 +343,14 @@ var fw = (function () {
 		 * 					or document.body if empty.
 	     */
 		addView(html, parent) {
-			if (!parent) {
-				parent = document.body;
+
+			if (parent) {
+				this._parent = parent;
 			}
-			const content = html.getElementsByTagName('body')[0].firstChild;
-			parent.appendChild(content);
-			return content;
+			//const content = html.getElementsByTagName('body')[0].firstChild;
+			let content = html.body || html;
+			this._parent.appendChild(content);
+			return html;
 		}
 
 		removeView() {
@@ -375,6 +377,8 @@ var fw = (function () {
 				const listener = this._contextListeners[i];
 				if (listener.type == type && listener.fn == fn) {
 					listener.unsubscriber.unsubscribe();
+					this._contextListeners.splice(i,1);
+
 				}
 			}
 		}
@@ -452,16 +456,19 @@ var fw = (function () {
 			return new Promise((resolve, reject) =>{
 				this.backoff.getURL(url).then((loadedView) =>{
 					if (loadedView) {
+						let data;
 						fw.core.parsers.viewParser.parseHTML(loadedView).then(html => {
 							// Check if there is a script attached.
 							const content = html.getElementsByTagName('body')[0].firstChild;
 							const script = content.hasAttribute('data-api') ? content.getAttribute('data-api') : null;
 							if (script) {
 								import(script).then(loadedscript => {
-									resolve( {
-										script: loadedscript.default,
-										html: html
-									});
+									data = {
+										script: new loadedscript.default(),
+										html: content
+									};
+									data.script.html = content;
+									resolve( data );
 								});
 							} else {
 								const id = content.getAttribute('id');
@@ -471,10 +478,12 @@ var fw = (function () {
 									}
 								};
 
-								resolve({
-									script: script,
+								data = {
+									script: new script(),
 									html: html
-								});
+								};
+								data.script.html = content;
+								resolve( data );
 							}
 						});
 					} else {

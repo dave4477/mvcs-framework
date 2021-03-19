@@ -8,6 +8,7 @@ export default class ViewCore {
 		this._name = name;
 		this._contextListeners = [];
 		this._viewListeners = [];
+		this._parent = document.body;
 	}
 
 	/**
@@ -20,12 +21,14 @@ export default class ViewCore {
 	 * 					or document.body if empty.
      */
 	addView(html, parent) {
-		if (!parent) {
-			parent = document.body;
+
+		if (parent) {
+			this._parent = parent;
 		}
-		const content = html.getElementsByTagName('body')[0].firstChild;
-		parent.appendChild(content);
-		return content;
+		//const content = html.getElementsByTagName('body')[0].firstChild;
+		let content = html.body || html;
+		this._parent.appendChild(content);
+		return html;
 	}
 
 	removeView() {

@@ -10,6 +10,7 @@ import Palms from './../decoration/Palms.js';
 import Grass from './../decoration/Grass.js';
 import Spikes from './../obstacles/Spikes.js';
 import Crusher from './../obstacles/Crusher.js';
+import RotatingSpikes from './../obstacles/RotatingSpikes.js';
 import Launcher from './../interaction/Launcher.js';
 import Bear from './../obstacles/Bear.js';
 import VenusFlyTrap from './../obstacles/VenusFlyTrap.js';
@@ -105,6 +106,14 @@ export default class LevelParser extends fw.core.viewCore {
             } else if (obstacle.type == "fish") {
                 new Fish(obstacle.x, obstacle.y, obstacle.z, obstacle.delay, obstacle.duration, obstacle.force).create(this._container);
             }
+
+            // else if (obstacle.type == "rotatingSpikes") {
+            //     new RotatingSpikes(
+            //         new THREE.Vector3(obstacle.x, obstacle.y, obstacle.z),
+            //         new THREE.Vector3(obstacle.width, obstacle.height, obstacle.depth),
+            //         obstacle.spikes
+            //     ).create(this._container);
+            // }
         }
 
         // Add collectables

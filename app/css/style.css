@@ -47,6 +47,17 @@ body {
     color: #fff;
 }
 
+.layout .hudView .lifesLeft {
+    position: absolute;
+    top: 0;
+    left: 200px;
+    padding: 4px;
+    font-size:16px;
+    font-weight: bold;
+    text-shadow: 0px 0px 2px #000;
+    color: #fff;
+}
+
 .layout .hudView .score {
     position: absolute;
     top: 0;
@@ -130,7 +141,7 @@ body {
 
 .layout .mainScreen .startGame {
     position: absolute;
-    top: 75px;
+    top: 70px;
     width: 120px;
     left: 0;
     right: 0;
@@ -200,7 +211,7 @@ body {
 
 .copyRight {
     position: absolute;
-    bottom: 30px;
+    bottom: 20px;
     color: #eee;
     font-size: 11px;
     left: 0;
@@ -224,10 +235,26 @@ body {
 
 .quote {
     position: absolute;
-    width:250px;
+    width:100%;
     height:20px;
-    color:#fff;
-    top:200px;
+    top:20px;
+    font-size: 14px;
+    color: #eee;
+    font-variant: small-caps;
+    text-shadow: 0 0 12px #fff;
+    left:0;
+    right:0;
+    margin:auto;
+}
+
+.HOF {
+    position: absolute;
+    width: 400px;
+    height: 60px;
+    top: 200px;
+    overflow: hidden;
+    font-size: 14px;
+    color: #aaa;
     left:0;
     right:0;
     margin:auto;
@@ -269,4 +296,15 @@ body {
 }
 .scoreField {
     text-shadow: 0 0 4px #fff;
+}
+
+.textInput {
+    width: 200px;
+    height: 25px;
+    font-size: 14px;
+    background: transparent;
+    color: #6aff8b;
+    border-width:0 0 1px 0;
+    border-style: dotted;
+    border-color: #6aff8b;
 }

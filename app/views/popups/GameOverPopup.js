@@ -3,17 +3,18 @@ import Constants from './../../Constants.js';
 /**
  * Popup for level complete. Here we show score and button for next level.
  */
-export default class GameCompletedPopup extends fw.core.viewCore {
+export default class GameOverPopup extends fw.core.viewCore {
     constructor() {
-        super(Constants.views.POPUP_GAME_COMPLETE);
-        this.timeBonus = NaN;
-        this.score = NaN;
+        super(Constants.views.POPUP_GAME_OVER);
+        this.score = null;
     }
 
     init() {
     }
 
     show(score) {
+        this.score = score;
+
         const popupView = document.querySelector('#popupView');
 
         popupView.style.display = "";
@@ -37,7 +38,7 @@ export default class GameCompletedPopup extends fw.core.viewCore {
 
     submitScore() {
         const name = encodeURI(document.querySelector('#username').value);
-        this.dispatchToContext('submitScore', {name: name, score: this.score});
+        this.dispatchToContext('submitScore', {name:name, score:this.score});
         this.hide();
     }
 

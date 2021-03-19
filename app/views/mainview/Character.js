@@ -254,6 +254,26 @@ export default class Character extends fw.core.viewCore {
 
         switch (targetObject.name) {
             case "ground":
+                // for (let i = 0; i < targetObject.children.length; i++) {
+                //     if (targetObject.children[i].name == "spike") {
+                //         const spike = targetObject.children[i];
+                //         const mesh = this.character.mesh;
+                //         const geom = mesh.geometry;
+                //         const bbMin = geom.boundingBox.min;
+                //         const bbMax = geom.boundingBox.max;
+                //         const spikeX = spike.parent.position.x + spike.position.x;
+                //         const spikeY = spike.parent.position.y + spike.position.y;
+                //         const spikeZ = spike.parent.position.z + spike.position.z;
+                //
+                //         if (spikeX > mesh.position.x - bbMin.x && spikeX < mesh.position.x + bbMax.x) {
+                //             if (spikeY > mesh.position.y - bbMin.y && spikeY < mesh.position.y + bbMax.y) {
+                //                 if (spikeZ > mesh.position.z - bbMin.z && spikeZ < mesh.position.z + bbMax.z) {
+                //                     alert('spike collision');
+                //                 }
+                //             }
+                //         }
+                //     }
+                // }
             case "box":
             case "bridge":
                 this._isJumping = false;

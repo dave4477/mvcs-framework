@@ -21,16 +21,27 @@ export default class LevelCompletePopup extends fw.core.viewCore {
     }
 
     show(score) {
-        document.querySelector('#levelCompletePopup').style.display = "";
+        const popupView = document.querySelector('#popupView');
+
+        popupView.style.display = "";
+
+        this.addView(this.html, popupView);
+
+        this.init();
+
         document.querySelector('#popupView').style.display = "";
         document.querySelector('#coinsScoreText').innerHTML = score;
         this.score = score;
         this.checkTotal();
     }
 
+
+
     hide() {
-        document.querySelector('#levelCompletePopup').style.display = "none";
-        document.querySelector('#popupView').style.display = "none";
+        const popupView = document.querySelector('#popupView');
+
+        popupView.innerHTML = "";
+        popupView.style.display = "none";
     }
 
     checkTotal() {

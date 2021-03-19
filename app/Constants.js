@@ -57,6 +57,7 @@ export default {
 		OBJECTS_PRELOADER: "ObjectsPreloader",
 		POPUP_PAUSE: "PopupPause",
 		POPUP_LEVEL_COMPLETE: "PopupLevelComplete",
-		POPUP_GAME_COMPLETE: "PopupGameComplete"
+		POPUP_GAME_COMPLETE: "PopupGameComplete",
+		POPUP_GAME_OVER: "PopupGameOver"
 	}
 }

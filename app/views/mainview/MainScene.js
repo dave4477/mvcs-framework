@@ -119,9 +119,6 @@ export default class MainScene extends fw.core.viewCore {
 
     onGameOver() {
         window.cancelAnimationFrame(this._animationFrame);
-        this.clearScene();
-        this.renderer.dispose();
-        document.getElementById('viewport').innerHTML = "";
         this.dispatchToContext(Constants.events.SWITCH_STATE, 'gameOver');
     }
 
@@ -408,5 +405,11 @@ export default class MainScene extends fw.core.viewCore {
             }
             this.scene.remove(child);
         }
+    }
+
+    dispose() {
+        this.clearScene();
+        this.renderer.dispose();
+        document.getElementById('viewport').innerHTML = "";
     }
 }

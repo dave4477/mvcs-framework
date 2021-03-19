@@ -7,7 +7,7 @@ export default class PlayerModel extends fw.core.modelCore {
 		this._isAlive = true;
 		this._score = 0;
 		this._level = 0;
-		this._lifes = Infinity;
+		this._lifes = 5; //Infinity;i6
 	}
 	
 	get isAlive() {
@@ -37,9 +37,25 @@ export default class PlayerModel extends fw.core.modelCore {
 		this.dispatchPlayerData();
 
 	}
-	
+
+	get lifes() {
+		return this._lifes;
+	}
+
+	set lifes(value) {
+		this._lifes = value;
+	}
+
 	get level() {
 		return this._level;
+	}
+
+	resetScore() {
+		this._score = 0;
+	}
+
+	resetLifes() {
+		this._lifes = 5;
 	}
 
 	resetLevel() {

@@ -25,16 +25,19 @@ export default class ServiceCore {
 		return new Promise((resolve, reject) =>{
 			this.backoff.getURL(url).then((loadedView) =>{
 				if (loadedView) {
+					let data;
 					fw.core.parsers.viewParser.parseHTML(loadedView).then(html => {
 						// Check if there is a script attached.
 						const content = html.getElementsByTagName('body')[0].firstChild;
 						const script = content.hasAttribute('data-api') ? content.getAttribute('data-api') : null;
 						if (script) {
 							import(script).then(loadedscript => {
-								resolve( {
-									script: loadedscript.default,
-									html: html
-								});
+								data = {
+									script: new loadedscript.default(),
+									html: content
+								};
+								data.script.html = content;
+								resolve( data );
 							});
 						} else {
 							const id = content.getAttribute('id');
@@ -44,10 +47,12 @@ export default class ServiceCore {
 								}
 							};
 
-							resolve({
-								script: script,
+							data = {
+								script: new script(),
 								html: html
-							});
+							};
+							data.script.html = content;
+							resolve( data );
 						}
 					});
 				} else {

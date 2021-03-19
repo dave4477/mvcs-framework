@@ -75,6 +75,8 @@
 		"postProcess":[],
 		"outbound":["game", "mainScreen"],
 		"events":[
+			"submitScore",
+			"restartGame"
 		]
 	},
 
@@ -84,6 +86,8 @@
 		"postProcess":[],
 		"outbound":["mainScreen"],
 		"events":[
+			"submitScore",
+			"restartGame"
 		]
 	},
 

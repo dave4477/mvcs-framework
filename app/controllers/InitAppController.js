@@ -19,7 +19,8 @@ export default class InitAppController extends fw.core.controllerCore {
 			'./views/uiview/hudView.html',
 			'./views/popups/levelCompletePopup.html',
 			'./views/popups/pausePopup.html',
-			'./views/popups/GameCompletedPopup.html'
+			'./views/popups/GameCompletedPopup.html',
+			'./views/popups/GameOverPopup.html'
 		);
 
 		this.addListener(Constants.events.PAUSE_SIMULATION, ()=> {
@@ -43,12 +44,13 @@ export default class InitAppController extends fw.core.controllerCore {
 				   hudViewUrl,
 				   levelCompletePopupUrl,
 				   pausePopupUrl,
-				   gameCompletePopupUrl) {
+				   gameCompletePopupUrl,
+	 			   gameOverPopupUrl) {
 
 		const viewLoaderService = this.getServiceByName(Constants.services.VIEW_LOADER_SERVICE);
 
 		const layoutView = await viewLoaderService.loadView(layoutUrl);
-		let view = new layoutView.script();
+		let view = layoutView.script;
 		view.addView(layoutView.html);
 
 		const loadingViewContainer = document.getElementById('loadingView');
@@ -59,45 +61,40 @@ export default class InitAppController extends fw.core.controllerCore {
 		const popupView = document.getElementById('popupView');
 
 		const mainView = await viewLoaderService.loadView(mainViewUrl);
-		view = new mainView.script();
+		view = mainView.script;
+		console.log(mainView.html);
 		view.addHTML(mainView.html, gameViewContainer);
 
 		const startScreen = await viewLoaderService.loadView(mainScreenUrl);
-		view = new startScreen.script();
+		view = startScreen.script;
 		view.addView(startScreen.html, startScreenContainer);
 		view.init();
 
 		const loadingView = await viewLoaderService.loadView(loadingViewUrl);
-		view = new loadingView.script();
+		view = loadingView.script;
 		view.addView(loadingView.html, loadingViewContainer);
 		view.init();
 
 		const uiView = await viewLoaderService.loadView(uiViewUrl);
-		view = new uiView.script();
+		view = uiView.script;
 		view.addView(uiView.html, uiViewContainer);
 		view.init();
 
 		const hudView = await viewLoaderService.loadView(hudViewUrl);
-		view = new hudView.script();
+		view = hudView.script;
 		view.addView(hudView.html, hudViewContainer);
 		view.init();
 
 		const levelCompletePopup = await viewLoaderService.loadView(levelCompletePopupUrl);
-		view = new levelCompletePopup.script();
-		view.addView(levelCompletePopup.html, popupView);
-		view.init();
-
 
 		const PausePopup = await viewLoaderService.loadView(pausePopupUrl);
-		view = new PausePopup.script();
-		view.addView(PausePopup.html, popupView);
+		view = PausePopup.script;
+		// view.addView(PausePopup.html, popupView);
 		view.init();
 
 		const gameCompletePopup = await viewLoaderService.loadView(gameCompletePopupUrl);
-		view = new gameCompletePopup.script();
-		view.addView(gameCompletePopup.html, popupView);
-		view.init();
 
+		const gameOverPopup = await viewLoaderService.loadView(gameOverPopupUrl);
 
 		this.dispatch(Constants.events.SWITCH_STATE, "mainScreen");
 
