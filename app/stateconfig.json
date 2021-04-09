@@ -75,6 +75,8 @@
 		"postProcess":[],
 		"outbound":["game", "mainScreen"],
 		"events":[
+			"UpdatePlayerScore",
+			"PlayerModelUpdated",
 			"submitScore",
 			"restartGame"
 		]

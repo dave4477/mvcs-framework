@@ -1,7 +1,8 @@
 
 export default {
     showLightHelper: false,
-    showRigidBody: false,
+    showRigidBody: true,
+    showRayCast: true,
     showEnemies: false,
     godMode: false,
     skipPanning: false

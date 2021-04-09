@@ -21,6 +21,10 @@ export default class GameController extends fw.core.controllerCore {
 			}
 		});
 
+		this.addListener(Constants.events.TIME_BONUS_COLLECTED, (timeBonus) => {
+			this.timeBonus = timeBonus.points;
+		});
+
 		this.addListener('submitScore', this.submitScore);
 		this.addListener('restartGame', this.restartGame);
 		this.json = null;
@@ -41,8 +45,11 @@ export default class GameController extends fw.core.controllerCore {
 		this.objectPreloader.preload(json);
 	}
 
-	showLevelComplete() {
+	async showLevelComplete() {
+		const viewLoaderService = this.getServiceByName(Constants.services.VIEW_LOADER_SERVICE);
+		const levelCompletePopup = await viewLoaderService.loadView('./views/popups/levelCompletePopup.html');
 		this.getViewByName(Constants.views.POPUP_LEVEL_COMPLETE).show(this.playerModel.score);
+		this.getViewByName(Constants.views.POPUP_LEVEL_COMPLETE).setTimeBonus(this.timeBonus);
 	}
 
 	showGameComplete() {
@@ -53,9 +60,12 @@ export default class GameController extends fw.core.controllerCore {
 		console.log("data received:", data);
 
 		this.gameService.loadLevelData('./../app/highscores.php?name=' +data.name+'&score=' +data.score).then((response) => {
+			this.restartGame();
+		}, (error) =>{
+			console.log("There was an error submitting the highscores");
+			this.restartGame();
 		});
 
-		this.restartGame();
 	}
 
 

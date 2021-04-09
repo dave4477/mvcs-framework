@@ -8,25 +8,26 @@ export default class LevelCompletePopup extends fw.core.viewCore {
         super(Constants.views.POPUP_LEVEL_COMPLETE);
         this.timeBonus = NaN;
         this.score = NaN;
+        this.onNextLevel = this.nextLevel.bind(this);
     }
 
     init() {
-        this.addContextListener(Constants.events.TIME_BONUS_COLLECTED, (timeBonus)=>{
-            document.querySelector('#timeBonusText').innerHTML = timeBonus.points;
-            this.timeBonus = timeBonus.points;
-            this.checkTotal();
-        });
+        document.querySelector('#nextLevelButton').addEventListener('click', this.onNextLevel);
+    }
 
-        document.querySelector('#nextLevelButton').addEventListener('click', this.nextLevel.bind(this));
+    onTimeBonus(timeBonus) {
+        this.timeBonus = timeBonus.points;
+        this.checkTotal();
     }
 
     show(score) {
+        console.log("score:", score);
+        this.score = score;
         const popupView = document.querySelector('#popupView');
 
         popupView.style.display = "";
 
         this.addView(this.html, popupView);
-
         this.init();
 
         document.querySelector('#popupView').style.display = "";
@@ -36,25 +37,35 @@ export default class LevelCompletePopup extends fw.core.viewCore {
     }
 
 
+    setTimeBonus(timeBonus) {
+        this.timeBonus = timeBonus;
+        this.checkTotal();
+    }
 
     hide() {
         const popupView = document.querySelector('#popupView');
 
+        this.removeContextListener(this.onTimeBonus);
+        document.querySelector('#nextLevelButton').removeEventListener('click', this.onNextLevel);
+
+        this.score = NaN;
+        this.timeBonus = NaN;
         popupView.innerHTML = "";
         popupView.style.display = "none";
+        this.removeView();
     }
 
     checkTotal() {
         if (!isNaN(this.timeBonus) && !isNaN(this.score)) {
-            document.querySelector('#totalScoreText').innerHTML = (this.timeBonus + this.score);
+            document.querySelector('#timeBonusText').innerHTML = this.timeBonus;
+            document.querySelector('#totalScoreText').innerHTML = this.timeBonus + this.score;
+            this.dispatchToContext(Constants.events.UPDATE_PLAYER_SCORE, {points: this.timeBonus});
         }
     }
     nextLevel() {
         this.dispatchToContext(Constants.events.NEXT_LEVEL);
         this.dispatchToContext(Constants.events.SWITCH_STATE, 'game');
         this.hide();
-        this.timeBonus = 0;
-        this.score = 0;
 
     }
 }

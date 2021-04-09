@@ -371,7 +371,7 @@
 
 
     {
-      "playerPos": {"x":0, "y":5},
+      "playerPos": {"x":-130, "y":5},
       "timeBonus":180,
       "cameraPan": {"fromX":0, "fromY":0, "x":0, "y":2, "z":50, "time":6000, "delay":2000, "repeatDelay":1000},
       "skybox": {

@@ -106,8 +106,11 @@ export default class LevelFinish extends fw.core.viewCore {
                     }
                 }
             });
+            this.mesh.userData = null;
             this.mesh.geometry.dispose();
             this.mesh.material.dispose();
+            this.scene.dispose();
+            this.scene = null;
         }
     }
 }

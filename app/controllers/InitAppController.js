@@ -85,7 +85,7 @@ export default class InitAppController extends fw.core.controllerCore {
 		view.addView(hudView.html, hudViewContainer);
 		view.init();
 
-		const levelCompletePopup = await viewLoaderService.loadView(levelCompletePopupUrl);
+		// const levelCompletePopup = await viewLoaderService.loadView(levelCompletePopupUrl);
 
 		const PausePopup = await viewLoaderService.loadView(pausePopupUrl);
 		view = PausePopup.script;

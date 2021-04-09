@@ -1,9 +1,13 @@
 import * as THREE from './../../libs/three.module.js';
 import Grass from './Grass.js';
 import ObjectsPreloader from './../helpers/ObjectsPreloader.js';
+
+
+const DEG2RAD = Math.PI / 180;
+
 export default class Platform {
 
-    static create(type, posVec3, geomVec3) {
+    static create(type, posVec3, geomVec3, angle) {
         const loader = new THREE.TextureLoader();
         let texture;
         if (type == "ground-falling") {
@@ -22,7 +26,9 @@ export default class Platform {
         ground.receiveShadow = true;
         // ground.castShadow = true;
         ground.name = type;
-
+        if (angle) {
+            ground.rotation.z = angle * DEG2RAD;
+        }
         const grass = new Grass(ground);
         ground.userData = {
             grass: grass

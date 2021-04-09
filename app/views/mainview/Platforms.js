@@ -12,7 +12,8 @@ export default class Platforms {
             const groundData = levelMap[i];
             const metrics = new THREE.Vector3(groundData.width, groundData.height, groundData.depth);
             const position = new THREE.Vector3(groundData.x, groundData.y, groundData.z);
-            const ground = Platform.create(groundData.type, position , metrics);
+            const angle = groundData.angle;
+            const ground = Platform.create(groundData.type, position , metrics, angle);
             scene.add(ground);
         }
     }

@@ -112,7 +112,7 @@ export default class VenusFlyTrap extends fw.core.viewCore {
         this.clock = null;
         this.handleFrameUpdate = null;
         this.levelFinish = null;
-
+        this.removeView();
         console.log("venus destroyed");
     }
 }

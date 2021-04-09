@@ -237,14 +237,14 @@ export default class Character extends fw.core.viewCore {
     }
 
     createRayCasts(mesh) {
-        this.rayCastR = new RayCast(mesh.position, new THREE.Vector3(1, 0, 0), mesh);
-        this.rayCastRT = new RayCast(mesh.position, new THREE.Vector3(1, 1, 0));
-        this.rayCastRB = new RayCast(mesh.position, new THREE.Vector3(1, -1, 0));
-        this.rayCastL = new RayCast(mesh.position, new THREE.Vector3(-1, 0, 0));
-        this.rayCastLT = new RayCast(mesh.position, new THREE.Vector3(-1, 1, 0));
-        this.rayCastLB = new RayCast(mesh.position, new THREE.Vector3(-1, -1, 0));
-        this.rayCastU = new RayCast(mesh.position, new THREE.Vector3(0, 1, 0));
-        this.rayCastD = new RayCast(mesh.position, new THREE.Vector3(0, -1, 0));
+        this.rayCastR = new RayCast(mesh.position, new THREE.Vector3(1, 0, 0), mesh, 0, 0.5);
+        this.rayCastRT = new RayCast(mesh.position, new THREE.Vector3(1, 1, 0), mesh, 0, 1);
+        this.rayCastRB = new RayCast(mesh.position, new THREE.Vector3(1, -1, 0), mesh, 0, 1);
+        this.rayCastL = new RayCast(mesh.position, new THREE.Vector3(-1, 0, 0), mesh, 0, 0.5);
+        this.rayCastLT = new RayCast(mesh.position, new THREE.Vector3(-1, 1, 0), mesh, 0, 1);
+        this.rayCastLB = new RayCast(mesh.position, new THREE.Vector3(-1, -1, 0), mesh, 0, 1);
+        this.rayCastU = new RayCast(mesh.position, new THREE.Vector3(0, 1, 0), mesh, 0, 1);
+        this.rayCastD = new RayCast(mesh.position, new THREE.Vector3(0, -1, 0), mesh, 0, 1);
     }
 
     handlePlayerCollision(targetObject, linearVelocity, angularVelocity) {
@@ -254,26 +254,26 @@ export default class Character extends fw.core.viewCore {
 
         switch (targetObject.name) {
             case "ground":
-                // for (let i = 0; i < targetObject.children.length; i++) {
-                //     if (targetObject.children[i].name == "spike") {
-                //         const spike = targetObject.children[i];
-                //         const mesh = this.character.mesh;
-                //         const geom = mesh.geometry;
-                //         const bbMin = geom.boundingBox.min;
-                //         const bbMax = geom.boundingBox.max;
-                //         const spikeX = spike.parent.position.x + spike.position.x;
-                //         const spikeY = spike.parent.position.y + spike.position.y;
-                //         const spikeZ = spike.parent.position.z + spike.position.z;
-                //
-                //         if (spikeX > mesh.position.x - bbMin.x && spikeX < mesh.position.x + bbMax.x) {
-                //             if (spikeY > mesh.position.y - bbMin.y && spikeY < mesh.position.y + bbMax.y) {
-                //                 if (spikeZ > mesh.position.z - bbMin.z && spikeZ < mesh.position.z + bbMax.z) {
-                //                     alert('spike collision');
-                //                 }
-                //             }
-                //         }
-                //     }
-                // }
+            // for (let i = 0; i < targetObject.children.length; i++) {
+            //     if (targetObject.children[i].name == "spike") {
+            //         const spike = targetObject.children[i];
+            //         const mesh = this.character.mesh;
+            //         const geom = mesh.geometry;
+            //         const bbMin = geom.boundingBox.min;
+            //         const bbMax = geom.boundingBox.max;
+            //         const spikeX = spike.parent.position.x + spike.position.x;
+            //         const spikeY = spike.parent.position.y + spike.position.y;
+            //         const spikeZ = spike.parent.position.z + spike.position.z;
+            //
+            //         if (spikeX > mesh.position.x - bbMin.x && spikeX < mesh.position.x + bbMax.x) {
+            //             if (spikeY > mesh.position.y - bbMin.y && spikeY < mesh.position.y + bbMax.y) {
+            //                 if (spikeZ > mesh.position.z - bbMin.z && spikeZ < mesh.position.z + bbMax.z) {
+            //                     alert('spike collision');
+            //                 }
+            //             }
+            //         }
+            //     }
+            // }
             case "box":
             case "bridge":
                 this._isJumping = false;
@@ -324,11 +324,11 @@ export default class Character extends fw.core.viewCore {
                 }
                 break;
             case "bottomCatcher":
-                    this._isAlive = false;
-                    this.dispatchToContext(Constants.events.PLAYER_DIED);
-                    fw.utils.audioManager.playSound("./assets/die.mp3");
+                this._isAlive = false;
+                this.dispatchToContext(Constants.events.PLAYER_DIED);
+                fw.utils.audioManager.playSound("./assets/die.mp3");
                 break;
-            
+
             case "finish":
                 this.dispatchToContext(Constants.events.LEVEL_FINISHED, 1);
         }
@@ -337,6 +337,10 @@ export default class Character extends fw.core.viewCore {
     checkRay(rc, distance) {
         if (this.character.mesh && this.character.mesh.parent) {
             const scene = this.character.mesh.parent;
+
+            this.drawRay(rc, distance);
+
+
             const intersects = rc.intersectObjects(scene.children);
 
             for (let i = 0; i < intersects.length; i++) {
@@ -347,13 +351,25 @@ export default class Character extends fw.core.viewCore {
                             this.dispatchToContext(Constants.events.UPDATE_PLAYER_SCORE, {points: intersect.object.userData.points});
                             intersect.object.userData.owner.destroy();
                             intersect.object.parent.remove(intersect.object);
-                            fw.utils.audioManager.playSound("./assets/collect.mp3");
+                            // fw.utils.audioManager.playSound("./assets/collect.mp3");
                         }
                     }
                 }
             }
 
         }
+    }
+
+    drawRay(rc, distance) {
+        this.rayCastR.userData.owner.drawRay();
+        this.rayCastL.userData.owner.drawRay();
+        this.rayCastU.userData.owner.drawRay();
+        this.rayCastD.userData.owner.drawRay();
+
+        this.rayCastLB.userData.owner.drawRay();
+        this.rayCastLT.userData.owner.drawRay();
+        this.rayCastRB.userData.owner.drawRay();
+        this.rayCastRT.userData.owner.drawRay();
     }
 
     respawn(x, y) {
@@ -365,18 +381,18 @@ export default class Character extends fw.core.viewCore {
     }
 
     updatePlayer() {
-        this.checkRay(this.rayCastR, 1);
+        this.checkRay(this.rayCastR, 0.5);
 
         this.checkRay(this.rayCastRT, 1.5);
         this.checkRay(this.rayCastRB, 1.5);
 
-        this.checkRay(this.rayCastL, 1);
+        this.checkRay(this.rayCastL, 0.5);
 
         this.checkRay(this.rayCastLT, 1.5);
         this.checkRay(this.rayCastLB, 1.5);
 
-        this.checkRay(this.rayCastU, 1.5);
-        this.checkRay(this.rayCastD, 1.5);
+        this.checkRay(this.rayCastU, 1.25);
+        this.checkRay(this.rayCastD, 1.25);
 
         this.updatePlayerPosition();
         this.updatePlayerRotation();
@@ -415,7 +431,9 @@ export default class Character extends fw.core.viewCore {
                     this._isWalking = true;
                     this._isIdle = false;
                 }
-                player.applyCentralImpulse(new THREE.Vector3(this._moveForce, 0, 0));
+                player.applyCentralForce(new THREE.Vector3(this._moveForce * 60, 0, 0));
+
+                // player.applyCentralImpulse(new THREE.Vector3(this._moveForce, 0, 0));
                 this._rotation.rotating = true;
                 this._rotation.direction = "right";
             } else if (this._keyPressed["ArrowLeft"]) {
@@ -427,7 +445,7 @@ export default class Character extends fw.core.viewCore {
                     this._isWalking = true;
                     this._isIdle = false;
                 }
-                player.applyCentralImpulse(new THREE.Vector3(-this._moveForce, 0, 0));
+                player.applyCentralForce(new THREE.Vector3(-this._moveForce * 60, 0, 0));
                 this._rotation.rotating = true;
                 this._rotation.direction = "left";
 
@@ -442,7 +460,7 @@ export default class Character extends fw.core.viewCore {
                     this._isWalking = false;
                     this._isIdle = false;
                 }
-                player.applyCentralImpulse(new THREE.Vector3(0, this._jumpForce, 0));
+                player.applyCentralForce(new THREE.Vector3(0, this._jumpForce * 60, 0));
             }
         }
         model.position.x = player.position.x;
@@ -481,11 +499,8 @@ export default class Character extends fw.core.viewCore {
     updatePlayerAnimation() {
         const delta = this._clock.getDelta();
 
+        // console.log("delta:", delta);
         if ( this._mixer ) this._mixer.update( delta );
     }
 
-    drawRay(scene) {
-        this.rayCastR.drawRay(scene);
-        this.rayCastL.drawRay(scene);
-    }
 }

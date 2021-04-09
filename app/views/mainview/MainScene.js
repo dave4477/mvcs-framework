@@ -36,7 +36,7 @@ export default class MainScene extends fw.core.viewCore {
         this._startX = 0;
         this._startY = 0;
         this._panTo = {x:0, y:0, z:0};
-
+        this.deltaClock = new THREE.Clock(true);
         this.water = null;
 
         this._secondsLeft = 0;
@@ -93,10 +93,8 @@ export default class MainScene extends fw.core.viewCore {
             timeLeft = 0;
         }
         this.dispatchToContext(Constants.events.TIME_BONUS_COLLECTED, {points: timeLeft});
-        this.dispatchToContext(Constants.events.UPDATE_PLAYER_SCORE, {points: timeLeft});
         this.pause();
         this.dispatchToContext(Constants.events.SWITCH_STATE, "levelComplete");
-        //this.onNextLevel();
     }
 
     onNextLevel() {
@@ -352,9 +350,12 @@ export default class MainScene extends fw.core.viewCore {
         this.dispatchToContext(Constants.events.RESUME_SIMULATION);
     }
 
-    render(dt) {
+    render() {
         if (!this._isPaused) {
-            this.scene.simulate(undefined, 1);
+
+            const dt = this.deltaClock.getDelta();
+
+            this.scene.simulate(dt, 1);
 
             this.dispatchToView('frameUpdate', dt);
 
@@ -365,7 +366,7 @@ export default class MainScene extends fw.core.viewCore {
                 }
             }
             if (this._cameraTween) {
-                TWEEN.update(dt);
+                TWEEN.update();
             }
             this._animationFrame = window.requestAnimationFrame(() => this.render());
             this.renderer.render(this.scene, this.camera);

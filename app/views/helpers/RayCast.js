@@ -1,29 +1,27 @@
 import * as THREE from './../../libs/three.module.js';
+import DebugSettings from './../../DebugSettings.js';
 
 export default class RayCast {
     constructor(origin, direction, scene = null, near = 0, far = 10) {
         direction = direction.normalize();
         this.raycaster = new THREE.Raycaster(origin, direction, near, far);
+        this.arrowHelper = null;
+        this.scene = scene;
 
-        // if (scene) {
-        //     var distance = far;
-        //
-        //     var pointB = new THREE.Vector3();
-        //     pointB.addVectors(origin, direction.multiplyScalar(distance));
-        //
-        //     var geometry = new THREE.Geometry();
-        //     geometry.vertices.push(origin);
-        //     geometry.vertices.push(pointB);
-        //
-        //     console.log(origin, pointB);
-        //
-        //     var material = new THREE.LineBasicMaterial({color: 0xffffff});
-        //     var line = new THREE.Line(geometry, material);
-        //     scene.add(line);
-        // }
+        if (scene && DebugSettings.showRayCast) {
+            this.arrowHelper = new THREE.ArrowHelper(this.raycaster.ray.direction, scene.position, far, 0xffffff);
+            scene.add( this.arrowHelper );
+
+        }
+        this.raycaster.userData = {owner:this};
         return this.raycaster;
     }
 
+    drawRay() {
+        if (this.scene && DebugSettings.showRayCast) {
+            this.arrowHelper.position.set(0, 0, this.scene.position.z);
+        }
+    }
 
     changeDirection(direction) {
         switch (direction) {

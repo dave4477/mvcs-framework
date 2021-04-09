@@ -6,14 +6,23 @@ import Constants from './../../Constants.js';
 export default class GameCompletedPopup extends fw.core.viewCore {
     constructor() {
         super(Constants.views.POPUP_GAME_COMPLETE);
-        this.timeBonus = NaN;
-        this.score = NaN;
+        this.timeBonus = 0;
+        this.score = 0;
     }
 
     init() {
+        this.addContextListener(Constants.events.TIME_BONUS_COLLECTED, this.onTimeBonus);
+    }
+
+    onTimeBonus(timeBonus) {
+        this.timeBonus = timeBonus.points;
+        this.score += this.timeBonus;
+        document.querySelector('#totalScoreText').innerHTML = this.score;
     }
 
     show(score) {
+        this.score = score;
+
         const popupView = document.querySelector('#popupView');
 
         popupView.style.display = "";

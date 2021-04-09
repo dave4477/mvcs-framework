@@ -16,7 +16,6 @@ export default class FallingRocks extends fw.core.viewCore {
         this._interval = interval;
         this._active = true;
         this._justStarted = true;
-        this._texture = null;
         this.loader = new THREE.TextureLoader();
         this.loader.load( 'images/rock.jpg', (texture) =>{
            this.texture = texture;
@@ -79,9 +78,11 @@ export default class FallingRocks extends fw.core.viewCore {
             this._rocks[i].destroy();
         }
         this._rocks = [];
+        this.texture.dispose();
+        this.loader = null;
         this.removeContextListener(Constants.events.SIMULATION_PAUSED, this.pause);
         this.removeContextListener(Constants.events.SIMULATION_RESUMED, this.resume);
-
+        this.removeView();
     }
     
     pause() {
