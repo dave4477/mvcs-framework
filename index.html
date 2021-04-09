@@ -3,15 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <title>Robot Game - Detailed Simplicity</title>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="robots" content="all">
+    <meta name="description" content="A terrible game written in HTML5 you can play for free on your desktop's and mobile browser">
+    <meta name="keywords" content="webgame, game, html5, platform game, html5 game, free to play, webgl, browser, detailed simplicity">
+    <meta name="author" content="Dave Bleeker">
 
     <style>
-        body { background:#000; font-family:verdana, sans-serif; font-size:20px; color:#fff; }
+        body { background:#000; font-family:helvetica, sans-serif; font-size:20px; color:#fff; overflow:hidden; margin:0; border:0; }
+		h1 { font-family: Helvetica, sans-serif; font-size:24px; color:#fff;     text-shadow: 1px 1px 2px #222222;}
+		a:link,
+		a:visited,
+		a:active {
+			text-shadow: 1px 1px 2px #232344;
+			color:#aeaeff;
+			text-decoration:none;
+		}
+		a:hover {
+			text-shadow: 1px 1px 2px #440022;
+			color:#ff0066;
+		}
+		.banner {
+			position: absolute;
+			width: 100%;
+			height: 384px;
+			overflow: hidden;
+			background-image:url(background.jpg);
+			background-repeat:no-repeat;
+			background-position:50% 0;
+			filter:blur(1px);
+		}
+		.content {
+			position: absolute;
+			width: 600px;
+			height: 800px;
+			left:0;
+			right:0;
+			margin:auto;
+		}
+		
+		.centered {
+			position:relative;
+			width:100%;
+			text-align:center;
+		}
     </style>
+
 </head>
 <body>
 
+<div id="game" class="banner"></div>
 
+<div class="content">
+<div class="centered">
+<h1>Detailed Simplicity Games</h1>
+<br>
+<p>An original HTML5 Platform Game</p>
+<br><br>
 <a title="Robot Game, a free HTML5 game" href="./app/index.html">Play Game</a>
+</div>
+</div>
+<div style="position:absolute; top:390px; width:100%; height:40px; overflow:hidden; font-size:12px;">
+<div class="centered">
+This game will automatically start in 5 seconds.
+</div>
+</div>
 
+<script type="text/javascript">
+
+setTimeout(()=>{
+	document.location.href = "./app/index.html";
+}, 5000);
+
+</script>
 </body>
 </html>
